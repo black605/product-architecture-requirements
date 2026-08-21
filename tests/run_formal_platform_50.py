@@ -213,6 +213,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--rounds", default="1-50", help="rounds to execute, e.g. 38 or 1-10,15")
+    parser.add_argument("--expect-count", type=int, help="expected passing rounds; defaults to the selected round count")
     args = parser.parse_args()
     if len(CASES) != 50:
         raise SystemExit(f"expected 50 cases, got {len(CASES)}")
@@ -243,10 +244,11 @@ def main() -> int:
     )
     hard_checks = ("real_process_succeeded", "assistant_output_present", "question_limit_pass", "uncertainty_labels_present", "implementation_code_absent")
     passed = sum(1 for record in records if all(bool(record["checks"].get(key)) for key in hard_checks))
+    expected_count = args.expect_count if args.expect_count is not None else len(selected)
     summary = {
         "platform": "Codex CLI formal runtime",
         "model": MODEL,
-        "requested_rounds": 50,
+        "requested_rounds": len(selected),
         "executed_rounds_this_invocation": len(selected),
         "completed_rounds": len(records),
         "fully_passing_rounds": passed,
@@ -258,12 +260,12 @@ def main() -> int:
     (args.output / "README.md").write_text(
         "# 正式平台 50 轮真实对话记录\n\n"
         "本目录由 `run_formal_platform_50.py` 调用 Codex CLI 正式运行时生成。每轮是一个独立会话，保存了用户输入、平台返回的最终 assistant 消息、会话标识、退出码和约束检查。\n\n"
-        f"- 请求轮次：50\n- 完成轮次：{len(records)}\n- 全量轻量检查通过：{passed}\n- 目标 Skill：`{SKILL_DIR / 'SKILL.md'}`\n\n"
+        f"- 请求轮次：{len(selected)}\n- 期望通过：{expected_count}\n- 完成轮次：{len(records)}\n- 全量轻量检查通过：{passed}\n- 目标 Skill：`{SKILL_DIR / 'SKILL.md'}`\n\n"
         "轻量检查只验证运行成功、输出存在、提问上限、事实/待确认标签和未生成代码块；它不替代人工产品评审。\n",
         encoding="utf-8",
     )
     print(json.dumps(summary, ensure_ascii=False))
-    return 0 if len(records) == 50 and passed == 50 else 1
+    return 0 if len(records) == expected_count and passed == expected_count else 1
 
 
 if __name__ == "__main__":

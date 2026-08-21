@@ -88,3 +88,22 @@
 ## 发布结论
 
 规则级回归总分均 ≥90，且每个维度均 ≥15，可标记为 v2.0 发布候选。当前已完成 Codex 正式运行时的 50 轮真实对话记录；若后续部署到 Dify、Coze 或 GPTs，还应分别按其实际配置做平台特定回归，本报告不把当前 Codex 结果冒充为这些外部平台结果。
+
+## v2.6.0–v2.6.3 完整交付回归
+
+2026-08-20 使用五子棋好友比拼真实项目验证“需求基线 → DEC 决策 → 状态/测试门槛 → 跨 Skill 交付 → 返回审计”组合链路。
+
+| 验证层 | 结果 | 证据 |
+|---|---|---|
+| 静态规则 | 7/7 通过 | 三份 v2.6 参考均存在并由 SKILL.md 路由；五子棋为用例 D；教育内容保留为用例 F |
+| 正式运行回复 | 16/16 通过 | DEC-001–009、DEL Manifest、GameInvite/TeamSession/MatchSession、测试追溯、只读与代码边界均通过 |
+| 真实产物检查 | 10/10 通过 | 六个页面、F01–F09、四张状态机、71 条测试、Ready/Blocked/Needs Decision 均可验证 |
+| 自动四维评分 | 100/100 | 引导、架构、UI/UX、约束各 25 |
+| 正式回复自评 | 95/100 | 评价 Skill 运行表现，不把输入产物缺陷反向计分 |
+| 下游产物状态 | Blocked | 正确识别原型模拟逻辑、未确认规则固化、对象命名偏差和缺少执行证据 |
+
+完整结果见 [`gomoku-case-d/result.json`](gomoku-case-d/result.json)，正式回复见 [`gomoku-case-d/latest-response.md`](gomoku-case-d/latest-response.md)，产物证据见 [`gomoku-case-d/artifact-manifest.json`](gomoku-case-d/artifact-manifest.json)。
+
+升级后另行重跑正式 50 轮记录中的 1、11、21、26、31 轮，分别覆盖教育内容、教师作业、复杂 SaaS、数据大屏和内容运营场景；5/5 新执行通过，合并记录仍为 50/50 通过。该检查继续只证明进程、问题上限、证据标签和实现边界，不替代用例 D 的完整产物审计。
+
+v2.6 发布结论：Skill 规则与 Codex 平台回归达到发布候选门槛；Dify、Coze、GPTs 已同步约束映射，但仍需在各宿主实际配置专业工作流后进行平台特定执行验证。

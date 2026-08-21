@@ -1,0 +1,59 @@
+{
+  "case_id": "D",
+  "generated_at": "2026-08-21T03:12:03.848167+00:00",
+  "runtime": {
+    "executed": true,
+    "exit_code": 0,
+    "response_bytes": 15528,
+    "platform_output_present": true
+  },
+  "checks": {
+    "static": {
+      "references_exist": true,
+      "references_routed_from_skill": true,
+      "case_d_is_gomoku": true,
+      "legacy_education_case_preserved": true,
+      "cross_skill_ready_gate_present": true,
+      "decision_ledger_gate_present": true,
+      "state_test_gate_present": true
+    },
+    "runtime": {
+      "response_present": true,
+      "no_redundant_questions": true,
+      "decision_ledger_complete": true,
+      "confirmed_evidence_label_present": true,
+      "cross_skill_manifest_present": true,
+      "three_deliverables_audited": true,
+      "state_trigger_explained": true,
+      "state_diagrams_or_transitions_present": true,
+      "test_trace_present": true,
+      "key_rules_preserved": true,
+      "scope_boundary_preserved": true,
+      "no_implementation_code": true,
+      "read_only_boundary_preserved": true,
+      "unverified_work_not_reported_done": true,
+      "four_dimension_score_present": true,
+      "skill_and_artifact_scores_separated": true
+    },
+    "artifacts": {
+      "all_artifacts_exist": true,
+      "prototype_has_six_pages": true,
+      "routes_are_traced": true,
+      "features_f01_f09_present": true,
+      "key_timing_rules_present": true,
+      "concurrent_invite_rule_present": true,
+      "state_machines_present": true,
+      "test_case_volume_sufficient": true,
+      "domain_test_families_present": true,
+      "handoff_statuses_present": true
+    }
+  },
+  "scores": {
+    "elicitation": 25,
+    "architecture": 25,
+    "ui_ux": 25,
+    "constraint": 25,
+    "total": 100
+  },
+  "passed": true
+}
