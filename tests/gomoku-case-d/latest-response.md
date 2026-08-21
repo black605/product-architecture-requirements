@@ -1,237 +1,284 @@
 # 五子棋好友比拼完整交付回归评审
 
-结论：需求基线本身已具备跨 Skill 交接条件，但三份下游产物均不能判定为 Completed。核心原因是原型存在模拟流程与业务规则不一致，研发文档保留高影响 Needs Decision，测试文档虽覆盖较全但尚无通过证据，且 `MatchSession` 被写成了 `GameSession`。
+评审范围：Case D；只读审计。
+权威基线：`scenario.json` 中 DEC-001～DEC-009、required_objects、required_routes、required_feature_ids。
+结论：需求规则本身足以进入交接，但三类已返回产物均未通过返回审计，当前不能标记 `Completed` 或 `Handoff Ready`。
 
-评审范围：
-
-- 权威场景：[scenario.json](/Users/tal/.codex/skills/product-architecture-requirements/tests/gomoku-case-d/scenario.json)
-- 原型：[Gomoku Friend Battle Prototype.html](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Gomoku%20Friend%20Battle%20Prototype.html)
-- 研发：[Development Tasks and Acceptance Checklist.md](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Development%20Tasks%20and%20Acceptance%20Checklist.md)
-- 测试：[Test Cases and State Machines.md](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Test%20Cases%20and%20State%20Machines.md)
+未修改、发布或推送任何外部产物。
 
 ## 1. 当前有效 DEC 决策快照
 
-以下 9 条均来自权威场景数据，证据类型为“用户确认 / 权威场景数据”，状态为 Confirmed。
+所有 DEC-001～DEC-009 均为 `Confirmed`，证据类型为：
 
-| DEC | 当前有效规则 | 主要影响 |
+- `Confirmed`：用户提供的权威场景数据；
+- `Fact`：三份下游文件中的可观察内容；
+- `Pending`：下游文档明确写出的 Needs Decision、未勾选项或未冻结契约；
+- `Inference`：本次基于规则与产物差异做出的审计判断。
+
+| 决策 | 当前有效规则 | 主要影响 |
 |---|---|---|
-| DEC-001 | 首期闭环为好友互通、添加好友、邀请组队、联机对弈、消息中心 | F01–F08、核心页面 |
-| DEC-002 | 在线通知、邀请回应话术、棋局预设文字与表情为 Must | F05、F09、消息/对局交互 |
-| DEC-003 | 15 秒只限制邀请响应；接受后进入独立组队准备阶段 | GameInvite、TeamSession、F06/F07 |
-| DEC-004 | 双方都准备后才开局；组队 5 分钟未开局自动解散 | TeamSession、F07 |
-| DEC-005 | 接受一个有效邀请后，其余邀请立即失效；邀请方看到“对方已进入对弈中” | 并发邀请、GameInvite、F06/F07 |
-| DEC-006 | 好友对弈沿用真人对弈的棋盘、胜负、投降、超时、异常退出和结算规则 | MatchSession、F08 |
-| DEC-007 | 首期只适配当前学习机横屏界面 | 页面布局、触控、焦点 |
-| DEC-008 | 沿用现有五子棋暖色游戏化风格和资源 | 原型视觉边界 |
-| DEC-009 | 人机入口合并、头像替换、勋章修复为同版本独立改动，不阻塞主闭环 | P101–P103、独立回归 |
+| DEC-001 | 好友互通、添加好友、邀请组队、联机对弈、消息中心为首期主闭环 | F01～F09、六条核心路由 |
+| DEC-002 | 在线通知、邀请回应话术、棋局预设文字与表情为 Must | F05、F09、消息与对局互动 |
+| DEC-003 | 15 秒仅用于邀请响应；接受后进入独立组队准备阶段 | GameInvite、TeamSession |
+| DEC-004 | 双方都准备后才能开局；组队 5 分钟未开局自动解散 | TeamSession、MatchSession |
+| DEC-005 | 接受一个有效邀请后，其余邀请立即失效；邀请方看到“对方已进入对弈中” | 并发接受、消息反馈 |
+| DEC-006 | 完全沿用现有真人对弈棋盘、胜负、投降、超时、异常退出、结算规则 | MatchSession |
+| DEC-007 | 仅适配当前学习机横屏界面 | 全部页面与 UI 验收 |
+| DEC-008 | 沿用既有五子棋暖色游戏化风格与资源 | 原型视觉边界 |
+| DEC-009 | 人机入口合并、头像替换、勋章修复为独立同版本改动，不阻塞主闭环 | P101～P103 |
 
-决策快照与下游产物之间未发现 DEC 被静默改写，但存在以下传播缺口：
+未发现本案新增的 `CHG`。下游文档中出现的以下规则不能升级为有效 DEC：
 
-- `DEC-004` 未完整传播到原型：原型没有真实的 5 分钟组队倒计时和自动解散行为。
-- `DEC-005` 未完整传播到原型：没有多邀请并发、其余邀请失效和邀请方提示的可操作实现。
-- `DEC-006` 产生对象命名偏差：场景要求 `MatchSession`，研发和测试文档使用 `GameSession`。
-- `DEC-007` 仍被研发文档标记为部分待确认：目标分辨率、系统版本和性能基线未冻结。
-- `DEC-009` 中 `P103` 在研发文档有列出，但原型追溯只明确了 P101、P102，未形成完整独立项证据。
+- 好友申请有效期 10 天、好友上限 100；
+- 同一好友每日通知最多 3 次；
+- 消息中心 100 条清理规则；
+- Push 降级细节；
+- 当前学习机具体分辨率、系统版本和性能基线。
+
+其中前两项被开发和测试文档当作既定规则使用，但不在权威场景的 Confirmed DEC 中，应继续视为 `Pending`，不能作为已确认业务规则。
 
 ## 2. 自动触发状态机的原因
 
-本项目命中以下自动触发条件：
+本案满足多个自动触发条件：
 
-- 两名用户共同改变邀请、组队和棋局对象；
-- 异步通知、消息记录和在线状态同步；
-- 邀请 15 秒、组队 5 分钟、好友申请 10 天、通知每日限频；
-- 并发接受、重复提交、抢占和幂等；
-- 取消、拒绝、超时、自动失效；
-- 断网、熄屏、异常退出与恢复；
+- 两名用户共同改变邀请、组队和对局对象；
+- 异步通知、邀请回应和消息回调；
+- 邀请 15 秒有效期；
+- 组队 5 分钟自动解散；
+- 并发接受、重复提交和幂等；
+- 双方准备共同决定是否开局；
+- 断网、熄屏、退出和恢复；
 - 用户明确要求测试用例与状态机图。
 
-### GameInvite 关键转移
+因此不能只审查页面和按钮，必须审查业务对象、事件、守卫、失败出口、并发权威结果和测试覆盖。
+
+### GameInvite
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Pending: 在线空闲好友发起邀请
+    [*] --> Pending
     Pending --> Accepted: 15秒内接受
     Pending --> Rejected: 15秒内拒绝
     Pending --> Responded: 发送回应话术
-    Responded --> Pending: 倒计时继续
+    Responded --> Pending: 邀请仍有效
     Pending --> Timeout: 15秒无响应
+    Pending --> Invalidated: 接受了其他邀请
     Pending --> Cancelled: 邀请方取消
-    Pending --> Invalidated: 被邀请方接受其他邀请
-    Accepted --> TeamWaiting: 创建组队
+    Accepted --> [*]
+    Rejected --> [*]
+    Timeout --> [*]
+    Invalidated --> [*]
+    Cancelled --> [*]
 ```
 
 关键守卫：
 
-- 邀请双方必须为好友；
-- 被邀请方必须在线且空闲；
-- 同一邀请只能成功处理一次；
-- 接受一个有效邀请后，其余有效邀请立即 `Invalidated`；
-- `Timeout`、`Rejected`、`Cancelled`、`Invalidated` 不得再次接受。
+- 只有有效 Pending 邀请可接受；
+- 接受操作必须幂等；
+- 并发接受只能产生一个权威成功结果；
+- 其余邀请进入 `Invalidated`；
+- 邀请方收到“对方已进入对弈中”。
 
-### TeamSession 关键转移
+### TeamSession
 
 ```mermaid
 stateDiagram-v2
-    [*] --> WaitingReady: 邀请被接受
-    WaitingReady --> ReadyPartial: 任一方准备
-    ReadyPartial --> ReadyAll: 另一方准备
-    WaitingReady --> Cancelled: 任一方取消
-    ReadyPartial --> Cancelled: 任一方取消
-    WaitingReady --> Expired: 5分钟未开局
-    ReadyPartial --> Expired: 5分钟未开局
-    ReadyAll --> CreatingMatch: 请求创建棋局
-    CreatingMatch --> ReadyAll: 创建失败，可重试
-    CreatingMatch --> MatchPlaying: 创建成功
+    [*] --> waiting_ready
+    waiting_ready --> ready_partial: 一方准备
+    ready_partial --> ready_all: 另一方准备
+    waiting_ready --> cancelled: 任一方取消
+    ready_partial --> cancelled: 任一方取消
+    waiting_ready --> expired: 5分钟未开局
+    ready_partial --> expired: 5分钟未开局
+    ready_all --> MatchSession: 双方准备完成
+    MatchSession --> ready_all: 创建失败且可重试
 ```
 
 关键守卫：
 
-- `ReadyAll` 之前不得创建棋局；
-- 组队从创建起最多保留 5 分钟；
-- 取消或超时后双方恢复空闲；
-- 同一组队最多对应一个有效棋局；
-- 创建失败不能重复创建组队。
+- `ready_all` 之前不得创建棋局；
+- 5 分钟倒计时从组队创建开始；
+- 取消与超时后双方恢复空闲；
+- 创建棋局必须幂等。
 
-### MatchSession 关键转移
+### MatchSession
 
-```mermaid
-stateDiagram-v2
-    [*] --> Playing: 组队双方均准备，棋局创建成功
-    Playing --> Finished: 正常胜负或平局
-    Playing --> Surrendered: 一方投降
-    Playing --> Timeout: 对局超时
-    Playing --> Disconnected: 断网或熄屏
-    Disconnected --> Playing: 按真人对弈规则恢复
-    Disconnected --> Finished: 按真人对弈规则结算
-    Finished --> WaitingRematch: 一方申请再来一局
-    WaitingRematch --> Playing: 双方同意，先后手互换
-    WaitingRematch --> Closed: 对方拒绝或退出
-```
-
-测试文档中的状态图覆盖了同样的行为，但对象名为 `GameSession`，需由研发和测试责任人统一回写为权威对象 `MatchSession`，或建立明确别名映射。
+权威场景要求沿用现有真人对弈规则。测试文档使用了 `Playing`、`Finished`、`Surrendered`、`Timeout`、`Disconnected`、`WaitingRematch`、`Closed` 等状态，覆盖方向正确，但对象名称错误：应使用 `MatchSession`，不能用 `GameSession` 替代权威对象名。
 
 ## 3. 邀请、组队、对局测试与追溯
 
-| 领域 | 测试覆盖 | 对应功能 | 对应决策 | 评审结论 |
-|---|---|---|---|---|
-| 邀请创建与倒计时 | IN-001、IN-003、IN-006 | F06 | DEC-003 | 有正向、超时、单发限制；需补真实服务端时间证据 |
-| 邀请接受与组队 | IN-002、TM-001、TM-002 | F06/F07 | DEC-003/004 | 逻辑覆盖完整 |
-| 多邀请并发 | IN-007、IN-008 | F06/F07 | DEC-005 | 测试有覆盖；原型未实现 |
-| 邀请回应话术 | IN-005 | F06/F09 | DEC-002/003 | 测试覆盖；原型有话术入口，但没有真实回传状态 |
-| 组队超时 | TM-003、TM-004 | F07 | DEC-004 | 测试覆盖 4:59、5:00；原型只展示 `5:00`，没有倒计时和自动解散 |
-| 取消与恢复 | TM-005、TM-007 | F07 | DEC-004/005 | 有取消和并发测试 |
-| 棋局创建失败 | TM-006、NF-004 | F07/F08 | DEC-004/006 | 有停留、重试和幂等要求 |
-| 真人对弈规则 | GM-001、GM-002、GM-003 | F08 | DEC-006 | 测试覆盖落子、投降、断网、熄屏；原型实际使用本地模拟落子 |
-| 棋局互动 | GM-004、GM-005、GM-006 | F09 | DEC-002/006 | 有客户端与服务端限频测试 |
-| 再来一局 | GM-007、GM-008、GM-009 | F08 | DEC-006 | 有等待、同意、退出和换先后手测试 |
-| 消息中心 | MS-001–MS-007 | F02/F03/F06 | DEC-001/002/005 | 覆盖红点、已读、可操作和超时；100 条清理规则仍待确认 |
-| 页面状态 | UI-001–UI-009 | F01–F09 | DEC-007/008 | 有 loading、empty、error、无权限和 reduced-motion 测试 |
+| 领域 | 主要测试 | 覆盖决策 | 追溯评价 |
+|---|---|---|---|
+| 邀请创建与响应 | IN-001～IN-005 | DEC-002、DEC-003 | 覆盖 15 秒、拒绝、回应话术；基本完整 |
+| 邀请并发与失效 | IN-006～IN-010 | DEC-003、DEC-005 | 覆盖单发、并发接受、幂等、取消和过期 |
+| 全局邀请 | IN-011 | DEC-003 | 测试要求任意页面接收邀请，但原型只在首页弹出，存在产物偏差 |
+| 组队准备 | TM-001～TM-005 | DEC-003、DEC-004 | 覆盖单方准备、双方准备、取消、5 分钟超时 |
+| 创建棋局失败 | TM-006 | DEC-004、DEC-006 | 覆盖失败后保持准备完成并重试 |
+| 组队并发 | TM-007 | DEC-004 | 覆盖取消与准备同时发生 |
+| 对局规则 | GM-001～GM-003 | DEC-006 | 覆盖落子、投降、断网/熄屏、既有规则复用 |
+| 对局互动 | GM-004～GM-006 | DEC-002、DEC-006 | 覆盖预设文字、表情、3 秒冷却和服务端拦截 |
+| 再来一局 | GM-007～GM-010 | DEC-006 | 覆盖等待双方同意、先后手互换、退出反馈 |
+| 消息中心 | MS-001～MS-007 | DEC-001、DEC-002 | 覆盖红点、已读、申请处理、过期和超时 |
 
-### F01–F09 总体追溯
+主要追溯缺口：
 
-| 功能 | 研发追溯 | 测试追溯 | 原型入口 | 结论 |
-|---|---|---|---|---|
-| F01 好友互通 | FE-03、BE-01/02 | FR-001、FR-011/012 | `#/friends`、`#/add` | 有追溯；跨产品契约仍 Blocked |
-| F02 添加好友 | FE-03、BE-02 | FR-002–010、MS-003/004 | `#/add`、`#/messages` | 覆盖较完整；原型仅为本地 Mock |
-| F03 消息中心 | FE-04、BE-06 | MS-001–007 | `#/messages` | 有追溯；清理规则未冻结 |
-| F04 好友列表 | FE-02、BE-05 | FL-001–003、FL-007、GM-010 | `#/friends` | 有追溯；在线状态契约未冻结 |
-| F05 通知上线 | FE-02、BE-07 | FL-003–006、NF-005 | `#/friends` | 有入口；Push 失败和限频契约未完成 |
-| F06 邀请比拼 | FE-01、FE-05、BE-03 | IN-001–011 | `#/home`、`#/friends`、`#/lobby` | 主链路有追溯；原型并发规则不完整 |
-| F07 组队准备 | FE-06、BE-04 | TM-001–007 | `#/lobby` | 测试充分；原型缺少真实 5 分钟状态 |
-| F08 好友对弈 | FE-07/08、BE-08 | GM-001–003、GM-007–010 | `#/game` | 规则复用有声明；原型不是联机 MatchSession |
-| F09 棋局互动 | FE-07、BE-09 | IN-005、GM-004–006 | `#/game` | 有交互和限频；原型未证明对端投递和记录一致 |
+1. 测试用例主要只回指 `F`，没有稳定回指 `DEC`、`TR`、`AC`。
+2. 状态转移没有使用规定的 `TR-*` 编号。
+3. `MatchSession` 被写成 `GameSession`，违反权威对象名称要求。
+4. `MS-005` 依赖“冻结的清理规则”，但开发文档仍将其标为 `Needs Decision`，不能视为验收完成。
+5. 测试中的 10 天、100 人、每日 3 次等规则未出现在权威 Confirmed DEC 中，责任应归下游需求契约/产品确认，不应由测试自行固化。
 
-## 4. 三类 Handoff Manifest 与返回审计
+## 4. Handoff Manifest 与返回审计
 
-以下为本次只读评审重建的审计 Manifest。原始文件中没有独立 Manifest 文件，因此状态以本次返回审计为准。
+### DEL-001：页面高保真原型
 
-### DEL-001：高保真原型
+**Handoff Manifest**
 
-| 字段 | 审计内容 |
-|---|---|
-| 目标产物 | `Gomoku Friend Battle Prototype.html` |
-| 来源基线 | 场景 D、DEC-001–009、F01–F09、六条必需路由 |
-| 页面范围 | `#/home`、`#/friends`、`#/add`、`#/messages`、`#/lobby`、`#/game` |
-| 已确认约束 | 当前学习机横屏、沿用暖色游戏化风格、15 秒邀请、5 分钟组队 |
-| 返回证据 | 页面路由、好友/添加/消息/组队/棋局界面；包含回应话术、表情、倒计时文案和 reduced-motion CSS |
-| 主要偏差 | 12 秒自动接受；双方准备后 1.2 秒自动完成；组队 5 分钟没有真实计时器；棋局为本地自动落子模拟；无多邀请失效闭环 |
-| 状态 | **Blocked** |
-| 责任 | 原型交付责任人；需按 DEC-003/004/005/006 重做状态行为并补验证证据 |
+- 来源基线：Case D；需求版本未在产物中声明；适配当前学习机横屏。
+- 决策：DEC-001～DEC-009。
+- 功能：F01～F09。
+- 路由：`#/home`、`#/friends`、`#/add`、`#/messages`、`#/lobby`、`#/game`。
+- 必须呈现：邀请 15 秒、独立组队准备、双方准备、5 分钟解散、消息中心、对局互动、异常状态。
+- 禁止推断：不得自行新增业务规则、权限、真实服务能力或生产状态。
+- 回传要求：页面入口、状态、Mock 边界、DEC/F/TR/AC/T/ART 追溯。
 
-关键证据见原型中的 `startInvite`、`acceptInvite`、`readyUp`、`acceptIncoming` 和 `placeStone` 逻辑：[原型相关行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Gomoku%20Friend%20Battle%20Prototype.html:716)。
+**返回审计**
 
-### DEL-002：研发任务与验收清单
+产物路径：[Gomoku Friend Battle Prototype.html](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Gomoku%20Friend%20Battle%20Prototype.html)
 
-| 字段 | 审计内容 |
-|---|---|
-| 目标产物 | `Development Tasks and Acceptance Checklist.md` |
-| 来源基线 | F01–F09、必需对象、DEC-001–009 |
-| 返回证据 | 功能矩阵、对象不变量、FE/BE 任务、接口级输入输出、Ready/Done 清单、页面追溯 |
-| 已覆盖 | F01–F09 均有研发任务；邀请并发、组队幂等、消息、Push、真人对弈复用均被列出 |
-| 阻塞项 | D01、D02、D04、API-01–03、FE-04、FE-10、BE-01、BE-05–07、DATA/OPS 多项仍为 Needs Decision |
-| 对象偏差 | 使用 `GameSession`，未使用场景要求的 `MatchSession` |
-| 状态 | **Blocked** |
-| 责任 | 产品负责人及统一好友、在线状态、Push、游戏服务负责人；需关闭高影响契约后再进入研发 Ready |
+已覆盖：
 
-文档自身明确写有“交付状态：Needs Decision”，且 Ready/Done 清单仍有未勾选项：[研发清单](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Development%20Tasks%20and%20Acceptance%20Checklist.md:5)、[Ready 检查](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Development%20Tasks%20and%20Acceptance%20Checklist.md:129)。
+- 六条必需路由存在，见原型页面结构 [第 461–563 行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Gomoku%20Friend%20Battle%20Prototype.html:461)；
+- 15 秒邀请文案与组队准备文案存在 [第 529–537 行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Gomoku%20Friend%20Battle%20Prototype.html:529)；
+- 消息中心、好友、添加好友、预设文字、表情和投降入口存在；
+- 横屏约束、焦点样式和 reduced-motion 样式存在。
 
-### DEL-003：测试用例与状态机
+关键偏差：
 
-| 字段 | 审计内容 |
-|---|---|
-| 目标产物 | `Test Cases and State Machines.md` |
-| 来源基线 | F01–F09、六个业务对象、DEC-001–009 |
-| 返回证据 | FriendRequest、邀请、组队、棋局四类状态机；FR/FL/IN/TM/GM/MS/UI/NF 用例 |
-| 已覆盖 | 正向、拒绝、超时、并发、幂等、断网、Push 失败、弱网、回滚和无障碍 |
-| 主要偏差 | `GameSession` 与 `MatchSession` 命名不一致；没有实际执行结果、通过证据或缺陷回写 |
-| 重要限制 | 文档写明 P0 全部通过是发布门槛，但没有说明本次已通过 |
-| 状态 | **Blocked** |
-| 责任 | 测试负责人和产品负责人；需统一对象命名、执行 P0 用例并附结果、环境、清理和缺陷证据 |
+- 邀请流程在倒计时到 12 秒时自动调用 `acceptInvite()`，并非由对方真实接受 [第 721–727 行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Gomoku%20Friend%20Battle%20Prototype.html:721)。
+- 组队准备时自动把对方设置为已准备并跳转棋局，绕过双方共同准备守卫 [第 760–766 行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Gomoku%20Friend%20Battle%20Prototype.html:760)。
+- “5:00”仅为展示文本，没有实际 5 分钟倒计时或自动解散逻辑 [第 742–758 行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Gomoku%20Friend%20Battle%20Prototype.html:742)。
+- 全局邀请弹窗只在首页延迟触发，不能证明“任意页面接收邀请” [第 620–623、864–866 行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Gomoku%20Friend%20Battle%20Prototype.html:620)。
+- 再来一局直接创建新棋局，没有真实 `WaitingRematch` 状态 [第 835–854 行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Gomoku%20Friend%20Battle%20Prototype.html:835)。
+- 未出现 `FriendRelation`、`FriendRequest`、`GameInvite`、`TeamSession`、`MatchSession`、`MessageRecord` 等权威对象名，也没有 DEC/F/TR/AC/T/ART 追溯标识。
+- 原型没有明确 Mock/真实能力边界。
 
-测试文档覆盖情况见：[邀请用例](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Test%20Cases%20and%20State%20Machines.md:158)、[组队用例](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Test%20Cases%20and%20State%20Machines.md:174)、[对局用例](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Test%20Cases%20and%20State%20Machines.md:188)。
+**状态：Blocked**
 
-## 5. 关键返回审计结论
+文件可打开，但未通过状态行为、对象命名、异常出口和追溯审计。不能标记 `Completed`。
 
-### 已通过的审计项
+---
 
-- 六条必需路由均存在。
-- F01–F09 在研发清单、测试文档和原型路由之间基本建立了双向追溯。
-- 15 秒邀请响应与 5 分钟组队准备在研发和测试文档中被区分。
-- 测试文档覆盖了邀请、组队、对局、并发、超时、重试和异常退出。
-- 原型继承了暖色游戏化风格，并提供横屏布局、焦点样式和 reduced-motion 规则。
-- 文档没有把未勾选验收项直接宣称为已完成。
+### DEL-002：研发任务拆分与验收清单
 
-### 必须阻塞的缺口
+**Handoff Manifest**
 
-1. 原型中的“自动接受”和“自动准备”是演示脚本行为，不是 DEC-003/004 的真实交互验证。
-2. 原型没有实现 DEC-005 的多邀请并发失效与邀请方反馈。
-3. 原型没有实现 TeamSession 的 5 分钟倒计时、超时终态和双方恢复空闲。
-4. 原型棋盘由本地脚本自动落子，不能证明 MatchSession 的联机对弈、断线恢复和双方一致性。
-5. `MatchSession` / `GameSession` 对象命名不一致，影响研发、测试和数据追溯。
-6. 研发文档中的高影响外部契约尚未关闭。
-7. 测试文档没有真实执行结果，不能把测试用例存在等同于测试通过。
-8. 当前学习机目标分辨率、系统版本、性能基线仍未确认，不能宣布视觉交接完成。
+- 来源基线：Case D；功能 F01～F09；DEC-001～DEC-009。
+- 目标：研发任务、依赖、AC、发布风险和非阻塞独立项。
+- 必须覆盖：六个权威对象、状态、并发、幂等、超时、失败恢复、横屏适配。
+- 禁止推断：未确认的好友申请期限、清理规则、Push 降级、性能基线不得写成已确认。
+- 回传要求：每个 Must 对应任务、Owner、依赖、AC、测试和 ART-ID。
+
+**返回审计**
+
+产物路径：[Development Tasks and Acceptance Checklist.md](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Development%20Tasks%20and%20Acceptance%20Checklist.md)
+
+已覆盖：
+
+- F01～F09 功能矩阵 [第 18–30 行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Development%20Tasks%20and%20Acceptance%20Checklist.md:18)；
+- 依赖、前端、后端、数据和发布任务；
+- 邀请、组队、并发、幂等、异常和横屏验收方向；
+- 六条必需路由；
+- P101～P103 独立改动不阻塞主闭环。
+
+关键偏差：
+
+- 文件自身声明交付状态为 `Needs Decision` [第 3–6 行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Development%20Tasks%20and%20Acceptance%20Checklist.md:3)。
+- 多个外部依赖与核心任务仍为 `Needs Decision`，包括统一好友服务、在线状态、Push、消息契约和同步时效 [第 40–47、62–70 行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Development%20Tasks%20and%20Acceptance%20Checklist.md:40)。
+- Ready 检查有 5 项未勾选 [第 129–140 行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Development%20Tasks%20and%20Acceptance%20Checklist.md:129)。
+- Done 检查全部未勾选 [第 164–171 行](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Development%20Tasks%20and%20Acceptance%20Checklist.md:164)。
+- required object 中的 `MatchSession` 被替换成 `GameSession`；`FriendRelation` 未列出。
+- 10 天、100 人、每日 3 次、消息 100 条等规则混入任务与验收，但没有对应 Confirmed DEC。
+- 没有 `DEL`、`ART` 或完整 `DEC/F/TR/AC/T` 追溯表。
+
+**状态：Blocked**
+
+该文档可作为研发草案，不能作为 Ready 的生产研发交接包。
+
+---
+
+### DEL-003：测试用例与状态机图
+
+**Handoff Manifest**
+
+- 来源基线：Case D；DEC-001～DEC-009；F01～F09。
+- 目标：状态机、正向测试、守卫拒绝、恢复/终态、并发、幂等、故障注入。
+- 必须覆盖：GameInvite、TeamSession、MatchSession、好友关系、好友申请、消息记录。
+- 验证要求：每个 Must 转移至少有正向、拒绝、恢复或终态测试；必须回指 DEC/F/TR/AC。
+- 禁止推断：未确认规则不能升级为已验收。
+- 回传要求：测试 ID、转移 ID、决策、功能、AC、ART 和实际执行证据。
+
+**返回审计**
+
+产物路径：[Test Cases and State Machines.md](/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Test%20Cases%20and%20State%20Machines.md)
+
+已覆盖：
+
+- 好友申请、邀请、组队、对局/再来一局四类状态机；
+- 邀请 15 秒、组队 5 分钟、并发接受、重复回调、创建失败和弱网；
+- IN-001～IN-011 邀请测试；
+- TM-001～TM-007 组队测试；
+- GM-001～GM-010 对局测试；
+- 消息中心和 UI 状态测试。
+
+关键偏差：
+
+- 状态转移没有 `TR-*` 稳定编号；
+- 用例追溯大多只有 F01～F09，没有 DEC、TR、AC；
+- `MatchSession` 被命名为 `GameSession`；
+- `IN-011` 要求任意页面全局邀请，但原型不满足；
+- `MS-005` 依赖仍未冻结的消息清理规则；
+- 测试文档中部分新增规则没有权威 DEC；
+- 文档是测试设计资产，不包含实际执行结果，不能据此宣布 P0 已通过。
+
+**状态：Blocked**
+
+测试资产覆盖面较好，但因追溯、对象命名、未决规则和缺少执行证据，不能标记 `Completed`。
+
+## 5. 下游产物 Ready/Blocked 判定
+
+| Delivery ID | 产物 | 证据 | 判定 |
+|---|---|---|---|
+| DEL-001 | 高保真页面原型 | 文件存在，主页面可观察；关键状态行为被演示逻辑绕过 | **Blocked** |
+| DEL-002 | 研发任务与验收清单 | 功能和任务结构完整，但自身为 Needs Decision，多个门槛未勾选 | **Blocked** |
+| DEL-003 | 测试用例与状态机图 | 状态和测试覆盖较完整，但缺少正式追溯与执行证据 | **Blocked** |
+
+因此当前总体交付状态为：
+
+```text
+需求基线：Ready
+状态建模：Ready for Specification
+下游返回审计：Blocked
+生产交接：Blocked
+Validation Passed：不可声明
+v1.0：不可声明
+```
 
 ## 6. Skill 本次运行表现四维评分
 
-评分只评价 Skill 是否正确引导、建模、穿透和约束，不把下游产物缺陷反向算作 Skill 扣分。
+此评分只评价 Skill 的引导、建模、穿透和约束能力，不把下游产物自身缺陷反向计入 Skill 扣分。
 
-| 维度 | 得分 | 证据 |
+| 维度 | 得分 | 评价 |
 |---|---:|---|
-| 引导深度 | 24/25 | 接受已确认场景，不重复提问；按用户要求直接进入正式回归；区分权威输入、产物证据和审计结论 |
-| 架构完备性 | 25/25 | 识别六类对象、F01–F09、DEC 传播、并发/超时/幂等和 Ready 门槛；对对象命名偏差进行了定位 |
-| 设计穿透力 | 24/25 | 审计了路由、组件状态、倒计时、弹窗、焦点、reduced-motion 与原型脚本行为；明确原型行为不等于联机业务证据 |
-| 抗幻觉与约束 | 25/25 | 未把 Needs Decision、未勾选项或测试用例说成已验收；未输出实现代码；保持只读边界并区分责任 |
-| **总分** | **98/100** | 达到 Skill 发布候选门槛；本次下游产物仍被独立判定为 Blocked |
+| 引导深度 | 24/25 | 能识别已确认场景，不重复提问；要求从目标、决策和阶段门槛推进 |
+| 架构完备性 | 25/25 | 明确单一事实源、对象优先、状态机自动触发、Must 追溯链和异常分支 |
+| 设计穿透力 | 23/25 | 明确要求页面状态、Mock/真实边界、关键异常和交接回传；本次审计能穿透到原型行为而非只看页面存在 |
+| 抗幻觉与约束 | 25/25 | 严格区分 Confirmed/Pending/Fact；不把文件存在、未勾选项或测试设计当作完成；明确只读边界 |
 
-## 7. 下游产物 Ready/Blocked 判定
+**总分：97/100，Skill 本次运行表现为通过。**
 
-| 交付物 | 判定 | 原因 |
-|---|---|---|
-| DEL-001 高保真原型 | **Blocked** | 关键状态被自动模拟，缺少 5 分钟超时、多邀请失效和真实联机对局证据 |
-| DEL-002 研发任务拆分 | **Blocked** | 多项高影响依赖仍为 Needs Decision，且 `MatchSession` 对象未对齐 |
-| DEL-003 测试用例与状态机 | **Blocked** | 用例和状态图覆盖较完整，但没有执行结果；对象命名存在偏差 |
-| 需求基线 | **Ready** | 权威 DEC、功能范围、页面路由和核心状态规则已具备；下游契约仍需按责任人关闭 |
-| 发布/Done | **Blocked** | 没有 P0 通过证据，且原型与研发交接仍存在阻塞项 |
+## 最终结论
 
-本次为只读正式回归评审，未修改、发布或推送任何外部产物。
+需求确认基线有效，状态机自动触发判断正确，邀请、组队和对局的核心测试方向基本齐全。但原型存在自动接受、自动准备、缺少实际组队超时和直接创建再来一局等关键行为偏差；研发与测试产物仍含未决规则、对象命名偏差、追溯缺失和未执行证据。
+
+因此三类下游产物均为 `Blocked`，不能宣称已完成生产交接。

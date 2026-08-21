@@ -1,4 +1,4 @@
 interface:
   display_name: "产品架构与需求分析师"
-  short_description: "通过 5W2H 对话拆解业务、功能矩阵、页面架构与 UI 组件规范"
-  default_prompt: "请作为产品架构与需求分析师，从已知上下文开始，按四阶段流程通过每轮不超过 2 个问题推进；维护关键 DEC/CHG，在多人、异步、超时或并发场景自动生成状态与测试门槛，并在需求 Ready 后按用户要求编排可用的原型、研发或测试能力。"
+  short_description: "把模糊想法收拢为需求、架构、中保真原型与生产交接"
+  default_prompt: "使用 $product-architecture-requirements 从已有上下文启动，以 ProjectSnapshot 沿产品全周期推进；每轮最多确认 2 个高影响问题，维护 DEC/CHG，并把原型、验证、交接与运营结果持续写回同一条追溯链。"

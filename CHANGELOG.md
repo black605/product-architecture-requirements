@@ -2,6 +2,77 @@
 
 ## [Unreleased]
 
+### v3.4.8：双端设计系统与 AI UI Contract
+
+- 修改位置：更新 `SKILL.md`、`references/design-system-architecture.md`、教育回归用例 F 和生命周期检查；同步 README。
+- 修改原因：原设计系统协议以学习端 shadcn/Radix 为主要示例，后台与学生端没有明确分流，组件也缺少可供 AI 稳定解析的布局、插槽、变体和响应式字段。
+- 预期防范的问题：教师后台误套用学习端 Profile；AI 只根据截图或组件名称猜测布局；不同页面自行发明 slots、variants 和状态；候选库被误报为已安装或已接入。
+- 新增约束：教师/运营后台优先 Ant Design + ProComponents，学生/内容端优先 shadcn/ui + Radix + Tailwind Variants，严格多部件插槽时可选 Park UI + Ark UI + Panda CSS；DS Contract 必须包含 `layout_pattern`、`regions`、`slots`、`variants`、`states`、`responsive_rules`、`token_refs` 和 `traces_to`。
+- 回归要求：用例 F 验证双端路由、AI Contract 字段、基础/产品/领域层边界和实现授权状态；生命周期结构检查应通过。
+
+### v3.4.7：低摩擦对话与 Ready Gate 强化
+
+- 修改位置：更新 `SKILL.md`、`references/low-friction-dialogue.md`、需求收敛/生命周期/账本/状态测试/生产交接规则；新增五角色增强用例集、正式回归记录与版本说明。
+- 修改原因：v3.4.5 已隐藏大部分内部术语，但仍存在标题模板冲突、一个问句包含多个决定、跨项目上下文污染、短答历史重述，以及高影响 Pending 规则混入 Ready Must/AC 的风险。
+- 预期防范的问题：把探索对话做成表单或小型 PRD；对教师、设计、运营和研发使用同一套术语；提前索要产物时生成占位规格；金额、权限或状态触发未定却写出可执行验收；范围优先级 Must 被误当成研发就绪。
+- 回归结果：五角色各 10 轮、共 50 个独立正式运行时会话，50/50 通过增强硬检查；探索轮最多 1 个问题、最长 179 个汉字；独立四维评审 92/100，三个定向发布问题复审通过。
+- 已知边界：最终补丁前的双 Gate 随机重复压力为 5/6；失败样本已修补，最终官方样本通过，但补丁后尚未重跑完整 6 次概率稳定性矩阵。
+
+### v3.4.6：设计系统与学习组件架构协议
+
+- 修改位置：新增 `references/design-system-architecture.md`；更新 `SKILL.md` 的 S4 设计系统路由、`DS-` 追溯、交付形态与质量门槛；扩展教育回归用例 F。
+- 修改原因：中保真原型只能使用 `prototype-neutral`，缺少把基础组件、产品 Token 和学习领域组件分层交接的协议，容易把视觉样式、组件库选择与评分/解锁等业务规则混在一起。
+- 预期防范的问题：把 shadcn/Radix 候选说成已安装；将学习组件名称误写为评分、录音或通关规则；把 SpeakUp Profile 套用到所有教育或后台产品；视觉 Token 反向覆盖已确认页面语义。
+- 修改边界：基础组件库与 SpeakUp Profile 均为按需路由的候选规范；当前 Skill 仅产出 `DS-` Contract、Token 语义和组件映射，不安装包、不注册组件、不写生产工程代码。基础库、品牌 Profile 与实际接入均保持独立确认和授权。
+- 回归要求：用例 F 必须保持教育 MVP、角色边界、状态/验收与未确认业务规则；同时验证基础层/产品层/领域层分离、组件追溯和候选实现边界。Skill 结构校验必须通过。
+
+### v3.4.5：角色化低摩擦对话呈现层
+
+- 修改位置：新增 `references/low-friction-dialogue.md`；更新 `SKILL.md` 的默认交互、S0–S3 路由与最小回复模板；补充 5W2H 路由说明、用例 I 和生命周期检查。
+- 修改原因：50 轮无污染角色化基线显示，教师、产品、设计、运营和研发角色的回复频繁将 `S1/S2`、`Needs Decision`、`DEC`、`PUI` 等内部语言直接暴露给用户，且多个探索轮默认抛出两个独立问题，低摩擦原则没有形成执行层。
+- 预期防范的问题：非专业用户被内部术语阻塞；角色化开场缺失；重复或复合提问；5W2H 退化为问卷；需求状态与用户可见表达混淆。
+- 修改边界：内部 ProjectSnapshot、DEC/CHG、状态机、PUI Contract 和生产交接规则保持不变；仅增加面向用户的呈现层与路由，用户明确要求规格/交接时仍可展示稳定 ID。
+- 回归要求：复跑 `tests/role-dialogue-50` 的五角色 50 轮基线；用例 A、E、I 与 v3.4 生命周期检查必须通过。
+- 回归结果：同一无污染五角色矩阵已完成 50/50 正式运行时回归；探索表层的内部控制词从 15/20 降至 0/20，超过一个问题从 12/20 降至 0/20。详见 `tests/role-dialogue-50/v3.4.5-low-friction/review.md`。
+
+### v3.4.4：原型 UI Contract 层
+
+- 修改位置：新增 `references/prototype-ui-contract.md`；更新 `SKILL.md` 的 S3→S4 路由、`ProjectSnapshot`、中保真交接规范和对抗用例 H。
+- 修改原因：页面规格进入中保真原型前缺少统一的页面骨架、信息层级、操作层级、组件语义、页面状态和上下游语义边界，原型容易直接滑向视觉稿或静默补业务规则。
+- 预期防范的问题：主次操作不清、P0/P1/P2 缺失、状态出口遗漏、原型中视觉默认被误认为品牌方案、最终设计改动语义、Contract 与功能/验收不可追溯。
+- 交付边界：新增 `PUI-` Contract 和 `prototype-neutral` 原型展示规范；不涉及生产组件库、Registry、MCP、前端实现或部署。
+- 回归要求：用例 H 验证 Contract 在中保真前建立；v3.4 生命周期回归、五子棋用例 D 和 Skill 结构校验不得退化。
+
+### v3.4.3：轻量总控与全周期回归
+
+- 修改位置：重构 `SKILL.md` 为轻量总控；同步 README、Agent 元数据和 Dify/Coze/GPTs 映射；新增 `tests/v3.4-lifecycle-cases.md` 与 `tests/run_v34_lifecycle_checks.py`。
+- 修改原因：主入口同时承载通用访谈、教育规则、A2UI、原型、运行时和工程交付细节，导致每次调用加载大量不相关上下文，主链路反而不清楚。
+- 预期防范的问题：专项规则抢占核心流程、平台映射仍沿用旧四阶段、压缩入口时遗漏 DEC/状态/交付约束、只检查关键词却没有跨阶段回归场景。
+- 回归要求：主入口不超过 220 行；所有新参考可从入口发现；H–L 五类场景、旧用例 D 及 Skill 结构校验均通过。
+- 首次回归发现：用例 D 的已确认范围“好友互通”被近义改写，语义基本保留但稳定范围名称丢失，导致自动追溯失败；已将“权威命名原样保留”升级为 ProjectSnapshot 接口约束并安排复跑。
+- 回归结果：v3.4 生命周期契约 18/18 通过；用例 D 重新执行真实 Codex 运行后四维 100/100，静态、运行时和下游产物检查全部通过。
+
+### v3.4.2：产品运营闭环与专项路由
+
+- 修改位置：新增 `references/product-operations-loop.md`；在 `SKILL.md` 增加 S7 路由，并接入 `$product-management-workflows` 的研究、竞品、路线图、利益相关方更新和指标复盘。
+- 修改原因：现有 Skill 在 PRD/原型交付后缺少稳定的反馈入口，研究、指标和路线图容易形成孤立报告或第二份权威需求。
+- 预期防范的问题：少量反馈直接变成需求、竞品功能直接抄入范围、路线图只加不减、指标相关性被写成因果、专项工作流重复生成 PRD。
+- 回归要求：五个专项工作流只写回 ProjectSnapshot；Feature Spec 不建立平行 PRD；复盘必须形成 Continue/Adjust/Investigate/Stop 动作，基线变化必须创建 DEC/CHG。
+
+### v3.4.1：中保真交互线稿与证据回写
+
+- 修改位置：新增 `references/medium-fidelity-handoff.md`；更新跨 Skill、原型证据与生产交接规范。
+- 修改原因：v0.3 能验证页面关系，但从结构线框到生产交接之间缺少稳定的中保真定义，真实信息密度、主次操作、异常恢复和 Mock 边界容易遗漏。
+- 预期防范的问题：用高保真装饰掩盖规则缺口、页面样例静默改业务、技术回归被当作目标用户有效、原型发现未回写 DEC/CHG、产物没有 ART 追溯。
+- 回归要求：Ready for Prototype 后才能进入 v0.4；主路径和关键异常可操作；技术、目标用户、交接证据分开；真实用户证据缺失时不得标记 v1.0。
+
+### v3.4.0：统一生命周期与 ProjectSnapshot
+
+- 修改位置：新增 `references/lifecycle-orchestration.md`、`references/project-snapshot.md` 和 `references/requirements-convergence.md`；重构 Skill 主链路。
+- 修改原因：原四阶段需求流程与原型版本、跨 Skill Delivery、生产交接和运营活动分别维护状态，长周期项目容易出现多份相互冲突的“当前版本”。
+- 预期防范的问题：需求 Ready 与原型 Ready 混用、文件生成被说成交付完成、变更只改页面不改 AC/测试、研发与运营使用不同基线。
+- 回归要求：所有项目使用 S0–S7 与统一状态词表；单一 ProjectSnapshot 覆盖产品、证据、治理、架构与交付；每个 Must 保持目标到 ART 的稳定追溯。
+
 ### v3.3.0：结构原型交接与验证
 
 - 修改位置：`SKILL.md` 原型递进交付、跨 Skill 交付协议；新增 `references/structural-prototype-handoff.md`。
