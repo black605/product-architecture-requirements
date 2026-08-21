@@ -2,7 +2,14 @@
 
 > 中文版｜通过分步对话，把模糊的产品想法沉淀为可评审、可设计、可研发交接的产品规格。
 
-`product-architecture-requirements` 是一个面向产品经理、业务专家/教师、设计师与运营人员的 Codex Skill。它不会一开始就输出一份假设很多的 PRD，而是用通俗、可修改的自然语言对话，逐步确认业务目标、角色、流程和边界，再生成完整的产品架构方案。
+`product-architecture-requirements` 是一个面向产品经理、业务专家/教师、设计师与运营人员的 Codex Skill。它通过简洁的自然语言对话，将模糊想法逐步沉淀为业务流程、功能架构、页面结构、组件状态和可验收的交接方案；不会用一份假设很多的 PRD 代替需求确认。
+
+## 本次更新：v3.3
+
+- 新增 v0.3 结构原型交接：先验证页面路径、锁定/完成/异常状态，再进入视觉或研发。
+- 明确本地 Mock、真实服务、用户测试和生产发布的证据边界，避免把演示当成交付完成。
+- 补齐 A2UI 输入、字段优先级、防御性 UI、可视化 Patch、运行时质量门禁和资产包交接规范。
+- 纳入完整交付用例与迭代回归记录，确保需求、原型、测试与交接可追溯。
 
 ## 能解决什么问题
 
@@ -31,7 +38,7 @@
 将仓库克隆到 Codex 的 skills 目录；下面的目标路径请替换为自己电脑上的实际路径：
 
 ```bash
-git clone https://github.com/black605/-skill.git /path/to/.codex/skills/product-architecture-requirements
+git clone https://github.com/black605/product-architecture-requirements.git /path/to/.codex/skills/product-architecture-requirements
 ```
 
 重新打开 Codex 或开启一个新对话后，即可通过 Skill 名称调用。若本机已存在同名目录，请先备份其中内容，避免覆盖自己的修改。
@@ -192,4 +199,4 @@ $product-architecture-requirements
 
 ---
 
-仓库地址：[github.com/black605/-skill](https://github.com/black605/-skill)
+仓库地址：[github.com/black605/product-architecture-requirements](https://github.com/black605/product-architecture-requirements)
