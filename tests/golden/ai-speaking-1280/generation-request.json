@@ -1,0 +1,157 @@
+{
+  "request_id": "PGR-001",
+  "session_id": "PRS-001",
+  "project_id": "PROJECT-AI-SPEAKING-001",
+  "baseline_version": "v0.1",
+  "status": "ready-to-generate",
+  "title": "AI 口语课后复习 · Harness Golden Case",
+  "contracts": {
+    "profile_id": "UIP-001",
+    "pui_contracts": ["PUI-001"],
+    "fit_decision_id": "TFD-001",
+    "frame_contract_id": "FRM-001",
+    "flow_contract_id": "FLOW-001",
+    "selected_template_instance_id": null,
+    "prototype_candidate_id": "PTC-001",
+    "asset_slot_contracts": ["ASC-001"]
+  },
+  "rendering": {
+    "mode": "controlled",
+    "arbitrary_components_allowed": false,
+    "arbitrary_html_allowed": false,
+    "output_format": "single-html"
+  },
+  "pages": [
+    {
+      "page_id": "P-001",
+      "state_id": "COURSE_MAP",
+      "components": [
+        {"component_id": "C-001", "type": "heading", "region_id": "REG-TOP", "priority": "P0", "level": 1, "label": "本课复习地图", "traces_to": ["F-001", "P-001"]},
+        {"component_id": "C-002", "type": "meta", "region_id": "REG-TOP", "priority": "P1", "items": ["主题：餐厅点餐", "预计 12 分钟", "恢复点：学习目标"], "traces_to": ["F-002"]},
+        {"component_id": "C-003", "type": "progress", "region_id": "REG-NAV", "priority": "P1", "label": "复习进度 0/6", "value": 0, "traces_to": ["F-001"]},
+        {"component_id": "C-004", "type": "step-list", "region_id": "REG-NAV", "priority": "P1", "items": ["学习目标", "单词跟读", "重点句跟读", "完整对话", "问题词纠音", "学习报告"], "traces_to": ["FLOW-001"]},
+        {"component_id": "C-005", "type": "heading", "region_id": "REG-MAIN", "priority": "P0", "level": 2, "label": "继续复习：餐厅点餐", "traces_to": ["F-001", "P-001"]},
+        {"component_id": "C-006", "type": "text", "region_id": "REG-MAIN", "priority": "P0", "label": "完成本课重点表达、跟读和完整点餐对话，最后查看未掌握知识点。", "traces_to": ["DEC-001", "AC-001"]},
+        {"component_id": "C-007", "type": "card-list", "region_id": "REG-MAIN", "priority": "P1", "items": ["重点词：menu / order / please", "重点句：I'd like...", "真实语音评分：Mock"], "traces_to": ["F-001"]},
+        {"component_id": "C-008", "type": "action", "region_id": "REG-MAIN", "priority": "P0", "level": "primary", "action_id": "ACT-CONTINUE", "label": "继续到学习目标", "traces_to": ["TR-001", "AC-002"]}
+      ]
+    },
+    {
+      "page_id": "P-002",
+      "state_id": "LEARNING_GOAL",
+      "components": [
+        {"component_id": "C-101", "type": "heading", "region_id": "REG-TOP", "priority": "P0", "level": 1, "label": "学习目标", "traces_to": ["F-001", "P-002"]},
+        {"component_id": "C-102", "type": "meta", "region_id": "REG-TOP", "priority": "P1", "items": ["步骤 1/6", "保存位置：learning-goal"], "traces_to": ["F-002"]},
+        {"component_id": "C-103", "type": "progress", "region_id": "REG-NAV", "priority": "P1", "label": "复习进度 1/6", "value": 16, "traces_to": ["F-001"]},
+        {"component_id": "C-104", "type": "step-list", "region_id": "REG-NAV", "priority": "P1", "items": ["当前：学习目标", "下一步：单词跟读", "之后：重点句与对话"], "traces_to": ["FLOW-001"]},
+        {"component_id": "C-105", "type": "heading", "region_id": "REG-MAIN", "priority": "P0", "level": 2, "label": "学完你能够完成一次基础点餐", "traces_to": ["F-001", "AC-001"]},
+        {"component_id": "C-106", "type": "card-list", "region_id": "REG-MAIN", "priority": "P0", "items": ["听懂服务员的常见提问", "用 I'd like... 完成点餐", "识别并修正问题词"], "traces_to": ["DEC-001", "F-001"]},
+        {"component_id": "C-107", "type": "asset-slot", "region_id": "REG-MAIN", "priority": "P1", "slot_id": "ASLOT-TEACHER", "ratio": "16:9", "label": "外教示范视频位置", "traces_to": ["ASC-001"]},
+        {"component_id": "C-108", "type": "action", "region_id": "REG-MAIN", "priority": "P0", "level": "primary", "action_id": "ACT-START", "label": "开始单词跟读", "traces_to": ["TR-002", "AC-001"]}
+      ]
+    },
+    {
+      "page_id": "P-003",
+      "state_id": "WORD_REPEAT",
+      "components": [
+        {"component_id": "C-201", "type": "heading", "region_id": "REG-TOP", "priority": "P0", "level": 1, "label": "单词跟读", "traces_to": ["F-001", "P-003"]},
+        {"component_id": "C-202", "type": "meta", "region_id": "REG-TOP", "priority": "P1", "items": ["步骤 2/6", "当前词：menu", "语音能力：Mock"], "traces_to": ["F-001"]},
+        {"component_id": "C-203", "type": "progress", "region_id": "REG-NAV", "priority": "P1", "label": "复习进度 2/6", "value": 33, "traces_to": ["F-001"]},
+        {"component_id": "C-204", "type": "step-list", "region_id": "REG-NAV", "priority": "P1", "items": ["menu", "order", "please"], "traces_to": ["FLOW-001"]},
+        {"component_id": "C-205", "type": "heading", "region_id": "REG-MAIN", "priority": "P0", "level": 2, "label": "menu", "traces_to": ["F-001", "AC-001"]},
+        {"component_id": "C-206", "type": "status", "region_id": "REG-MAIN", "priority": "P0", "label": "点击录音后朗读；当前原型仅模拟录音与结果。", "traces_to": ["DEC-001", "AC-001"]},
+        {"component_id": "C-207", "type": "card-list", "region_id": "REG-MAIN", "priority": "P1", "items": ["示范音播放", "录音中 listening", "提交后 completed"], "traces_to": ["FLOW-001"]},
+        {"component_id": "C-208", "type": "action", "region_id": "REG-MAIN", "priority": "P0", "level": "primary", "action_id": "ACT-WORD-DONE", "label": "完成单词跟读", "traces_to": ["TR-003", "AC-001"]}
+      ]
+    },
+    {
+      "page_id": "P-004",
+      "state_id": "SENTENCE_REPEAT",
+      "components": [
+        {"component_id": "C-301", "type": "heading", "region_id": "REG-TOP", "priority": "P0", "level": 1, "label": "重点句跟读", "traces_to": ["F-001", "P-004"]},
+        {"component_id": "C-302", "type": "meta", "region_id": "REG-TOP", "priority": "P1", "items": ["步骤 3/6", "重点表达：I'd like..."], "traces_to": ["F-001"]},
+        {"component_id": "C-303", "type": "progress", "region_id": "REG-NAV", "priority": "P1", "label": "复习进度 3/6", "value": 50, "traces_to": ["F-001"]},
+        {"component_id": "C-304", "type": "step-list", "region_id": "REG-NAV", "priority": "P1", "items": ["听示范", "分段跟读", "整句跟读"], "traces_to": ["FLOW-001"]},
+        {"component_id": "C-305", "type": "heading", "region_id": "REG-MAIN", "priority": "P0", "level": 2, "label": "I'd like a sandwich, please.", "traces_to": ["F-001", "AC-001"]},
+        {"component_id": "C-306", "type": "text", "region_id": "REG-MAIN", "priority": "P0", "label": "先听完整示范，再按意群跟读，最后完成整句。", "traces_to": ["DEC-001", "AC-001"]},
+        {"component_id": "C-307", "type": "status", "region_id": "REG-MAIN", "priority": "P1", "label": "长句文本自动换行，主操作保持在内容区内。", "traces_to": ["FRM-001"]},
+        {"component_id": "C-308", "type": "action", "region_id": "REG-MAIN", "priority": "P0", "level": "primary", "action_id": "ACT-SENTENCE-DONE", "label": "完成重点句", "traces_to": ["TR-004", "AC-001"]}
+      ]
+    },
+    {
+      "page_id": "P-005",
+      "state_id": "ROLEPLAY",
+      "components": [
+        {"component_id": "C-401", "type": "heading", "region_id": "REG-TOP", "priority": "P0", "level": 1, "label": "完整点餐对话", "traces_to": ["F-001", "P-005"]},
+        {"component_id": "C-402", "type": "meta", "region_id": "REG-TOP", "priority": "P1", "items": ["步骤 4/6", "角色：顾客", "回合 1/3"], "traces_to": ["F-001"]},
+        {"component_id": "C-403", "type": "progress", "region_id": "REG-NAV", "priority": "P1", "label": "复习进度 4/6", "value": 66, "traces_to": ["F-001"]},
+        {"component_id": "C-404", "type": "step-list", "region_id": "REG-NAV", "priority": "P1", "items": ["服务员提问", "学生回答", "确认订单"], "traces_to": ["FLOW-001"]},
+        {"component_id": "C-405", "type": "heading", "region_id": "REG-MAIN", "priority": "P0", "level": 2, "label": "What would you like to order?", "traces_to": ["F-001", "AC-001"]},
+        {"component_id": "C-406", "type": "asset-slot", "region_id": "REG-MAIN", "priority": "P1", "slot_id": "ASLOT-SCENE", "ratio": "4:3", "label": "点餐场景插图位置", "traces_to": ["ASC-001"]},
+        {"component_id": "C-407", "type": "input", "region_id": "REG-MAIN", "priority": "P0", "label": "你的回答", "placeholder": "I'd like...", "traces_to": ["F-001", "AC-001"]},
+        {"component_id": "C-408", "type": "action", "region_id": "REG-MAIN", "priority": "P0", "level": "primary", "action_id": "ACT-ROLEPLAY-DONE", "label": "提交完整对话", "traces_to": ["TR-005", "AC-001"]}
+      ]
+    },
+    {
+      "page_id": "P-006",
+      "state_id": "GENERATING",
+      "components": [
+        {"component_id": "C-501", "type": "heading", "region_id": "REG-TOP", "priority": "P0", "level": 1, "label": "正在生成练习反馈", "traces_to": ["F-001", "P-006"]},
+        {"component_id": "C-502", "type": "meta", "region_id": "REG-TOP", "priority": "P1", "items": ["状态：generating", "超时：3 秒", "最多重试：2 次"], "traces_to": ["FLOW-001"]},
+        {"component_id": "C-503", "type": "progress", "region_id": "REG-NAV", "priority": "P1", "label": "复习进度 4/6", "value": 66, "traces_to": ["F-001"]},
+        {"component_id": "C-504", "type": "step-list", "region_id": "REG-NAV", "priority": "P1", "items": ["已提交对话", "正在分析问题词", "下一步：纠音"], "traces_to": ["FLOW-001"]},
+        {"component_id": "C-505", "type": "heading", "region_id": "REG-MAIN", "priority": "P0", "level": 2, "label": "请稍候，正在整理问题词", "traces_to": ["F-001", "AC-001"]},
+        {"component_id": "C-506", "type": "status", "region_id": "REG-MAIN", "priority": "P0", "label": "超时后进入可重试页面，不会显示虚假的成功结果。", "traces_to": ["TR-007", "T-003"]},
+        {"component_id": "C-507", "type": "action", "region_id": "REG-MAIN", "priority": "P0", "level": "primary", "action_id": "ACT-CANCEL-GENERATING", "label": "返回课程地图", "traces_to": ["TR-011", "AC-001"]}
+      ]
+    },
+    {
+      "page_id": "P-007",
+      "state_id": "GENERATION_TIMEOUT",
+      "components": [
+        {"component_id": "C-601", "type": "heading", "region_id": "REG-TOP", "priority": "P0", "level": 1, "label": "反馈生成超时", "traces_to": ["F-001", "P-007"]},
+        {"component_id": "C-602", "type": "meta", "region_id": "REG-TOP", "priority": "P1", "items": ["状态：timeout", "练习记录已保留"], "traces_to": ["FLOW-001"]},
+        {"component_id": "C-603", "type": "progress", "region_id": "REG-NAV", "priority": "P1", "label": "复习进度 4/6", "value": 66, "traces_to": ["F-001"]},
+        {"component_id": "C-604", "type": "step-list", "region_id": "REG-NAV", "priority": "P1", "items": ["对话已保存", "反馈待生成", "可重新尝试"], "traces_to": ["FLOW-001"]},
+        {"component_id": "C-605", "type": "heading", "region_id": "REG-MAIN", "priority": "P0", "level": 2, "label": "暂时没有得到纠音结果", "traces_to": ["F-001", "AC-001"]},
+        {"component_id": "C-606", "type": "status", "region_id": "REG-MAIN", "priority": "P0", "label": "你的对话记录没有丢失，可以重试；超过上限后返回课程地图。", "traces_to": ["TR-007", "TR-008"]},
+        {"component_id": "C-607", "type": "action", "region_id": "REG-MAIN", "priority": "P0", "level": "primary", "action_id": "ACT-RETRY", "label": "重新生成反馈", "traces_to": ["TR-008", "T-003"]}
+      ]
+    },
+    {
+      "page_id": "P-008",
+      "state_id": "CORRECTION",
+      "components": [
+        {"component_id": "C-701", "type": "heading", "region_id": "REG-TOP", "priority": "P0", "level": 1, "label": "问题词纠音", "traces_to": ["F-001", "P-008"]},
+        {"component_id": "C-702", "type": "meta", "region_id": "REG-TOP", "priority": "P1", "items": ["步骤 5/6", "问题词：order", "评分结果：Mock"], "traces_to": ["F-001"]},
+        {"component_id": "C-703", "type": "progress", "region_id": "REG-NAV", "priority": "P1", "label": "复习进度 5/6", "value": 83, "traces_to": ["F-001"]},
+        {"component_id": "C-704", "type": "step-list", "region_id": "REG-NAV", "priority": "P1", "items": ["查看问题", "听示范", "再次跟读"], "traces_to": ["FLOW-001"]},
+        {"component_id": "C-705", "type": "heading", "region_id": "REG-MAIN", "priority": "P0", "level": 2, "label": "order：注意首音节和尾音", "traces_to": ["F-001", "AC-001"]},
+        {"component_id": "C-706", "type": "card-list", "region_id": "REG-MAIN", "priority": "P0", "items": ["问题：尾音不清晰", "建议：放慢后半段", "再次练习结果仅作原型示例"], "traces_to": ["DEC-001", "AC-001"]},
+        {"component_id": "C-707", "type": "action", "region_id": "REG-MAIN", "priority": "P0", "level": "primary", "action_id": "ACT-FINISH", "label": "查看学习报告", "traces_to": ["TR-009", "AC-001"]}
+      ]
+    },
+    {
+      "page_id": "P-009",
+      "state_id": "LEARNING_REPORT",
+      "components": [
+        {"component_id": "C-801", "type": "heading", "region_id": "REG-TOP", "priority": "P0", "level": 1, "label": "学习报告", "traces_to": ["F-001", "P-009"]},
+        {"component_id": "C-802", "type": "meta", "region_id": "REG-TOP", "priority": "P1", "items": ["步骤 6/6", "复习已完成", "恢复点：completed"], "traces_to": ["F-002"]},
+        {"component_id": "C-803", "type": "progress", "region_id": "REG-NAV", "priority": "P1", "label": "复习进度 6/6", "value": 100, "traces_to": ["F-001"]},
+        {"component_id": "C-804", "type": "step-list", "region_id": "REG-NAV", "priority": "P1", "items": ["已完成：单词", "已完成：重点句", "待加强：order"], "traces_to": ["FLOW-001"]},
+        {"component_id": "C-805", "type": "heading", "region_id": "REG-MAIN", "priority": "P0", "level": 2, "label": "你已完成本课复习", "traces_to": ["F-001", "AC-001"]},
+        {"component_id": "C-806", "type": "card-list", "region_id": "REG-MAIN", "priority": "P0", "items": ["已掌握：menu / please", "待加强：order 尾音", "下一次建议：从问题词纠音开始"], "traces_to": ["DEC-001", "AC-001"]},
+        {"component_id": "C-807", "type": "status", "region_id": "REG-MAIN", "priority": "P1", "label": "结果为原型 Mock；未连接真实学习数据或语音服务。", "traces_to": ["ART-001"]},
+        {"component_id": "C-808", "type": "action", "region_id": "REG-MAIN", "priority": "P0", "level": "primary", "action_id": "ACT-REVIEW-COURSE", "label": "返回课程地图", "traces_to": ["TR-010", "AC-002"]}
+      ]
+    }
+  ],
+  "boundaries": {
+    "semantic_locked": ["课后复习主任务", "六步学习流程", "唯一主操作", "具体恢复位置", "超时和重试出口"],
+    "visual_flexible": ["品牌色", "字体", "圆角", "阴影", "插画", "图标", "动效风格"],
+    "pending_decisions": [],
+    "forbidden_assumptions": ["不得声称真实语音评分已接入", "不得带入历史项目素材"],
+    "mock_capabilities": ["录音", "语音评分", "纠音结果"],
+    "real_capabilities": ["页面状态切换", "主流程路径", "具体恢复键表达"]
+  }
+}

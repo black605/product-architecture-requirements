@@ -11,6 +11,8 @@ prototype_generation_request:
     profile_id: UIP-001
     pui_contracts: []
     fit_decision_id: TFD-001
+    frame_contract_id: FRM-001
+    flow_contract_id: FLOW-001
     selected_template_instance_id: null
     prototype_candidate_id: null
     asset_slot_contracts: []
@@ -48,6 +50,7 @@ prototype_generation_request:
   rendering:
     mode: controlled
     arbitrary_components_allowed: false
+    arbitrary_html_allowed: false
     arbitrary_business_actions_allowed: false
     output_format: pending
     output_location: pending

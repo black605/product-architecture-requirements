@@ -1,0 +1,30 @@
+schema_version: v1
+
+harness_handoff_package:
+  package_id: HPKG-001
+  project_id: PROJECT-001
+  snapshot_revision: 1
+  run_id: HRUN-001
+  release_status: blocked # passed / blocked
+  artifacts:
+    master_prd: pending
+    frame_contracts: []
+    flow_contracts: []
+    asset_slot_contracts: []
+    prototype_files: []
+    acceptance_test_map: pending
+    validation_report: pending
+  boundaries:
+    semantic_locked: []
+    visual_flexible: []
+    pending_decisions: []
+    forbidden_assumptions: []
+    mock_capabilities: []
+    real_capabilities: []
+  evidence:
+    contract_lint: pending
+    browser_geometry: pending
+    task_flow: pending
+    visual_diff: pending
+    target_user_validation: pending
+  owner: pending

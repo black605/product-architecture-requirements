@@ -4,7 +4,6 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 ---
 
 # 产品架构与需求全周期编排
-
 把用户的零散想法持续推进为“可决策、可设计、可研发、可测试、可复盘”的产品基线。核心不是一次性写出长 PRD，而是用短轮次确认高影响规则，并让所有下游产物共享同一份权威状态。
 
 ## 角色与边界
@@ -19,16 +18,16 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 开始工作前读取 [产品全周期编排与阶段门槛](references/lifecycle-orchestration.md) 和 [ProjectSnapshot 权威状态模型](references/project-snapshot.md)。所有项目使用同一条链路：
 
 ```text
-输入归集 → 需求收拢 → 产品架构 → 规格生成 → 中保真线稿
-→ 方案验证 → 生产交付 → 运营复盘
+项目识别 → 输入归集 → 需求收拢 → 产品架构 → 规格生成
+→ Contract 编译 → 中保真线稿 → 方案验证 → 生产交付 → 运营复盘
 ```
 
-`ProjectSnapshot` 是唯一事实源。对话结论、PRD、原型、测试、交接和指标复盘都只更新或投影这份状态，不维护互相矛盾的平行版本。
+首次输入、恢复历史项目或资料边界变化时，先读取 [项目身份识别闸门](references/project-identity-gate.md)，明确 `resume/fork/new/needs_confirmation` 后再加载项目上下文。`ProjectSnapshot` 是唯一事实源；进入 S3 后必须持久化为项目文件并记录 revision、事件日志和运行目录，不能只依赖长对话记忆。
 
 ### 状态与追溯
 
 - 阶段状态只使用：`Exploring`、`Needs Decision`、`Ready for Architecture`、`Ready for Specification`、`Ready for Prototype`、`In Validation`、`Validation Passed`、`Handoff Ready`、`Blocked`、`Superseded`。
-- 稳定 ID 使用 `OBJ/DEC/CHG/F/FL/TR/P/C/DS/PUI/UIP/TFD/ASC/PTC/PRS/AC/T/ART`；编号创建后不复用。
+- 稳定 ID 使用 `PID/OBJ/DEC/CHG/F/FL/TR/P/C/DS/PUI/UIP/TFD/ASC/PTC/PRS/PGR/FRM/FLOW/AC/T/ART/HRUN/HPKG`；编号创建后不复用。
 - 进入规格或交付后，创建 Profile、适配、素材占位、候选、原型会话或模具清单时必须显示对应 `UIP/TFD/ASC/PTC/PRS/TMF-` ID；尚不能正式编号时写 `前缀-待登记`，不能省略对象身份。
 - 用户或权威资料已确认的范围项、对象名、功能名和状态名在快照与交接中原样保留；可以追加通俗解释，但不能只用同义改写替代权威名称。
 - 每个 Must 至少形成“目标/用户任务 → DEC → F → FL/TR → P/系统入口 → AC → T → ART”的追溯链。
@@ -99,13 +98,13 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 
 用户要验证页面、交互或进入设计交接时读取 [v0.4 中保真交互线稿交接](references/medium-fidelity-handoff.md)。若需求仍只足以验证页面关系，先按 [v0.3 结构原型交接](references/structural-prototype-handoff.md) 生成低保真。
 
-进入中保真前必须建立 [原型 UI Contract](references/prototype-ui-contract.md)：定义页面骨架、P0/P1/P2 信息层级、主次/危险/返回操作、组件业务语义、加载/空/错误/无权限等页面状态，以及 `semantic_locked` / `visual_flexible` / `pending_decisions` / `forbidden_assumptions`。默认使用标记为 `prototype-only` 的 `prototype-neutral` 展示规范；它不等同于品牌视觉、前端组件库或生产实现。
+进入中保真前必须建立 [原型 UI Contract](references/prototype-ui-contract.md)，再按 [可执行 Frame / Flow Contract](references/prototype-frame-flow-contract.md) 编译目标视口几何、区域约束、任务状态、异步兜底和具体恢复位置。默认使用标记为 `prototype-only` 的 `prototype-neutral`；Schema、项目身份或 Must 追溯未通过时禁止生成。
 
 进入任何新项目原型前，还必须按 [项目 UI Profile 与证据输入](references/project-ui-profile.md) 建立独立 `UIP-`，再按 [原型模具目录](references/prototype-template-catalog.md) 和 [原型模具适配闸门](references/prototype-template-fit.md) 输出 `TFD-`。逐项比较目标用户、核心任务、页面类型、信息层级、关键区域、设备尺寸和交互状态；不得只写“相似、可复用或不匹配”。旧项目只能提供候选结构证据，文案、视觉资产、用户数据和业务规则默认禁止继承。
 
 `TFD-` 为 `no_match` 时读取 [项目级候选模具](references/prototype-candidate-generation.md)；页面存在图片、插画、图标、音视频或文档区域时同时读取 [原型素材占位 Contract](references/prototype-asset-slots.md)。只用通用网格、语义组件和 `prototype-neutral` 生成当前项目的 `PTC-`，素材只标注位置、比例、状态和替换规则。
 
-用户希望在沟通中直接生成和修改原型时读取 [对话式原型会话](references/conversational-prototype-session.md)：先展示页面、模具、扩展、占位和语义锁定摘要，再创建受控 Generation Request；预览返回后接受自然语言 Patch。L1/L2 可逆修改重渲染，L3 业务变化创建 DEC/CHG 并退回上游。没有真实生成证据时只交付请求，不声称原型已完成。
+用户希望在沟通中直接生成和修改原型时读取 [对话式原型会话](references/conversational-prototype-session.md) 和 [原型生产 Harness](references/prototype-harness.md)：先展示页面、模具、扩展、占位和语义锁定摘要，再创建受控 Generation Request；模型只决定语义和允许组合，模板/项目候选负责几何与组件白名单。L1/L2 修改重渲染，L3 创建 DEC/CHG 并退回上游；没有 `lint → render → test → report` 真实返回时不声称原型完成。
 
 任何原型回改须按顶部固定 Patch 首行输出，下一行写影响范围，再描述页面变化。L1/L2 为 `applied` 时先递增 Contract/Generation Request 版本，后续 Patch 以该版本为基线；没有重渲染能力时单独保留旧产物版本，不把 Contract 更新冒充页面已生成。L3 或含未定义触发词的变化禁止以“已确认、已改成、已应用”开头：先建立 Proposed/Blocked 的 DEC/CHG；编号暂时不可分配时也要写 `DEC-待登记 / CHG-待登记`，不能省略。随后降低受影响 PRS/TFD 状态并只追问一个前置规则。
 
@@ -128,6 +127,8 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 3. 交接完整性：设计、研发、测试和运营是否知道如何继续。
 
 一类证据不能替代另一类。尚未发生的用户测试只能交付计划、样本和记录模板；真实用户证据缺失时不得标记 v1.0。多人测试须有相同、可重复的干净起点，测试中不由主持人替用户执行关键步骤。
+
+技术验证必须优先读取 Harness 的真实浏览器、几何、任务流、素材扫描和视觉差异证据；关键词、文件存在或 Schema 文本检查只能证明协议基础，不能证明页面可用。
 
 项目候选模具需要验证或登记时读取 [原型模具生命周期与登记治理](references/prototype-template-lifecycle.md)。结构、隔离、技术、任务、追溯和来源证据齐备后才可提交 `TMF-`；实际 Catalog/Registry/仓库写入仍需授权和真实返回证据，登记不能替代工程消费或生产部署。
 
@@ -162,6 +163,7 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 | 模具无匹配或原型包含未来素材位置 | [项目级候选模具](references/prototype-candidate-generation.md) 与 [原型素材占位 Contract](references/prototype-asset-slots.md) | 生成 project-local 黑白候选和语义占位，不带入旧项目资产 |
 | 在当前沟通中生成、预览或自然语言修改原型 | [对话式原型会话](references/conversational-prototype-session.md) | 维护 PRS、受控 Generation Request、Patch、版本和返回审计，不做黑盒一次性生成 |
 | 候选模具验证、登记、升级或停用 | [原型模具生命周期与登记治理](references/prototype-template-lifecycle.md) | 维护 TMF、证据、作用域和版本；不把项目候选自动升级为共享或生产资产 |
+| 可运行中保真、布局/任务验证、失败修复或发布证据 | [可执行 Frame / Flow Contract](references/prototype-frame-flow-contract.md) 与 [原型生产 Harness](references/prototype-harness.md) | 编译 Contract、执行受控渲染和真实浏览器验证；局部修复最多两次且不改变业务语义 |
 | 设计系统、组件规范、Token、插槽/变体、shadcn/Radix、Ant Design 或学习组件 | [设计系统与学习组件架构协议](references/design-system-architecture.md) | 输出布局、插槽、变体、状态、Token 和基础/领域组件映射；不声称已安装、注册或上线 |
 | 模糊想法、非专业用户、角色化需求确认 | [低摩擦自然语言对话](references/low-friction-dialogue.md) | 用角色语言进行单问题推进，内部追溯不默认外露 |
 | 最新案例、开源或竞品证据 | [GitHub/对标参考](references/github-benchmarks.md) 或联网检索 | 优先官方来源，区分事实、推断与待验证 |
@@ -192,10 +194,11 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 - 需求、技术实现和证据结论分开；不伪造用户数据、行业事实、业务规则、调研或上线结果。
 - 涉及个人、学生、员工、支付或敏感数据时，明确目的、可见范围、保留期限、导出/删除和责任角色。
 - 生产交付前执行 Ready 检查；交付返回后执行 Done/返回审计。缺少测试证据不得标记 Done。
+- 原型发布必须同时通过 Contract lint、真实浏览器几何、主任务、素材政策和视觉差异门槛；文档评分不能替代这些证据。
 
 ## Skill 自身迭代
 
-用户要求审查或升级本 Skill 时，从 [极限测试用例](tests/adversarial-cases.md) 选择与变更最相关的场景，按 [四维评估量表](references/evaluation-rubric.md) 做定向修补并更新 `CHANGELOG.md`。跨 Skill、DEC/CHG 或状态门槛变更必须回归五子棋用例 D；教育规则或学习组件 Profile 变更必须回归用例 F。主入口只保留共享编排与路由，专项 schema、模板和长流程放入 references。
+用户要求审查或升级本 Skill 时，从 [极限测试用例](tests/adversarial-cases.md) 选择一个相关场景，按 [四维评估量表](references/evaluation-rubric.md) 定向修补并更新 `CHANGELOG.md`。涉及原型时还必须把失败沉淀为标准错误、最小 fixture 和可执行回归，并运行 `./harness all`；跨 Skill/状态门槛回归五子棋 D，教育或学习组件回归 F。主入口只保留共享编排与路由。
 
 ## 最小回复模板
 

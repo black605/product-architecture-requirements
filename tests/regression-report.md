@@ -1,5 +1,26 @@
 # D4 回归验证报告
 
+## v4.0.0 可执行原型生产 Harness 回归
+
+2026-08-24 将 v3.7 的需求治理与模具协议升级为可执行 Contract、确定性渲染、真实浏览器验证和有限失败回流。
+
+| 验证层 | 结果 | 证据 |
+|---|---|---|
+| Skill 结构 | 通过 | `quick_validate.py` |
+| v4.0 行为回归 | 23/23 | `run_v40_harness_checks.py` |
+| AI 口语 Golden Case Contract | 通过 | `golden/ai-speaking-1280/*.json` |
+| 1280×800 真实浏览器几何 | 通过 | 无越界、非预期重叠、P0 缺失或多主操作 |
+| 六步主任务 | 通过 | COURSE_MAP → LEARNING_REPORT，含 generating 自动完成与 timeout/retry 旁路 |
+| 素材政策 | 通过 | 只使用 neutral asset Slot；原始媒体与历史 source 注入会阻塞 |
+| 视觉基线 | 通过 | `golden/ai-speaking-1280/baseline.png` 二次回归 |
+| Snapshot 增量写入 | 通过 | revision 1→2；重复 base revision 冲突被拒绝 |
+| 有限修复 | 通过 | overflow 候选修复通过；源 Frame Contract 保持不变 |
+| v3.4 生命周期保护 | 25/25 | `run_v34_lifecycle_checks.py` |
+| v3.7 模具治理保护 | 50/50 | `run_v37_prototype_template_checks.py` |
+| 跨项目隔离保护 | 7/7 | `run_v37_isolation_scan.py` |
+
+v4.0 的发布证据来自真实生成 HTML、Chromium DOM 几何、自动任务、截图差异和结构化报告，不再用关键词或 Schema 文件存在性证明页面可用。目标用户验证仍为 `not-claimed`；本轮没有用技术回归替代真实学生测试。v3.7 连续外部模型会话复跑未在等待窗口内返回，已终止且未计为新证据，原归档 8/8 记录保持不变。
+
 ## v3.7.0 项目级模具与对话原型回归
 
 2026-08-24 对 v3.5.0–v3.7.0 新增链路执行结构、旧链路和正式运行时回归。

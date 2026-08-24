@@ -6,8 +6,13 @@
 
 ```yaml
 project_id:
+revision: 1
 current_stage:
 delivery_status:
+identity:
+  decision_id:
+  mode: # resume / fork / new / needs_confirmation
+  source_project_id:
 product:
   target_user:
   scenario:
@@ -37,6 +42,8 @@ architecture:
   pages: []
   components: []
   prototype_ui_contracts: []
+  frame_contracts: []
+  flow_contracts: []
 prototype:
   ui_profile:
   evidence_map: []
@@ -45,15 +52,23 @@ prototype:
   candidates: []
   sessions: []
   template_manifests: []
+harness:
+  generation_requests: []
+  runs: []
+  errors: []
 delivery:
   artifacts: []
   validation_results: []
   owners: []
   dependencies: []
   next_gate:
+storage:
+  snapshot_path:
+  event_log_path:
+  run_root:
 ```
 
-未知字段留空或标记 `pending`，不得用常识补成事实。普通回复不必完整打印 YAML；进入跨 Skill 交付、版本冻结或生产交接时才输出完整快照或其 Manifest 投影。
+未知字段留空或标记 `pending`，不得用常识补成事实。进入 S3 后将快照持久化为项目级 JSON/YAML，revision 只增不减，并把每次确认、回改和下游返回追加到事件日志；普通回复不必完整打印，进入跨 Skill 交付、版本冻结或生产交接时才输出完整快照或其 Manifest 投影。可执行示例见 [`../schemas/project-snapshot.yaml`](../schemas/project-snapshot.yaml)。
 
 ## 2. 证据类型
 
@@ -91,6 +106,12 @@ delivery:
 | `ASC-` | 素材占位 Contract |
 | `PTC-` | 项目级候选模具 |
 | `PRS-` | 对话式原型会话 |
+| `PID-` | 项目身份决策 |
+| `PGR-` | 受控原型生成请求 |
+| `FRM-` | 页面 Frame Contract |
+| `FLOW-` | 任务与状态 Flow Contract |
+| `HRUN-` | Harness 运行 |
+| `HPKG-` | Harness 交付包 |
 
 编号创建后不复用、不因排序变化而改变。领域已有稳定测试前缀（如 `IN-`、`TM-`、`GM-`）时可继续使用，但必须能回指 `DEC/F/TR/AC`。
 
@@ -113,6 +134,8 @@ Must 项至少形成：
 - 用户研究或指标结果：进入 `research_findings`，关联样本、时间窗和置信度，再决定是否创建 DEC/CHG。
 - 任何阶段只维护一个权威 `open_questions` 列表；同一问题不得在“待确认”“下一步”“风险”中重复制造三个状态。
 - 每轮先更新 `turn_delta`，再将仍有效的结论压缩进 `confirmed_summary`；普通回复只展示本轮变化与一个下一问，不重复打印没有变化的历史摘要。
+- 任何持久化更新必须声明 `base_revision`；revision 冲突时停止写入并创建冲突事件，不能以最后写入覆盖并发变更。
+- Harness 只能读取当前 revision 的 Contract；运行结果记录源文件哈希，快照变化后旧运行自动成为历史证据。
 
 ## 5. 快照视图
 

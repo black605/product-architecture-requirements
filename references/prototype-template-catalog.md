@@ -38,6 +38,8 @@ target_users + primary_tasks + page_types + device_profiles
 
 命中缓存只能缩小候选集合，不能跳过 Profile 比对。候选排序可以参考历史验证结果，但不能只以视觉相似度、业务名称相似度或最近使用时间决定。
 
+本仓库的可执行索引位于 [`../assets/prototype-harness/templates/registry.json`](../assets/prototype-harness/templates/registry.json)。该索引只保存已登记的中性结构和组件白名单；Golden Case、项目生成页和 `PTC-` 不会自动进入索引。
+
 ## 4. 内容与资产隔离
 
 模板允许保存语义化占位定义，例如 `course-cover-slot`、`primary-action-label-slot`；禁止保存可直接流入新项目的真实文案、用户数据、旧项目图片、插画、音视频和品牌 Token。示例内容必须标记 `example-only`，生成项目实例时清空。

@@ -1,0 +1,23 @@
+{
+  "decision_id": "PID-001",
+  "decision": "new",
+  "project_id": "PROJECT-AI-SPEAKING-001",
+  "source_project_id": null,
+  "profile_id": "UIP-001",
+  "status": "ready",
+  "evidence": ["用户目标：课后理解重点、完成练习、识别未掌握知识点"],
+  "identity_fields": {
+    "product_name": "AI 口语课后复习",
+    "target_users": ["完成直播课或录播课的学生"],
+    "primary_task": "完成一节课的口语复习闭环",
+    "scope_signature": ["课程地图", "跟读", "对话", "纠音", "报告", "恢复位置"],
+    "core_objects": ["课程", "学习步骤", "练习记录", "纠音结果", "学习报告"],
+    "device_profile": "learning-device-landscape-1280x800"
+  },
+  "inheritance": {
+    "allowed": ["generic-grid", "component-semantics", "accessibility-rules"],
+    "prohibited": ["copy", "user_data", "visual_assets", "brand_tokens", "business_rules", "permissions", "algorithms"]
+  },
+  "decided_at": "2026-08-24",
+  "owner": "product-owner"
+}

@@ -29,7 +29,7 @@
 
 ### 2.1 页面骨架
 
-定义区域之间的关系和页面空间职责，不规定最终像素值：
+定义区域之间的关系和页面空间职责；PUI 不规定最终像素值，进入原型时由 Frame Contract 为目标视口提供可执行几何：
 
 - 顶栏：全局身份、全局导航、页面级上下文或全局操作；
 - 侧栏/标签区：模块导航、视图切换或筛选入口；
@@ -166,12 +166,16 @@ prototype_ui_contract:
     candidate_id:
     asset_slot_contracts: []
 
+  executable_contracts:
+    frame_contract_id: FRM-001
+    flow_contract_id: FLOW-001
+
   page:
     page_id: P-001
     purpose:
     entry:
     exit:
-    regions: []
+    regions: [] # 语义区域；像素几何位于 Frame Contract
 
   information_hierarchy:
     p0: []
@@ -233,6 +237,7 @@ prototype_ui_contract:
 S3 功能/页面规格
   → PUI Contract（语义、层级、操作、状态）
   → UIP + TFD（项目隔离、证据与模具适配）
+  → Frame/Flow Contract（可执行几何、状态与恢复）
   → S4 中保真交互线稿（可操作表达）
   → S5 技术/用户/交接验证
   → S6 设计、研发、测试交接
@@ -255,4 +260,5 @@ S3 功能/页面规格
 - 最终设计能区分必须继承的语义和可以重做的视觉；
 - 未确认的权限、数据、算法、收费、完成/解锁和验收规则仍保持 Pending；
 - Contract、页面、功能、DEC、AC 和验证任务可以相互追溯；
+- Ready 页面拥有同项目、同 revision 的 Frame/Flow Contract，且 lint 通过；
 - 没有把 Contract 当成生产组件注册、前端实现或上线证据。

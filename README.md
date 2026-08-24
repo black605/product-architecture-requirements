@@ -4,17 +4,18 @@
 
 `product-architecture-requirements` 是一个面向产品经理、业务专家/教师、设计师、运营与研发协作方的 Codex Skill。它通过简洁的自然语言对话，将模糊想法沿统一生命周期沉淀为业务流程、功能架构、页面结构、组件状态、中保真原型输入、验证证据和可验收的交接方案；不会用一份假设很多的 PRD 代替需求确认。
 
-## 本次更新：v3.7.0
+## 当前版本：v4.0.0（原型生产 Harness）
 
-- 新增项目级 `ProjectUIProfile` 和 UI 证据映射；每个新项目使用独立 Profile。
-- Figma、截图、旧页面和历史模具只作为可追溯证据，不自动成为当前项目规则。
-- 默认禁止继承旧项目文案、用户数据、视觉资产、品牌 Token 和业务规则。
-- 新增原型模具目录和强制适配闸门，按七个维度输出 `exact / extensible / no_match` 与逐项依据。
-- `no_match` 时生成项目级黑白候选模具；图片、插画、音视频等只使用带比例和状态的语义占位。
-- 原型在当前需求对话中生成和回改：生成前展示关键决策，自然语言修改形成可追溯 Patch，业务语义变化退回需求确认。
-- 候选模具经过结构、隔离、技术、任务和 Owner 审核后才能登记；模板目录、Runtime Registry、工程消费和生产部署状态分别记录。
+- 新增 `Project Identity Gate`，明确 `resume / fork / new / needs_confirmation`，新项目不会继承最近项目内容。
+- `ProjectSnapshot` 可持久化为项目 JSON，通过 revision 与事件日志做增量更新和冲突保护。
+- PUI 之后新增可执行 `Frame Contract` 与 `Flow Contract`，约束视口、区域几何、状态可达、异步兜底和具体恢复位置。
+- 新增 `./harness` 统一入口，执行 `lint → render → test → report`，模型不再自由生成页面 HTML/CSS。
+- 原型运行时只接受组件白名单、登记模板或 project-local 候选；图片、人物、视频和插画只显示中性 Slot 占位。
+- 新增真实 Chromium 几何、任务路径、素材扫描和截图差异检查；结构评分不再等同于页面质量。
+- 新增结构化错误和最多两次局部修复；修复只生成候选副本，不静默改变源 Contract 或业务语义。
+- 输出统一 `Harness Handoff Package`，同时标记技术、视觉基线、目标用户和 Mock/真实能力证据。
 
-验证结果：v3.4 生命周期 25/25、v3.7 结构 50/50、正式运行时硬检查 50/50、跨项目污染扫描 7/7、同一 PRS 连续修改 8/8；四维评分 99/100，21/21 关键 TFD/Patch Contract 与源码一致性通过。详见 [回归报告](tests/regression-report.md)。
+当前确定性验证：v4.0 Harness 行为回归 23/23、AI 口语 Golden Case 在 1280×800 下完成真实浏览器渲染、六步任务和视觉基线检查；旧 v3.4 生命周期 25/25、v3.7 模具协议 50/50、跨项目污染扫描 7/7 保持通过。目标用户验证仍需真实测试，不由技术绿灯替代。
 
 ## 项目级模具与原型生成
 
@@ -104,14 +105,15 @@ Skill 会先说明它已理解的项目背景，并提出一个最关键的问�
 
 这是一个“先确认、再下钻、验证后回写”的产品全周期助手，默认遵循以下规则：
 
-- 每轮优先只问 1 个关键问题，最多不超过 2 个，避免一次性问卷式收集。
+- 探索阶段每轮只问 1 个关键问题，避免一次性问卷式收集。
 - 不默认输出按钮、单选、多选、勾选框或字母选项；你可以用自然语言自由回答。
 - 已确认的结论可以随时修改，例如“把首期改为只支持小班直播课”。
 - 长对话会用稳定的 DEC/CHG 记录确认与修改；“是的”只会绑定上一轮唯一明确的问题。
 - 只有当你明确要求“给我几个选项/帮我比较方案”时，才会给出备选方案与取舍。
 - 在核心流程确定后，主动补充必要的异常、权限、并发或状态边界，但不会凭空把假设写成事实。
 - 一旦出现多人协作、异步、倒计时、并发、撤回或恢复规则，会自动生成状态转移与对应测试，不必再次要求“画状态机”。
-- 所有阶段共享一份 `ProjectSnapshot`；重要对象和产物使用稳定 ID，Must 项保持目标到测试、产物的追溯。
+- 所有阶段共享一份可持久化 `ProjectSnapshot`；重要对象和产物使用稳定 ID，Must 项保持目标到测试、产物的追溯。
+- 进入原型前必须完成项目身份、PUI/UIP/TFD/ASC 与 Frame/Flow Contract；可运行原型必须通过 Harness，而不是只看规则文字。
 - 用户研究、竞品和指标只作为证据或候选决策；不会因一条反馈或一次波动自动改需求。
 
 ## 推荐使用方式
@@ -150,8 +152,8 @@ $product-architecture-requirements
 | S1 需求收拢 | 用户、场景、问题、结果、范围 | 项目画像、成功口径、DEC/Pending |
 | S2 产品架构 | 角色、对象、主流程、状态、MVP | 业务闭环、对象与状态模型 |
 | S3 规格生成 | 功能、IA、页面、组件、AC、测试 | 可追溯产品规格 |
-| S4 中保真线稿 | UI Contract、信息层级、主次操作、异常与恢复 | PUI Contract、v0.4 交互线稿交接包 |
-| S5 方案验证 | 技术、目标用户、交接三类证据 | 验证记录、问题与优化决策 |
+| S4 中保真线稿 | PUI、Frame/Flow、组件白名单、异常与恢复 | 受控 HTML、截图、运行 trace 与交互线稿交接包 |
+| S5 方案验证 | 浏览器几何、任务、视觉、目标用户、交接证据 | Harness 报告、问题与优化决策 |
 | S6 生产交付 | Owner、依赖、风险、产物状态 | Master PRD 投影、Handoff Manifest |
 | S7 运营复盘 | 研究、竞品、路线图、指标与行动 | DEC/CHG、路线图动作、下一轮验证 |
 
@@ -168,6 +170,7 @@ $product-architecture-requirements
 7. 风险、开放问题、首期 MVP 与后续迭代路线图。
 8. 面向产品、设计、研发的生产交接清单。
 9. 对复杂动态业务自动生成状态转移表、Mermaid 状态机和可追溯测试用例。
+10. 进入可运行原型后生成 Frame/Flow Contract、受控 HTML、截图、Harness 报告和 Handoff Package。
 
 核心产物是“需求与架构规格”，不是可直接上线的后端代码或 Figma 源文件。用户明确要求继续交付时，Skill 会先冻结需求基线，再把原型、研发或测试任务编排给当前环境中可用的专业能力，并检查返回产物是否仍与需求一致。
 
@@ -178,6 +181,9 @@ $product-architecture-requirements
 ├── SKILL.md                         # 轻量总控、主链路与按需路由
 ├── CHANGELOG.md                     # 版本演进记录
 ├── agents/openai.yaml               # Agent 元数据
+├── harness                          # lint/render/test/report 统一入口
+├── scripts/harness.py               # Contract 编译、浏览器验证与有限修复
+├── assets/prototype-harness/        # 中性运行时、模板目录和组件白名单
 ├── platform/                        # Dify、Coze、GPTs 平台配置
 ├── references/                      # 生命周期、Snapshot、原型、交接与专项协议
 │   ├── prototype-ui-contract.md     # 页面语义与状态 Contract
@@ -185,8 +191,8 @@ $product-architecture-requirements
 │   ├── prototype-template-fit.md    # 原型模具适配闸门
 │   ├── conversational-prototype-session.md # 对话式原型与 Patch
 │   └── versions/                    # 历史版本快照
-├── schemas/                         # Profile、模板、适配、素材、生成与登记数据结构
-└── tests/                           # 对抗用例、回归记录与正式测试证据
+├── schemas/                         # Snapshot、Frame/Flow、Profile、模板与交付数据结构
+└── tests/                           # 对抗用例、Golden Case、回归记录与正式测试证据
 ```
 
 建议先阅读 [快速开始](references/quickstart.md)，需要了解评估方式时查看 [评分量表](references/evaluation-rubric.md)，需要做提示词迭代时使用 [自我迭代 Meta-Prompt](references/meta-prompt.md)。
@@ -202,6 +208,8 @@ $product-architecture-requirements
 - [50 轮正式运行记录](tests/formal-platform-50/README.md)：记录生产平台模拟运行与评分证据。
 - [v3.4.7 五角色增强回归](tests/role-dialogue-50/v3.4.7-dialogue-quality-final/review.md)：40 个探索轮与 10 个交付轮，覆盖短答、回改、矛盾、跨角色、提前索要产物和 Ready/Blocked Gate。
 - [v3.7 项目级模具正式回归](tests/prototype-template-50/v3.7.0-release/README.md)：50 个独立会话，覆盖 Profile 隔离、三态适配、无匹配候选、素材占位、对话 Patch、模板生命周期和历史逻辑保护。
+- [v4.0 可执行 Harness 回归](tests/run_v40_harness_checks.py)：真实浏览器、几何、任务、三态模板路由、视觉差异、项目身份、Snapshot 冲突、素材政策和有限修复 23 项行为检查。
+- [AI 口语 1280×800 Golden Case](tests/golden/ai-speaking-1280)：从课程地图到学习报告的完整可重复原型输入与截图基线。
 - [变更记录](CHANGELOG.md)：说明每次规则调整的位置、原因与预期防范问题。
 
 若要继续优化，请遵守“每次只改一个测试用例或一个核心缺陷、改后回跑上一阶段案例、同步记录 Changelog”的迭代规则。
@@ -226,7 +234,7 @@ $product-architecture-requirements
 
 ### 能否生成代码或完整视觉稿？
 
-本 Skill 的职责是把需求与产品架构说明清楚。它可以输出组件规格、交互说明和交接清单；当需求达到 Ready 且你明确要求继续生成时，它可以把任务交给相应的开发、原型或设计 Skill，并在结果返回后检查需求追溯和状态覆盖。没有匹配能力时，它只提供完整交接清单，不会声称已经生成文件。
+本 Skill 的核心职责仍是需求与产品架构。达到 Ready 后，它可以用内置 Harness 生成受控中保真 HTML、截图和验证报告；最终品牌视觉、生产前端、后端服务与 Figma 源文件仍交给相应专业能力，并在返回后检查追溯和状态覆盖。
 
 ## 维护与贡献
 

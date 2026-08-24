@@ -1,0 +1,12 @@
+{
+  "viewport": {"width": 1280, "height": 800},
+  "action_sequence": ["ACT-CONTINUE", "ACT-START", "ACT-WORD-DONE", "ACT-SENTENCE-DONE", "ACT-ROLEPLAY-DONE", "ACT-FINISH"],
+  "terminal_state": "LEARNING_REPORT",
+  "screenshot_state": "LEARNING_REPORT",
+  "visual_diff": {
+    "required": true,
+    "baseline": "baseline.png",
+    "max_mean_difference": 0.01,
+    "max_changed_ratio": 0.02
+  }
+}

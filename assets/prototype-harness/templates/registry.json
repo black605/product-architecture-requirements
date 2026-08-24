@@ -1,0 +1,49 @@
+{
+  "schema_version": "v1",
+  "templates": [
+    {
+      "template_id": "TPL-NEUTRAL-SIDEBAR-CONTENT-001",
+      "version": "v1.0.0",
+      "status": "registered",
+      "scope": "shared",
+      "target_users": ["teacher", "operator", "knowledge-worker"],
+      "primary_tasks": ["browse-and-manage-items", "review-item-detail"],
+      "page_types": ["workbench", "catalog", "detail"],
+      "device_profiles": ["desktop-landscape"],
+      "required_regions": ["navigation", "primary-content"],
+      "information_hierarchy": ["P0", "P1", "P2"],
+      "extension_points": ["optional-toolbar", "optional-detail-panel", "optional-secondary-card"],
+      "supported_states": ["loading", "empty", "error", "partial_data"],
+      "business_content_embedded": false,
+      "visual_assets_embedded": false
+    },
+    {
+      "template_id": "TPL-NEUTRAL-IMMERSIVE-STAGE-001",
+      "version": "v1.0.0",
+      "status": "registered",
+      "scope": "shared",
+      "target_users": ["learner", "guided-task-user"],
+      "primary_tasks": ["complete-one-guided-step", "continue-a-multi-step-task"],
+      "page_types": ["guided-task", "learning-step"],
+      "device_profiles": ["desktop-landscape", "tablet-landscape"],
+      "required_regions": ["context", "primary-content"],
+      "information_hierarchy": ["P0", "P1", "P2"],
+      "extension_points": ["optional-progress", "optional-asset-slot", "optional-feedback"],
+      "supported_states": ["loading", "active", "error", "completed"],
+      "business_content_embedded": false,
+      "visual_assets_embedded": false
+    }
+  ],
+  "component_whitelist": [
+    "heading",
+    "text",
+    "meta",
+    "status",
+    "progress",
+    "step-list",
+    "card-list",
+    "asset-slot",
+    "input",
+    "action"
+  ]
+}

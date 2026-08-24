@@ -1,0 +1,41 @@
+schema_version: v1
+
+project_snapshot:
+  project_id: PROJECT-001
+  revision: 1
+  current_stage: Exploring
+  delivery_status: Exploring
+  identity_decision_id: PID-001
+  persisted_at: pending
+  source_hash: pending
+  product:
+    target_user: pending
+    scenario: pending
+    problem: pending
+    expected_outcome: pending
+    primary_task: pending
+    in_scope: []
+    out_of_scope: []
+  governance:
+    decisions: []
+    changes: []
+    open_questions: []
+    blockers: []
+  contracts:
+    pui: []
+    ui_profile: pending
+    template_fit: []
+    asset_slots: []
+    frame: []
+    flow: []
+    generation_requests: []
+  traceability:
+    must_chains: []
+  storage:
+    snapshot_path: pending
+    event_log_path: pending
+    run_root: pending
+  delivery:
+    artifacts: []
+    validation_results: []
+    next_gate: pending

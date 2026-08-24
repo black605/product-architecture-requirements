@@ -2,6 +2,43 @@
 
 ## [Unreleased]
 
+### v4.0.0：可执行原型生产 Harness
+
+- 修改位置：新增根命令 `harness`、`scripts/harness.py`、`assets/prototype-harness/`、Harness/Handoff schema、平台映射和发布文档。
+- 修改原因：v3.7 的规则与结构评分不能证明最终页面无溢出、任务可达或素材合规，需要把约束做成可执行环境和机械反馈闭环。
+- 预期防范的问题：99 分规则评审仍产出错乱页面；自由生成 HTML/CSS；多个脚本没有统一入口；技术绿灯冒充目标用户验证；交付缺少可复现源哈希和运行证据。
+- 新增约束：统一执行 `lint → render → test → report`；生成只接受组件白名单、登记模板或 project-local 候选；发布同时要求 Contract、浏览器几何、任务、素材、视觉和追溯通过。
+- 回归结果：v4.0 行为检查 23/23；AI 口语 1280×800 Golden Case 真实 Chromium 任务与视觉基线通过；exact/extensible/no_match 三态运行时检查通过；v3.4 25/25、v3.7 50/50、跨项目隔离 7/7 保持通过。
+- 已知边界：未执行新的真实目标用户测试；技术通过仍只标记技术证据。外部模型连续会话复跑未在本次返回，未将其记为新通过证据。
+
+### v3.11.0：结构化失败回流与有限修复
+
+- 修改位置：Harness 错误模型、`schemas/harness-error.yaml`、`repair` 命令和失败注入回归。
+- 修改原因：原型失败后缺少统一错误和局部重试边界，容易要求模型整体重写页面。
+- 预期防范的问题：无限自愈；修复覆盖源 Contract；布局问题误改业务语义；失败没有最小复现。
+- 新增约束：错误归一为 Contract、布局、流程、状态、主操作、素材、追溯、浏览器和视觉九类；只修复声明 `shrink-to-safe-area` 的局部几何，最多两次并保留源文件。
+
+### v3.10.0：真实浏览器与 Golden Case 验证
+
+- 修改位置：Chromium DOM 审计、任务自动执行、截图差异、AI 口语 1280×800 Golden Case 与 `tests/run_v40_harness_checks.py`。
+- 修改原因：页面能生成或打开不代表无越界、无遮挡、主流程完整或恢复可用。
+- 预期防范的问题：横向溢出、区域重叠、P0 不可见、多主操作、流程不可达、异步无兜底、视觉回退。
+- 新增约束：真实浏览器检查全部页面和主任务；Golden Case 覆盖课程地图、目标、单词、重点句、对话、纠音、报告与具体恢复键。
+
+### v3.9.0：确定性原型运行时与模板路由
+
+- 修改位置：中性 HTML Shell、CSS/JS Runtime、模板 Registry、组件白名单和受控 Renderer。
+- 修改原因：原 Generation Request 虽写明 controlled，下游仍可自由编写 HTML/CSS，布局规则没有执行者。
+- 预期防范的问题：黑盒页面生成；CSS 人物或历史图片替代素材 Slot；新项目默认套旧模具；任意组件和动作进入原型。
+- 新增约束：exact/extensible 只能选登记模板；no_match 使用通用网格和 project-local 候选；Golden Case 不自动成为共享模具。
+
+### v3.8.0：项目身份、持久化 Snapshot 与可执行 Contract
+
+- 修改位置：新增项目身份闸门、Snapshot/Identity/Frame/Flow schema、Snapshot 事件写入和对应主路由。
+- 修改原因：新旧项目判断依赖上下文，PUI 只有语义区域，长对话后状态和页面几何无法机械校验。
+- 预期防范的问题：跨项目污染；revision 覆盖；区域越界；状态不可达；异步无超时；“继续学习”没有具体恢复位置。
+- 新增约束：先判定 resume/fork/new/needs_confirmation；S3 后持久化 Snapshot；Frame/Flow lint 未通过时禁止生成。
+
 ### v3.7.0：项目级模具与对话原型发布固化
 
 - 修改位置：新增 50 项结构校验、用例 K、v3.7 发布基线；同步 README、quickstart、Dify、Coze 和 GPTs 配置。

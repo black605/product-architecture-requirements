@@ -1,0 +1,38 @@
+schema_version: v1
+
+flow_contract:
+  contract_id: FLOW-001
+  project_id: PROJECT-001
+  version: v0.1
+  status: draft # draft / ready / superseded / blocked
+  initial_state: STATE-START
+  terminal_states: [STATE-DONE]
+  states:
+    - state_id: STATE-START
+      page_id: P-001
+      type: interactive # interactive / async / terminal / failure
+      entry_conditions: []
+      recovery_key: start
+      traces_to: [F-001, P-001]
+    - state_id: STATE-DONE
+      page_id: P-002
+      type: terminal
+      entry_conditions: []
+      recovery_key: completed
+      traces_to: [F-001, P-002]
+  transitions:
+    - transition_id: TR-001
+      from: STATE-START
+      event: ACT-CONTINUE
+      trigger: action # action / auto / timeout / recovery
+      guard: always
+      to: STATE-DONE
+      failure_to: null
+      traces_to: [DEC-001, F-001, AC-001, T-001]
+  async_policy:
+    max_retries: 2
+    required_timeout_ms: 3000
+  resume:
+    persistence: state-and-step
+    fallback_state: STATE-START
+  forbidden_assumptions: []

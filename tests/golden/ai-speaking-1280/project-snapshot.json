@@ -1,0 +1,67 @@
+{
+  "project_id": "PROJECT-AI-SPEAKING-001",
+  "revision": 1,
+  "current_stage": "Ready for Prototype",
+  "delivery_status": "In Validation",
+  "identity_decision_id": "PID-001",
+  "persisted_at": "2026-08-24",
+  "source_hash": "generated-by-harness",
+  "product": {
+    "target_user": "完成直播课或录播课的学生",
+    "scenario": "课后在学习机横屏端复习本课",
+    "problem": "学生不知道重点、练习进度和未掌握知识点",
+    "expected_outcome": "完成本课重点复习并得到具体未掌握项与恢复位置",
+    "primary_task": "从课程地图进入并完成一节课的口语复习闭环",
+    "in_scope": ["课程地图", "学习目标", "单词跟读", "重点句跟读", "完整对话", "纠音", "学习报告", "恢复位置"],
+    "out_of_scope": ["品牌视觉资产", "真实语音评分服务", "付费与解锁"]
+  },
+  "governance": {
+    "decisions": ["DEC-001", "DEC-002"],
+    "changes": [],
+    "open_questions": [],
+    "blockers": []
+  },
+  "contracts": {
+    "pui": ["PUI-001"],
+    "ui_profile": "UIP-001",
+    "template_fit": ["TFD-001"],
+    "asset_slots": ["ASC-001"],
+    "frame": ["FRM-001"],
+    "flow": ["FLOW-001"],
+    "generation_requests": ["PGR-001"]
+  },
+  "traceability": {
+    "must_chains": [
+      {
+        "target": "OBJ-001/完成课后复习",
+        "decision": "DEC-001",
+        "function": "F-001",
+        "flow_or_transition": "FLOW-001/TR-001..TR-008",
+        "page_or_entry": "P-001..P-009",
+        "acceptance": "AC-001",
+        "test": "T-001",
+        "artifact": "ART-001"
+      },
+      {
+        "target": "OBJ-002/恢复到具体学习步骤",
+        "decision": "DEC-002",
+        "function": "F-002",
+        "flow_or_transition": "FLOW-001/resume",
+        "page_or_entry": "P-001",
+        "acceptance": "AC-002",
+        "test": "T-002",
+        "artifact": "ART-001"
+      }
+    ]
+  },
+  "storage": {
+    "snapshot_path": "project-snapshot.json",
+    "event_log_path": ".harness/events.jsonl",
+    "run_root": ".harness/runs"
+  },
+  "delivery": {
+    "artifacts": ["ART-001"],
+    "validation_results": [],
+    "next_gate": "真实浏览器与主任务验证"
+  }
+}

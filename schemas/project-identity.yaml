@@ -1,0 +1,22 @@
+schema_version: v1
+
+project_identity:
+  decision_id: PID-001
+  decision: needs_confirmation # resume / fork / new / needs_confirmation
+  project_id: pending
+  source_project_id: null
+  profile_id: pending
+  evidence: []
+  identity_fields:
+    product_name: pending
+    target_users: []
+    primary_task: pending
+    scope_signature: []
+    core_objects: []
+    device_profile: pending
+  inheritance:
+    allowed: []
+    prohibited: [copy, user_data, visual_assets, brand_tokens, business_rules, permissions, algorithms]
+  status: draft # draft / ready / superseded / blocked
+  decided_at: pending
+  owner: pending

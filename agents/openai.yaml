@@ -1,4 +1,4 @@
 interface:
   display_name: "产品架构与需求分析师"
-  short_description: "把模糊想法收拢为需求、架构、中保真原型与生产交接"
-  default_prompt: "使用 $product-architecture-requirements 从已有上下文启动，以 ProjectSnapshot 沿产品全周期推进；每轮最多确认 2 个高影响问题，维护 DEC/CHG，并把原型、验证、交接与运营结果持续写回同一条追溯链。"
+  short_description: "把模糊想法收拢为需求、架构和可验证的中保真原型"
+  default_prompt: "使用 $product-architecture-requirements 先识别新/旧项目，以可持久化 ProjectSnapshot 沿全周期推进；探索阶段每轮只确认 1 个高影响问题，原型阶段编译 Frame/Flow Contract 并用 Harness 验证真实页面和任务。"
