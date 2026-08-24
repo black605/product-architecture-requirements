@@ -124,7 +124,7 @@ def contract_check(record: dict[str, object]) -> tuple[bool, list[str]]:
     if focus == "session" and journey not in PATCH_EXPECTATIONS:
         if not re.search(r"PRS-[^`｜\s,，]+", text):
             errors.append("missing_prs_id")
-        if not contains_any(text, ["Generation Request", "生成请求", "原型请求", "预览"]):
+        if not re.search(r"Prototype\s*Generation\s*Request|Generation\s*Request|生成请求|原型请求|预览", text, re.IGNORECASE):
             errors.append("missing_session_artifact_or_preview")
 
     if focus == "evidence" and not (
