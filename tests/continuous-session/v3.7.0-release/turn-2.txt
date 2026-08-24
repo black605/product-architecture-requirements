@@ -1,0 +1,6 @@
+PATCH-001｜L2｜v0.1｜applied
+变化：薄弱知识点区域从练习前移至练习结果后；无薄弱项时整块隐藏。
+影响：PUI/UIP/TFD/ASC 的对应区域规则与压力验证；P0、唯一主操作及其他页面语义不变。TFD-900 仍为 `extensible｜ready`。
+状态：PRS-900｜contract_version v0.2｜artifact_version unavailable
+
+由于当前无重渲染能力，页面仍未生成；仅受控 Contract 与 Generation Request 已更新。

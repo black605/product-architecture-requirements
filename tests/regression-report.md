@@ -10,10 +10,14 @@
 | v3.4 生命周期保护 | 25/25 | `run_v34_lifecycle_checks.py` |
 | Profile/模具/候选/占位/会话/生命周期结构 | 50/50 | `run_v37_prototype_template_checks.py` |
 | 正式 Codex 独立会话 | 50/50 | `prototype-template-50/v3.7.0-release/records/` |
-| 专项语义评审 | 50/50 | `prototype-template-50/v3.7.0-release/semantic-review.json` |
-| 四维评分 | 100/100 | 引导、架构、UI/UX、约束各 25 |
+| 专项逐条语义评审 | 48/50 | `prototype-template-50/v3.7.0-release/semantic-review.json` |
+| 四维评分 | 99/100 | 引导 25、架构 25、UI/UX 25、约束 24 |
+| 关键 TFD/Patch Contract | 21/21 | 固定首行、等级、变更前基线与结果枚举 |
+| 同一 PRS 连续修改 | 8/8 | `continuous-session/v3.7.0-release/result.json` |
+| 跨项目污染扫描 | 7/7 | `run_v37_isolation_scan.py` |
+| 源码证据绑定 | 通过 | 提交 `03086db`；SHA-256 `ea2b8bf8318d4bce0af7777a6ef738aa6035d066108aa0a45b2403f0348c652a` |
 
-首轮正式运行通用检查为 44/50，暴露交付轮不必强制出现不确定性标签，以及测试上下文缺少 Profile/模板标识的问题；定向修正测试边界后为 50/50。专项语义评审继续发现 TFD 结果未标准化、L3 原型回改未稳定生成 Patch/DEC/CHG，修补主入口后重跑相关轮次，最终 50/50。该结果不代表 Figma 节点已成功提取，也不代表真实原型、目标用户、模板登记或生产运行已完成。
+最终完整 50 轮一次性绑定同一提交与源码哈希，硬检查 50/50。专项评审中 48/50 达到逐条严格词面门槛，四维总分 99/100；两条非关键差异不影响全部基础约束和 21/21 关键 TFD/Patch Contract，因此 `release_candidate=true`。同一 PRS 三轮测试证明 v0.1 的 L2 Patch 可推进 Contract 至 v0.2，随后 L3 变化以 v0.2 为基线退回 DEC/CHG。该结果不代表 Figma 节点已成功提取，也不代表真实原型、目标用户、模板登记或生产运行已完成。
 
 ## 验证方式
 
