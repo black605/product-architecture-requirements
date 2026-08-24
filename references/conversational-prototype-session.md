@@ -78,7 +78,7 @@ PATCH-ID｜L1/L2/L3｜vX.Y｜applied/needs-decision/conflicted/rejected
 状态：PRS-ID｜contract_version｜artifact_version/退回 DEC/CHG 的原因
 ```
 
-首行第三段只允许当前 Contract 基线版本，例如 `v0.2`；不得写 `PRS-ID / v0.2`、页面名或“当前评审基线”。
+首行第三段只允许变更前的 Contract 基线版本，例如基于 `v0.2` 修改就写 `v0.2`；不得写 applied 后的新版本、`PRS-ID / v0.2`、页面名或“当前评审基线”。
 
 若 L3 表达包含“看完、有效、完成、自动、可见”等尚未定义的触发或口径，首行结果固定为 `needs-decision`，第二行固定登记 `DEC-ID / CHG-ID｜Proposed/Blocked`；无法分配正式编号时使用 `DEC-待登记 / CHG-待登记`，不得省略。保留旧 Confirmed 规则；不得先说“已确认改为”再追问定义。涉及新权限或新数据可见范围时，不先把入口写成暂定页面方案。
 

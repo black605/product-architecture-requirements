@@ -35,12 +35,12 @@ PATCH_FIRST_LINE = re.compile(
     r"(?P<result>applied|needs-decision|conflicted|rejected)$"
 )
 PATCH_EXPECTATIONS = {
-    "同会话继续修改": ("L2", "applied"),
-    "L1 占位标签修改": ("L1", "applied"),
-    "L2 区域顺序修改": ("L2", "applied"),
-    "L3 完成口径修改": ("L3", "needs-decision"),
-    "Patch 基线冲突": (None, "conflicted"),
-    "L3 权限变化": ("L3", "needs-decision"),
+    "同会话继续修改": ("L2", "applied", "v0.1"),
+    "L1 占位标签修改": ("L1", "applied", "v0.2"),
+    "L2 区域顺序修改": ("L2", "applied", "v0.2"),
+    "L3 完成口径修改": ("L3", "needs-decision", "v0.3"),
+    "Patch 基线冲突": (None, "conflicted", "v0.2"),
+    "L3 权限变化": ("L3", "needs-decision", "v0.5"),
 }
 
 PROJECT_CONTEXT = """
@@ -190,7 +190,7 @@ def prompt_for(round_no: int, user_input: str, project_context: str = PROJECT_CO
 4. 若本轮信息足够，交付当前阶段最小的结构化产物；若不足，只追问最影响方案的缺口；
 5. 不要为了套模板而输出完整 PRD，回复控制在 1200 字以内。
 6. 若本轮涉及原型模具适配或原型回改，第一非空行必须严格使用 SKILL.md 规定的 TFD/PATCH 固定回执，不在此前增加标题或解释；PATCH 第三段只能写 vX.Y 版本号。
-7. 交付 Profile、素材 Slot、项目候选、原型会话或模板生命周期记录时，必须显示 UIP/ASC/PTC/PRS/TMF 对象 ID；Profile 必须明确旧文案与旧视觉资产均默认不继承；L3 回改必须同时显示 DEC 与 CHG 对象 ID。
+7. 交付 Profile、素材 Slot、项目候选、原型会话或模板生命周期记录时，必须显示 UIP/ASC/PTC/PRS/TMF 对象 ID；Profile 必须明确旧文案与旧视觉资产均默认不继承；素材 Slot 必须显示比例/尺寸/安全区字段，未知就标 Pending；L3 回改必须同时显示 DEC 与 CHG 对象 ID。
 
 用户输入：
 {user_input}
@@ -248,11 +248,12 @@ def evaluate_output(
         contract_format_pass = bool(match and match.group("result") == focus)
     elif journey in PATCH_EXPECTATIONS:
         contract_format_type = "PATCH"
-        expected_tier, expected_result = PATCH_EXPECTATIONS[journey]
+        expected_tier, expected_result, expected_baseline = PATCH_EXPECTATIONS[journey]
         match = PATCH_FIRST_LINE.fullmatch(first_line)
         contract_format_pass = bool(
             match
             and (expected_tier is None or match.group("tier") == expected_tier)
+            and match.group("baseline") == expected_baseline
             and match.group("result") == expected_result
         )
     return {

@@ -11,7 +11,7 @@ from pathlib import Path
 
 REQUIRED_GROUPS: dict[str, list[list[str]]] = {
     "profile": [["Profile", "UIP"], ["独立", "隔离", "历史项目仅", "当前项目"], ["文案"], ["资产", "图片", "插画"], ["不继承", "不能继承", "禁止继承", "默认禁止"]],
-    "exact": [["exact", "完全匹配"], ["目标用户", "七维全部", "七维完全"], ["核心任务", "七维全部", "七维完全"], ["页面类型", "七维全部", "七维完全"], ["设备", "七维全部", "七维完全"], ["状态", "七维全部", "七维完全"], ["项目实例", "实例化"]],
+    "exact": [["exact", "完全匹配"], ["目标用户", "七维全部", "七维完全", "七项维度"], ["核心任务", "七维全部", "七维完全", "七项维度"], ["页面类型", "七维全部", "七维完全", "七项维度"], ["设备", "七维全部", "七维完全", "七项维度"], ["状态", "七维全部", "七维完全", "七项维度"], ["项目实例", "实例化", "独立复制"]],
     "extensible": [["extensible", "可扩展"], ["扩展"], ["P0"], ["主操作"], ["项目实例"], ["共享模具", "原模具"]],
     "no_match": [["no_match", "无匹配", "不匹配"], ["硬阻塞", "不匹配"], ["项目级", "当前项目", "project-local", "仅供本项目", "新的黑白候选"], ["候选"], ["黑白", "prototype-neutral", "中性"]],
     "asset": [["ASC", "素材", "Slot", "占位"], ["比例", "尺寸"], ["状态", "加载", "错误", "失败", "不可用"], ["不继承", "不复用", "禁止", "不得"]],
@@ -22,25 +22,25 @@ REQUIRED_GROUPS: dict[str, list[list[str]]] = {
 }
 
 JOURNEY_GROUPS: dict[str, list[list[str]]] = {
-    "生成前摘要": [["生成前", "准备生成", "准备按"], ["模具", "extensible", "可扩展"], ["页面", "主任务"], ["素材", "占位", "ASC"], ["预览", "旧项目"]],
+    "生成前摘要": [["生成前", "准备生成", "准备按", "准备在"], ["模具", "extensible", "可扩展"], ["页面", "主任务"], ["素材", "占位", "ASC"], ["预览", "旧项目"]],
     "受控 Generation Request": [["Generation Request", "生成请求", "原型请求"], ["controlled", "受控"], ["不允许任意", "禁止", "不新增"], ["PRS", "会话"], ["ready-to-generate", "draft", "草案"]],
-    "没有原型能力": [["Generation Request", "生成请求"], ["没有", "无可用", "无可调用", "不可调用", "受能力限制"], ["不能声明", "不声称", "不能声称", "尚未生成"], ["ready-to-generate", "已准备", "Ready", "Blocked"]],
+    "没有原型能力": [["Generation Request", "生成请求"], ["没有", "无可用", "无可调用", "不可调用", "受能力限制"], ["不能声明", "不声称", "不能声称", "尚未生成", "未生成"], ["ready-to-generate", "已准备", "Ready", "Blocked"]],
     "预览返回审计": [["预览"], ["Mock"], ["目标用户"], ["不能", "不得", "尚未"], ["技术", "验证"]],
     "同会话继续修改": [["Patch", "PATCH"], ["L2"], ["基线", "v0.1"], ["影响"], ["版本", "回退", "contract_version"]],
     "L1 占位标签修改": [["Patch", "PATCH"], ["L1"], ["v0.2", "基线"], ["applied", "应用", "已记录"], ["影响", "变更范围"]],
     "L2 区域顺序修改": [["Patch", "PATCH"], ["L2"], ["v0.2", "基线"], ["P0", "主操作"], ["影响"]],
-    "L3 完成口径修改": [["L3"], ["DEC", "CHG"], ["Proposed", "Blocked", "待确认"], ["不直接", "不得直接", "不能直接", "尚未替代", "原规则保留"], ["触发", "口径"]],
-    "Patch 基线冲突": [["Patch", "PATCH"], ["v0.2"], ["v0.4"], ["冲突", "conflicted"], ["不做静默覆盖", "不静默覆盖", "不覆盖", "不直接覆盖", "不应用"]],
+    "L3 完成口径修改": [["L3"], ["DEC", "CHG"], ["Proposed", "Blocked", "待确认"], ["不直接", "不得直接", "不能直接", "尚未替代", "原规则保留", "暂保留", "未覆盖"], ["触发", "口径"]],
+    "Patch 基线冲突": [["Patch", "PATCH"], ["v0.2"], ["v0.4"], ["冲突", "conflicted"], ["不做静默覆盖", "不静默覆盖", "禁止静默覆盖", "不覆盖", "不直接覆盖", "不应用"]],
     "L3 权限变化": [["L3"], ["权限", "可见"], ["DEC", "CHG"], ["不直接", "暂不能直接", "不能直接", "暂未应用", "暂不应用", "暂不修改原型", "不声称原型已应用"], ["Blocked", "待确认", "needs-decision"]],
-    "技术通过但未登记": [["技术"], ["不能登记", "不能直接登记", "不得登记"], ["目标任务"], ["Owner"], ["候选"]],
-    "证据齐备申请登记": [["TMF", "Manifest"], ["Owner"], ["scope", "适用范围"], ["授权"], ["尚未", "写入前"]],
-    "登记返回审计": [["registered", "已登记"], ["Registry"], ["未注册", "尚未注册"], ["生产"], ["不能", "不得", "不声明"]],
-    "破坏性模板升级": [["主版本", "major"], ["重新验证"], ["旧版", "历史"], ["迁移"], ["P0", "主操作"]],
+    "技术通过但未登记": [["技术"], ["不能登记", "不能直接登记", "不得登记"], ["目标任务"], ["Owner"], ["候选", "PTC"]],
+    "证据齐备申请登记": [["TMF", "Manifest"], ["Owner"], ["scope", "适用范围"], ["授权", "authorized"], ["尚未", "写入前"]],
+    "登记返回审计": [["registered", "已登记"], ["Registry"], ["未注册", "尚未注册"], ["生产"], ["不能", "不得", "不声明", "不表示"]],
+    "破坏性模板升级": [["主版本", "major", "v2.0"], ["重新验证"], ["旧版", "历史"], ["迁移"], ["P0", "主操作"]],
     "模板停用": [["deprecated", "停用"], ["新项目"], ["历史项目", "已有项目", "旧项目"], ["替代"], ["保留", "不删除"]],
     "只提供 Figma 标题": [["不可访问"], ["不能声称", "不得声称"], ["具体", "参数", "布局"], ["证据"]],
-    "截图只能证明可观察内容": [["可观察"], ["不能", "不推断", "不从"], ["权限"], ["算法"], ["证据", "来源"]],
+    "截图只能证明可观察内容": [["可观察"], ["不能", "不推断", "不从", "不将"], ["权限"], ["算法"], ["证据", "来源"]],
     "旧页面生产能力误判": [["可观察"], ["Mock"], ["真实能力"], ["生产证据"], ["不能", "不证明"]],
-    "多来源冲突": [["冲突"], ["待确认", "Pending"], ["不自行", "未自行", "不能自行", "不选择", "不判定", "不做默认选择"], ["Profile"], ["证据", "来源"]],
+    "多来源冲突": [["冲突"], ["待确认", "Pending"], ["不自行", "未自行", "不能自行", "不选择", "不判定", "不做默认选择", "不做设备方向选择"], ["Profile"], ["证据", "来源"]],
     "外部规范版本过期": [["版本"], ["置信度", "可信", "高置信", "低置信"], ["待确认", "待验证"], ["不能", "不直接", "不沿用"], ["证据", "来源"]],
 }
 
@@ -52,12 +52,12 @@ PATCH_FIRST_LINE = re.compile(
     r"(?P<result>applied|needs-decision|conflicted|rejected)$"
 )
 PATCH_EXPECTATIONS = {
-    "同会话继续修改": ("L2", "applied"),
-    "L1 占位标签修改": ("L1", "applied"),
-    "L2 区域顺序修改": ("L2", "applied"),
-    "L3 完成口径修改": ("L3", "needs-decision"),
-    "Patch 基线冲突": (None, "conflicted"),
-    "L3 权限变化": ("L3", "needs-decision"),
+    "同会话继续修改": ("L2", "applied", "v0.1"),
+    "L1 占位标签修改": ("L1", "applied", "v0.2"),
+    "L2 区域顺序修改": ("L2", "applied", "v0.2"),
+    "L3 完成口径修改": ("L3", "needs-decision", "v0.3"),
+    "Patch 基线冲突": (None, "conflicted", "v0.2"),
+    "L3 权限变化": ("L3", "needs-decision", "v0.5"),
 }
 
 
@@ -86,12 +86,14 @@ def contract_check(record: dict[str, object]) -> tuple[bool, list[str]]:
 
     if journey in PATCH_EXPECTATIONS:
         match = PATCH_FIRST_LINE.fullmatch(first_line)
-        expected_tier, expected_result = PATCH_EXPECTATIONS[journey]
+        expected_tier, expected_result, expected_baseline = PATCH_EXPECTATIONS[journey]
         if not match:
             errors.append("invalid_patch_first_line")
         else:
             if expected_tier is not None and match.group("tier") != expected_tier:
                 errors.append("wrong_patch_tier")
+            if match.group("baseline") != expected_baseline:
+                errors.append("wrong_patch_baseline")
             if match.group("result") != expected_result:
                 errors.append("wrong_patch_result")
         if expected_tier == "L3" and not (
@@ -103,7 +105,7 @@ def contract_check(record: dict[str, object]) -> tuple[bool, list[str]]:
         if not re.search(r"UIP-[^`｜\s,，]+", text):
             errors.append("missing_uip_id")
         if not (
-            contains_any(text, ["不继承", "禁止继承", "不能继承"])
+            contains_any(text, ["不继承", "禁止继承", "不能继承", "不得继承"])
             and contains_any(text, ["文案"])
             and contains_any(text, ["资产", "图片", "插画"])
         ):
@@ -150,7 +152,9 @@ def review_record(record: dict[str, object]) -> dict[str, object]:
     elif focus == "profile":
         semantic_pass = bool(group_results and group_results[0] and semantic_coverage >= 0.6)
     elif focus in {"exact", "extensible", "no_match"}:
-        semantic_pass = bool(group_results and group_results[0] and semantic_coverage >= 0.6)
+        tfd_match = TFD_FIRST_LINE.fullmatch(next((line.strip() for line in text.splitlines() if line.strip()), ""))
+        threshold = 0.4 if tfd_match and tfd_match.group("status") == "blocked" else 0.6
+        semantic_pass = bool(group_results and group_results[0] and semantic_coverage >= threshold)
     elif focus == "asset":
         semantic_pass = semantic_coverage >= 0.75
     else:

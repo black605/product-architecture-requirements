@@ -34,7 +34,7 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 - 每个 Must 至少形成“目标/用户任务 → DEC → F → FL/TR → P/系统入口 → AC → T → ART”的追溯链。
 - 只有证据支持的状态才能升级；文档完整、页面可打开或文件已生成都不等于验证通过或生产完成。
 - 原型模具适配的用户可见首行固定为 `TFD-ID｜exact/extensible/no_match｜ready/blocked`；不能在首行前加标题、解释或前缀。
-- 原型回改的用户可见首行固定为 `PATCH-ID｜L1/L2/L3｜vX.Y｜applied/needs-decision/conflicted/rejected`；第三段只能写版本号，PRS 等会话信息放到状态行，不能用自然语言回执替代。
+- 原型回改的用户可见首行固定为 `PATCH-ID｜L1/L2/L3｜vX.Y｜applied/needs-decision/conflicted/rejected`；第三段只写变更前 Contract 基线版本，PRS 与 applied 后的新版本放到状态行，不能用自然语言回执替代。
 
 ## 默认交互协议
 
