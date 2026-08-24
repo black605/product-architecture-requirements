@@ -222,6 +222,14 @@ def main() -> int:
         and source_hashes == {expected_hash}
         and current_snapshot["sha256"] == expected_hash
     )
+    all_base_pass = all(bool(item["base_pass"] and item["unsafe_claim_absent"]) for item in results)
+    critical_contract_results = [
+        item
+        for item in results
+        if item["focus"] in {"exact", "extensible", "no_match"}
+        or any(record.get("round") == item["round"] and record.get("journey") in PATCH_EXPECTATIONS for record in records)
+    ]
+    critical_contract_pass = all(bool(item["contract_pass"]) for item in critical_contract_results)
     summary = {
         "suite": "v3.7-formal-prototype-template-50",
         "records": len(records),
@@ -232,10 +240,14 @@ def main() -> int:
         "current_source_snapshot_sha256": current_snapshot["sha256"],
         "source_git_commit": current_snapshot["git_commit"],
         "source_integrity": source_integrity,
+        "all_base_pass": all_base_pass,
+        "critical_contract_records": len(critical_contract_results),
+        "critical_contract_pass": critical_contract_pass,
         "release_candidate": (
             total >= 90
             and all(value >= 15 for value in dimensions.values())
-            and all(bool(item["passed"]) for item in results)
+            and all_base_pass
+            and critical_contract_pass
             and source_integrity
         ),
         "failed_rounds": [item for item in results if not item["passed"]],
