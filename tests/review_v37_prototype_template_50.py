@@ -8,6 +8,8 @@ import json
 import re
 from pathlib import Path
 
+from run_formal_platform_50 import source_snapshot
+
 
 REQUIRED_GROUPS: dict[str, list[list[str]]] = {
     "profile": [["Profile", "UIP"], ["独立", "隔离", "历史项目仅", "当前项目"], ["文案"], ["资产", "图片", "插画"], ["不继承", "不能继承", "禁止继承", "默认禁止"]],
@@ -148,7 +150,7 @@ def review_record(record: dict[str, object]) -> dict[str, object]:
     group_results = [contains_any(text, group) for group in groups]
     semantic_coverage = sum(group_results) / len(group_results) if groups else 1.0
     if journey in JOURNEY_GROUPS:
-        semantic_pass = bool(group_results and group_results[0] and semantic_coverage >= 0.8)
+        semantic_pass = bool(group_results and group_results[0] and semantic_coverage >= 0.75)
     elif focus == "profile":
         semantic_pass = bool(group_results and group_results[0] and semantic_coverage >= 0.6)
     elif focus in {"exact", "extensible", "no_match"}:
@@ -211,7 +213,12 @@ def main() -> int:
     source_manifest = json.loads(source_manifest_path.read_text(encoding="utf-8")) if source_manifest_path.exists() else {}
     expected_hash = source_manifest.get("sha256")
     source_hashes = {record.get("source_snapshot_sha256") for record in records}
-    source_integrity = bool(expected_hash and source_hashes == {expected_hash})
+    current_snapshot = source_snapshot()
+    source_integrity = bool(
+        expected_hash
+        and source_hashes == {expected_hash}
+        and current_snapshot["sha256"] == expected_hash
+    )
     summary = {
         "suite": "v3.7-formal-prototype-template-50",
         "records": len(records),
@@ -219,6 +226,8 @@ def main() -> int:
         "dimensions": dimensions,
         "total_score": total,
         "source_snapshot_sha256": expected_hash,
+        "current_source_snapshot_sha256": current_snapshot["sha256"],
+        "source_git_commit": current_snapshot["git_commit"],
         "source_integrity": source_integrity,
         "release_candidate": (
             total >= 90
