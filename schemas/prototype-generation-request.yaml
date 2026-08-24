@@ -1,0 +1,70 @@
+schema_version: v1
+
+prototype_generation_request:
+  request_id: PGR-001
+  session_id: PRS-001
+  project_id: PROJECT-001
+  baseline_version: v0.1
+  status: draft # draft / ready-to-generate / generated / failed / superseded
+
+  contracts:
+    profile_id: UIP-001
+    pui_contracts: []
+    fit_decision_id: TFD-001
+    selected_template_instance_id: null
+    prototype_candidate_id: null
+    asset_slot_contracts: []
+
+  target:
+    fidelity: medium
+    device_type: pending
+    viewport: {width: pending, height: pending, orientation: pending}
+    pages: []
+    routes: []
+    validation_tasks: []
+
+  allowed_composition:
+    templates: []
+    component_semantics: []
+    regions: []
+    slots: []
+    variants: []
+    states: []
+    actions: []
+
+  content:
+    project_copy_only: true
+    example_content_marked: true
+    visual_assets_included: false
+    asset_placeholders: []
+
+  boundaries:
+    semantic_locked: []
+    visual_flexible: []
+    pending_decisions: []
+    forbidden_assumptions: []
+    prohibited_inheritance: [copy, user_data, visual_assets, brand_tokens, business_rules]
+
+  rendering:
+    mode: controlled
+    arbitrary_components_allowed: false
+    arbitrary_business_actions_allowed: false
+    output_format: pending
+    output_location: pending
+
+  patches:
+    - patch_id: PATCH-001
+      base_version: v0.1
+      user_intent: pending
+      tier: L1
+      targets: []
+      before: []
+      after: []
+      impact: []
+      result: pending
+
+  evidence:
+    artifact_ids: []
+    technical_status: pending
+    target_user_status: pending
+    handoff_status: pending

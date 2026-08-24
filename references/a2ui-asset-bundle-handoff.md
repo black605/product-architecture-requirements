@@ -2,6 +2,8 @@
 
 Bundle 将需求控制面交付给 A2UI 设计、运行时和工程团队。它可以包含代码候选，但不执行仓库写入、PR、Catalog 注册、Bit export 或部署，除非用户另行明确授权。
 
+原型模具的 `TMF-`、目录登记与 A2UI Runtime Registry 是独立状态。模板进入共享目录不证明 TSX、Schema、Registry、Renderer、目标应用消费或生产部署已经完成。
+
 ## 1. Bundle Manifest
 
 | 字段 | 要求 |

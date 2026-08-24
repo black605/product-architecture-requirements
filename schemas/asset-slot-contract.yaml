@@ -1,0 +1,45 @@
+schema_version: v1
+
+asset_slot_contract:
+  contract_id: ASC-001
+  project_id: PROJECT-001
+  profile_id: UIP-001
+  pui_contract_id: PUI-001
+  status: draft # draft / ready / superseded / blocked
+
+  slots:
+    - slot_id: ASLOT-001
+      page_id: P-001
+      region_id: pending
+      semantic_role: pending
+      information_priority: P1
+      asset_type: image # image / illustration / avatar / icon / video / audio / document
+      required: false
+      allowed_formats: []
+      source_status: pending
+      source_asset_ids: []
+      geometry:
+        aspect_ratio: pending
+        min_size: {width: pending, height: pending}
+        max_size: {width: pending, height: pending}
+        fit: contain # contain / cover / crop / fixed
+        safe_area: pending
+      placeholder:
+        style: neutral-outline
+        label: pending
+        alt_text: pending
+      states:
+        loading: pending
+        empty: collapse
+        error: safe-placeholder
+        unavailable: safe-placeholder
+        extreme_content: pending
+      interaction: none
+      visual_flexible: []
+      forbidden_assumptions: []
+
+  inheritance:
+    allow_geometry_rules: true
+    allow_safe_area_rules: true
+    allow_source_assets: false
+    allow_historical_fallback: false

@@ -8,6 +8,9 @@
 
 - `ProjectSnapshot` 已达到 `Ready for Prototype`；
 - 每个 Must 页面已有 `PUI-` 原型 UI Contract，并明确页面骨架、P0/P1/P2、主次操作、组件语义和适用状态；
+- 当前项目已有独立且可追溯的 `UIP-`，外部设计证据和继承边界已记录；
+- 已完成七维模具适配并生成状态为 `ready` 的 `TFD-`；结果为 `no_match` 时，必须存在状态为 `ready-for-prototype` 的项目级 `PTC-`；
+- 影响布局的图片、插画、图标、音视频和文档区域已有 `ASC-`，或明确标记 `not_applicable`；
 - 目标用户、主任务、设备/视口、页面入口出口、Must 功能和关键状态明确；
 - 会改变页面主操作的完成、解锁、权限、保存/恢复和异常规则已 Confirmed 或明确 Blocked；
 - Must 项能追溯到 DEC/F/P/AC/T，缺失组件 ID 不阻塞系统任务；
@@ -21,6 +24,9 @@
 |---|---|
 | Prototype ID | 稳定编号与需求基线版本 |
 | UI Contract | PUI-ID、版本、状态，以及 semantic_locked / visual_flexible / pending_decisions / forbidden_assumptions |
+| Profile 与模具 | UIP-ID、证据状态、TFD-ID、七维结论、选中模具或无匹配原因 |
+| 候选与素材 | PTC-ID（适用时）、ASC-ID、黑白占位、比例、缺失/错误行为和旧资产扫描结果 |
+| 对话原型 | PRS-ID、Generation Request、基线版本、允许组合、Patch 历史和真实生成状态 |
 | 验证目标 | 要观察的理解、操作或恢复行为 |
 | 页面与路径 | P-ID、入口、出口、主/替代路径 |
 | 信息层级 | 页面主任务、P0/P1/P2 内容和主次操作 |
@@ -51,6 +57,8 @@
 每个 P0 页面至少验证正常态和与业务最相关的三类风险态；优先从加载、空、失败、无权限、超长、极值、断网/恢复中选择。压力数据是测试输入，不是生产事实。
 
 涉及 Studio 或可视化调参时读取 `a2ui-studio-patch-bridge.md`：只允许受控、可逆、带基线的 Patch；任何 L3 业务变化必须创建 DEC/CHG，不能由 GUI 静默改写。
+
+用户通过当前对话生成或修改原型时读取 `conversational-prototype-session.md`。自然语言只是修改入口，最终仍要形成带基线、目标、前后变化和影响范围的结构化 Patch。
 
 ## 5. 返回审计与版本升级
 

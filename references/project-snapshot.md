@@ -37,6 +37,14 @@ architecture:
   pages: []
   components: []
   prototype_ui_contracts: []
+prototype:
+  ui_profile:
+  evidence_map: []
+  template_fit_decisions: []
+  asset_slot_contracts: []
+  candidates: []
+  sessions: []
+  template_manifests: []
 delivery:
   artifacts: []
   validation_results: []
@@ -78,6 +86,11 @@ delivery:
 | `T-` | 测试 |
 | `ART-` | 交付产物 |
 | `PUI-` | 原型 UI Contract |
+| `UIP-` | 项目 UI Profile |
+| `TFD-` | 模具适配决策 |
+| `ASC-` | 素材占位 Contract |
+| `PTC-` | 项目级候选模具 |
+| `PRS-` | 对话式原型会话 |
 
 编号创建后不复用、不因排序变化而改变。领域已有稳定测试前缀（如 `IN-`、`TM-`、`GM-`）时可继续使用，但必须能回指 `DEC/F/TR/AC`。
 
@@ -108,6 +121,7 @@ Must 项至少形成：
 - 产品评审：目标、范围、DEC、功能、风险和版本。
 - 设计交接：页面、组件、状态、内容优先级和未决视觉项。
 - 原型语义交接：PUI Contract、页面骨架、P0/P1/P2、操作层级、状态矩阵和语义/视觉边界。
+- 原型项目交接：独立 UI Profile、设计证据、继承边界、模具适配、素材占位、候选模具和会话版本。
 - 研发交接：对象、规则、状态、依赖、AC 和非功能要求。
 - 测试交接：DEC/F/TR/AC/T 追溯与环境/数据清理。
 - 运营复盘：指标、研究发现、路线图动作和待验证假设。

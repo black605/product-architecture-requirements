@@ -1,0 +1,7 @@
+{
+  "project_id": "PROJECT-STUDENT-OLD",
+  "copy": ["口语闯关岛", "跟哈佛外教开口说"],
+  "visual_assets": ["assets/student-mascot.png", "assets/oral-course-cover.webp"],
+  "brand_tokens": ["student-warm-orange", "student-game-radius"],
+  "business_rules": ["完成三次跟读自动解锁勋章"]
+}

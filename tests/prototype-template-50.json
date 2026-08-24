@@ -1,0 +1,402 @@
+[
+  {
+    "role": "产品经理",
+    "journey": "新项目引用历史学习端",
+    "focus": "profile",
+    "mode": "delivery",
+    "confirmed_context": ["新项目是教师桌面端批改工作台", "历史项目是学生学习机横屏口语练习", "只参考历史结构"],
+    "user_input": "请进入原型准备，建立当前项目的 UI Profile，并说明哪些旧内容不能继承。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "家长端引用学生端",
+    "focus": "profile",
+    "mode": "delivery",
+    "confirmed_context": ["当前项目是手机竖屏家长学习报告", "旧项目是学生平板课程页", "用户只允许参考栅格"],
+    "user_input": "请整理项目独立 Profile 和设计证据继承边界。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "同品牌不同业务",
+    "focus": "profile",
+    "mode": "delivery",
+    "confirmed_context": ["新项目是运营桌面端内容审核", "历史项目是同品牌 C 端课程商城", "业务规则不能共用"],
+    "user_input": "同一品牌是否能直接复用旧 Profile？请给出当前项目处理结果。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "Figma 暂不可访问",
+    "focus": "profile",
+    "mode": "delivery",
+    "confirmed_context": ["用户提供了 Figma 节点链接", "当前环境无法访问节点", "没有截图或导出文件"],
+    "user_input": "请先建立证据记录和 UI Profile，不要猜测节点里的具体设计参数。"
+  },
+  {
+    "role": "研发/技术负责人",
+    "journey": "历史 Profile 污染检查",
+    "focus": "profile",
+    "mode": "delivery",
+    "confirmed_context": ["两个项目目标用户不同", "设备不同", "历史缓存中存在旧文案和图片"],
+    "user_input": "请给出 Profile 隔离、来源记录和污染防护要求。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "完全匹配课程详情模具",
+    "focus": "exact",
+    "mode": "delivery",
+    "confirmed_context": ["PUI 和 UIP 已 Ready", "候选模具的用户、任务、页面、层级、区域、设备、状态全部一致", "模具无项目内容"],
+    "user_input": "请完成模具适配判断并给出可进入原型的结论。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "完全匹配教师表格页",
+    "focus": "exact",
+    "mode": "delivery",
+    "confirmed_context": ["教师桌面端名单管理页", "现有模板支持相同 P0、主操作、表格区域和状态", "视口一致"],
+    "user_input": "请输出七维适配结果，不要只给相似度分数。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "完全匹配移动详情页",
+    "focus": "exact",
+    "mode": "delivery",
+    "confirmed_context": ["PUI-008、UIP-008 已 Ready，候选为 TPL-008 v1.0", "目标用户、核心任务、页面类型、信息层级、关键区域、手机竖屏设备与全部关键状态一致", "模板版本与 Profile 版本兼容且不含项目内容"],
+    "user_input": "确认能否 exact 复用，并说明项目实例和内容清理要求。"
+  },
+  {
+    "role": "研发/技术负责人",
+    "journey": "完全匹配但需实例化",
+    "focus": "exact",
+    "mode": "delivery",
+    "confirmed_context": ["PUI-009、UIP-009 已 Ready，候选为 TPL-009 v1.0", "七维全部匹配且模板作用域允许", "模板含 example-only 示例文案"],
+    "user_input": "请给出 exact 结论和生成项目实例前的处理。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "完全匹配学习机横屏",
+    "focus": "exact",
+    "mode": "delivery",
+    "confirmed_context": ["PUI-010、UIP-010 已 Ready，候选为 TPL-010 v2.0", "目标用户、核心任务、页面类型、信息层级、关键区域、学习机横屏设备与关键状态全部匹配", "母版不含旧项目内容和资产"],
+    "user_input": "请输出正式 TemplateFitDecision 摘要。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "增加可选学习建议区",
+    "focus": "extensible",
+    "mode": "delivery",
+    "confirmed_context": ["核心任务、P0、设备和主操作一致", "只新增 P2 学习建议区", "模板有区域扩展点"],
+    "user_input": "请判断是否为可扩展匹配并列出扩展项。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "增加 partial_data 状态",
+    "focus": "extensible",
+    "mode": "delivery",
+    "confirmed_context": ["模板覆盖主流程", "当前项目新增部分数据状态", "模板声明状态扩展点"],
+    "user_input": "请完成 extensible 判断，并说明如何避免修改共享模具。"
+  },
+  {
+    "role": "研发/技术负责人",
+    "journey": "增加可选筛选插槽",
+    "focus": "extensible",
+    "mode": "delivery",
+    "confirmed_context": ["PUI-013、UIP-013 已 Ready，候选为 TPL-013", "目标用户、任务、页面、P0、骨架、设备、主操作与关键状态一致", "新增筛选属于 P1，模板允许工具区插槽扩展"],
+    "user_input": "请输出扩展清单、项目实例和回归范围。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "增加无权限状态",
+    "focus": "extensible",
+    "mode": "delivery",
+    "confirmed_context": ["PUI-014、UIP-014 已 Ready，候选为 TPL-014", "目标用户、主任务、页面类型、P0/P1/P2、关键区域、设备和既有关键状态全部匹配", "只新增 no_permission 状态，模板已有状态扩展点且不改变主操作、入口或出口"],
+    "user_input": "这个差异能否判定可扩展匹配？请给依据。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "增加可折叠辅助区",
+    "focus": "extensible",
+    "mode": "delivery",
+    "confirmed_context": ["新增区域是 P2", "为空时整块坍缩", "不影响主操作和入口出口"],
+    "user_input": "请给出 extensible 的结构处理，不要改原共享模板。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "手机家长报告无模具",
+    "focus": "no_match",
+    "mode": "delivery",
+    "confirmed_context": ["目录只有学习机课程页和桌面后台", "当前是手机竖屏家长报告", "PUI/UIP 已 Ready"],
+    "user_input": "请执行无匹配流程并说明候选模具怎么生成。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "核心任务冲突",
+    "focus": "no_match",
+    "mode": "delivery",
+    "confirmed_context": ["候选模板主任务是浏览", "当前页面主任务是完成批改", "视觉风格相近"],
+    "user_input": "能否复用这个看起来很像的模板？请完成适配判断。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "设备冲突",
+    "focus": "no_match",
+    "mode": "delivery",
+    "confirmed_context": ["现有模板只支持桌面横屏鼠标操作", "当前项目是手机竖屏触控", "关键区域无法重排"],
+    "user_input": "请判断模板结果，并给出新的黑白候选处理。"
+  },
+  {
+    "role": "研发/技术负责人",
+    "journey": "P0 区域缺失",
+    "focus": "no_match",
+    "mode": "delivery",
+    "confirmed_context": ["当前项目必须展示实时状态和主操作", "模板没有对应 P0 区域", "新增会改变核心骨架"],
+    "user_input": "请执行硬阻塞检查并给出 no_match 后续。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "关键状态不可表达",
+    "focus": "no_match",
+    "mode": "delivery",
+    "confirmed_context": ["页面必须覆盖断网恢复和部分提交", "模板没有状态扩展点", "不能删除这些状态"],
+    "user_input": "请给出适配结论和项目级候选要求。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "课程封面占位",
+    "focus": "asset",
+    "mode": "delivery",
+    "confirmed_context": ["原型不使用视觉资产", "课程封面影响卡片布局", "目标设备为平板横屏"],
+    "user_input": "请定义封面的原型素材 Slot，包括比例和异常状态。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "人物插画占位",
+    "focus": "asset",
+    "mode": "delivery",
+    "confirmed_context": ["人物插画为 P2", "无素材时允许坍缩", "不继承旧项目插画"],
+    "user_input": "请给出黑白占位、缺失和替换规则。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "视频区域占位",
+    "focus": "asset",
+    "mode": "delivery",
+    "confirmed_context": ["视频是 P0 教学内容", "原型只验证播放入口和状态", "没有真实封面与视频"],
+    "user_input": "请定义视频 Slot 的尺寸、状态和 P0 缺失出口。"
+  },
+  {
+    "role": "研发/技术负责人",
+    "journey": "音频与文档占位",
+    "focus": "asset",
+    "mode": "delivery",
+    "confirmed_context": ["页面包含示范音频和 PDF 预览", "只做中保真", "资源失败不能用历史缓存兜底"],
+    "user_input": "请整理 ASC 和安全 fallback。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "头像极端状态",
+    "focus": "asset",
+    "mode": "delivery",
+    "confirmed_context": ["头像为 P1", "可能缺失或比例异常", "页面需保持主结构"],
+    "user_input": "请给出头像占位、裁切、安全区和错误处理。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "生成前摘要",
+    "focus": "session",
+    "mode": "delivery",
+    "confirmed_context": ["PUI/UIP/TFD 已 Ready，选择 extensible 模具且 ASC 已完成", "页面是学生课后复习详情页", "唯一主任务是查看重点后完成配套练习", "本轮验证目标是学生能找到并开始练习"],
+    "user_input": "我想在当前对话里生成原型，请先告诉我准备怎么生成。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "受控 Generation Request",
+    "focus": "session",
+    "mode": "delivery",
+    "confirmed_context": ["PRS-027 已建立且生成前摘要已确认", "页面是学生课后复习详情页，唯一主任务是开始配套练习", "设备为学习机横屏，允许的模板、区域、Slot 和状态已登记，没有任意组件权限"],
+    "user_input": "请生成对话原型请求和可见边界，不写自由 HTML。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "没有原型能力",
+    "focus": "session",
+    "mode": "delivery",
+    "confirmed_context": ["PRS-028、PUI/UIP/TFD/ASC 均 Ready，Generation Request 已完成", "页面与唯一主任务已确认", "当前环境没有可调用的原型生成能力"],
+    "user_input": "请继续推进，但不要假装页面已经生成。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "预览返回审计",
+    "focus": "session",
+    "mode": "delivery",
+    "confirmed_context": ["PRS-029 下游返回了可打开预览并带基线版本", "尚未做目标用户测试", "预览使用 Mock 数据，本轮唯一主任务已在 Generation Request 中确认"],
+    "user_input": "请审计这次对话原型返回状态和下一步。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "同会话继续修改",
+    "focus": "session",
+    "mode": "delivery",
+    "confirmed_context": ["PRS-030 已生成 v0.1", "用户要继续自然语言修改且当前基线没有冲突", "结果卡片为 P1，练习区和唯一主操作不变"],
+    "user_input": "把结果卡片移到练习区后面，并保留修改记录。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "L1 占位标签修改",
+    "focus": "patch",
+    "mode": "delivery",
+    "confirmed_context": ["PRS-031 当前原型 v0.2", "用户只想缩短占位标签", "不改变业务语义"],
+    "user_input": "把图片占位里的文字从‘课程主题插画’改成‘主题图’，其他不变。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "L2 区域顺序修改",
+    "focus": "patch",
+    "mode": "delivery",
+    "confirmed_context": ["PRS-032 当前基线为 v0.2", "模板允许区域顺序与 P2 坍缩变体", "P0 和主操作不变"],
+    "user_input": "把薄弱项放到练习结果后，没有薄弱项时整块隐藏。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "L3 完成口径修改",
+    "focus": "patch",
+    "mode": "delivery",
+    "confirmed_context": ["PRS-033 当前原型 v0.3", "Confirmed 原规则是完成练习才完成本课", "‘看完重点’尚未定义触发口径"],
+    "user_input": "改成学生看完重点就自动完成，不需要练习。"
+  },
+  {
+    "role": "研发/技术负责人",
+    "journey": "Patch 基线冲突",
+    "focus": "patch",
+    "mode": "delivery",
+    "confirmed_context": ["PRS-034 中设计师基于 v0.2 提交 PATCH-034", "当前权威版本已是 v0.4", "同一区域已被修改"],
+    "user_input": "请处理这个过期 Patch，不要静默覆盖当前版本。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "L3 权限变化",
+    "focus": "patch",
+    "mode": "delivery",
+    "confirmed_context": ["PRS-035 原型已进入评审，当前基线为 v0.5", "Confirmed 当前学生只能查看自己的结果", "全班排名涉及新的数据可见权限"],
+    "user_input": "页面上加一个入口，让学生可以看到全班排名。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "技术通过但未登记",
+    "focus": "lifecycle",
+    "mode": "delivery",
+    "confirmed_context": ["PTC 已通过浏览器技术回归", "没有目标任务验证", "Owner 未授权共享"],
+    "user_input": "页面已经能打开，直接登记成公共模具吧。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "证据齐备申请登记",
+    "focus": "lifecycle",
+    "mode": "delivery",
+    "confirmed_context": ["结构、隔离、技术、任务和追溯证据通过", "Owner 已确认 shared 范围", "尚未执行目录写入"],
+    "user_input": "请生成模板登记 Manifest 和真实写入前的检查。"
+  },
+  {
+    "role": "研发/技术负责人",
+    "journey": "登记返回审计",
+    "focus": "lifecycle",
+    "mode": "delivery",
+    "confirmed_context": ["目录返回真实 TPL ID 和版本", "A2UI Registry 尚未注册", "目标应用未消费"],
+    "user_input": "请更新模板状态，但不要把登记说成生产可用。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "破坏性模板升级",
+    "focus": "lifecycle",
+    "mode": "delivery",
+    "confirmed_context": ["拟删除一个 P0 区域并移动主操作", "当前模板已有项目引用", "旧版证据需保留"],
+    "user_input": "请给出版本升级、重新验证和迁移处理。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "模板停用",
+    "focus": "lifecycle",
+    "mode": "delivery",
+    "confirmed_context": ["模板存在严重可用性问题", "已有历史项目引用", "有替代模板"],
+    "user_input": "请执行停用方案，并说明新旧项目如何处理。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "只提供 Figma 标题",
+    "focus": "evidence",
+    "mode": "delivery",
+    "confirmed_context": ["只有名为‘页面设计规范’的链接", "节点当前不可访问", "没有变量或截图"],
+    "user_input": "请告诉我现在能提取什么、不能声称什么。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "截图只能证明可观察内容",
+    "focus": "evidence",
+    "mode": "delivery",
+    "confirmed_context": ["提供一张课程页截图", "截图显示卡片和按钮", "没有权限与算法资料"],
+    "user_input": "请建立证据映射，避免从截图推断业务规则。"
+  },
+  {
+    "role": "研发/技术负责人",
+    "journey": "旧页面生产能力误判",
+    "focus": "evidence",
+    "mode": "delivery",
+    "confirmed_context": ["旧页面可打开", "不知道是否连接真实服务", "只有本地演示"],
+    "user_input": "请区分可观察页面、Mock、真实能力和生产证据。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "多来源冲突",
+    "focus": "evidence",
+    "mode": "delivery",
+    "confirmed_context": ["Figma 标注 1280 横屏", "产品文档要求手机竖屏", "用户尚未确认哪个有效"],
+    "user_input": "请记录冲突并处理 Profile 状态，不要自行选一个。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "外部规范版本过期",
+    "focus": "evidence",
+    "mode": "delivery",
+    "confirmed_context": ["提供的设计规范版本早于当前项目", "现有页面结构已经调整", "没有确认继续沿用"],
+    "user_input": "请说明证据版本、置信度和待确认边界。"
+  },
+  {
+    "role": "教师/业务专家",
+    "journey": "模糊批改工具",
+    "focus": "exploration",
+    "mode": "exploration",
+    "confirmed_context": [],
+    "user_input": "我想做个能帮老师批作业的页面，高级一点。"
+  },
+  {
+    "role": "UI/UX 设计师",
+    "journey": "模糊数据大屏",
+    "focus": "exploration",
+    "mode": "exploration",
+    "confirmed_context": ["要做数据大屏"],
+    "user_input": "先给我套个好看的模板，业务以后再说。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "复杂资金规则未定",
+    "focus": "exploration",
+    "mode": "exploration",
+    "confirmed_context": ["多租户", "多级分润", "涉及退款"],
+    "user_input": "规则还没定，你先把页面和验收都做完整。"
+  },
+  {
+    "role": "产品经理",
+    "journey": "五子棋原型模具复用",
+    "focus": "exploration",
+    "mode": "exploration",
+    "confirmed_context": ["学习机横屏", "沿用现有棋盘规则", "不做整体视觉重设计"],
+    "user_input": "增加好友观战页，先看看原来的对弈页能不能直接套。"
+  },
+  {
+    "role": "教师/业务专家",
+    "journey": "口语课程学习端",
+    "focus": "exploration",
+    "mode": "exploration",
+    "confirmed_context": ["学生端", "3 到 8 岁", "外教直播与录播并存"],
+    "user_input": "我想先做课后复习页，但还没想清楚学生在页面上具体要完成什么。"
+  }
+]

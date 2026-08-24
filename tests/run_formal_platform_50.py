@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import hashlib
 import json
 import os
 import re
@@ -26,8 +27,54 @@ PROJECT_DIR = Path("/Users/tal/Documents/ChatGPT/新课件-0818")
 CODEX = "/Applications/ChatGPT.app/Contents/Resources/codex"
 MODEL = os.environ.get("FORMAL_PLATFORM_MODEL", "gpt-5.6-luna")
 
+TFD_FIRST_LINE = re.compile(
+    r"^TFD-[^｜\s]+｜(?P<result>exact|extensible|no_match)｜(?P<status>ready|blocked)$"
+)
+PATCH_FIRST_LINE = re.compile(
+    r"^PATCH-[^｜\s]+｜(?P<tier>L1|L2|L3)｜(?P<baseline>v\d+\.\d+(?:\.\d+)?)｜"
+    r"(?P<result>applied|needs-decision|conflicted|rejected)$"
+)
+PATCH_EXPECTATIONS = {
+    "同会话继续修改": ("L2", "applied"),
+    "L1 占位标签修改": ("L1", "applied"),
+    "L2 区域顺序修改": ("L2", "applied"),
+    "L3 完成口径修改": ("L3", "needs-decision"),
+    "Patch 基线冲突": (None, "conflicted"),
+    "L3 权限变化": ("L3", "needs-decision"),
+}
+
 PROJECT_CONTEXT = """
 当前项目已知事实：产品是“学而思密卷 · 2026 高考备考专区”，当前页面有数学、语文、英语学科入口，包含备考方案、真题实战、真题模拟和资料类内容卡片，设计画布约为 1280×860，整体是温暖的新中式备考视觉方向。上述是页面与项目资料事实，不等同于已确认的业务规则。""".strip()
+
+
+def source_snapshot() -> dict[str, object]:
+    """Bind runtime evidence to the exact behavior and validator sources."""
+    candidates = [SKILL_DIR / "SKILL.md"]
+    for pattern in (
+        "platform/*.md",
+        "references/*.md",
+        "schemas/*",
+        "tests/*.py",
+        "tests/prototype-template-50.json",
+        "tests/fixtures/**/*",
+    ):
+        candidates.extend(SKILL_DIR.glob(pattern))
+    files = sorted({path for path in candidates if path.is_file()})
+    digest = hashlib.sha256()
+    manifest: list[dict[str, str]] = []
+    for path in files:
+        relative = path.relative_to(SKILL_DIR).as_posix()
+        content = path.read_bytes()
+        file_hash = hashlib.sha256(content).hexdigest()
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(content)
+        digest.update(b"\0")
+        manifest.append({"path": relative, "sha256": file_hash})
+    commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=SKILL_DIR, text=True, capture_output=True, check=False
+    ).stdout.strip() or None
+    return {"sha256": digest.hexdigest(), "git_commit": commit, "files": manifest}
 
 CASES = [
     "我想做一个给高中生用的高考备考内容专区。",
@@ -142,6 +189,8 @@ def prompt_for(round_no: int, user_input: str, project_context: str = PROJECT_CO
 3. 区分用户确认、暂定方向与待确认内容，不能把假设写成事实；非专业角色可用自然语言表达，不要求展示内部标签；
 4. 若本轮信息足够，交付当前阶段最小的结构化产物；若不足，只追问最影响方案的缺口；
 5. 不要为了套模板而输出完整 PRD，回复控制在 1200 字以内。
+6. 若本轮涉及原型模具适配或原型回改，第一非空行必须严格使用 SKILL.md 规定的 TFD/PATCH 固定回执，不在此前增加标题或解释；PATCH 第三段只能写 vX.Y 版本号。
+7. 交付 Profile、素材 Slot、项目候选、原型会话或模板生命周期记录时，必须显示 UIP/ASC/PTC/PRS/TMF 对象 ID；L3 回改必须同时显示 DEC 与 CHG 对象 ID。
 
 用户输入：
 {user_input}
@@ -166,7 +215,12 @@ def count_questions(text: str) -> int:
     return len(re.findall(r"[？?]+", text))
 
 
-def evaluate_output(assistant_output: str, mode: str = "standard") -> dict[str, object]:
+def evaluate_output(
+    assistant_output: str,
+    mode: str = "standard",
+    focus: str = "",
+    journey: str = "",
+) -> dict[str, object]:
     question_count = count_questions(assistant_output)
     chinese_char_count = len(re.findall(r"[\u4e00-\u9fff]", assistant_output))
     internal_language = re.search(
@@ -185,6 +239,22 @@ def evaluate_output(assistant_output: str, mode: str = "standard") -> dict[str, 
         assistant_output,
     )
     high_impact_bypass = re.search(r"待确认但不影响[^\n]*(?:Must|骨架|规格|验收)", assistant_output, re.IGNORECASE)
+    first_line = next((line.strip() for line in assistant_output.splitlines() if line.strip()), "")
+    contract_format_pass = True
+    contract_format_type = "not_applicable"
+    if focus in {"exact", "extensible", "no_match"}:
+        contract_format_type = "TFD"
+        match = TFD_FIRST_LINE.fullmatch(first_line)
+        contract_format_pass = bool(match and match.group("result") == focus)
+    elif journey in PATCH_EXPECTATIONS:
+        contract_format_type = "PATCH"
+        expected_tier, expected_result = PATCH_EXPECTATIONS[journey]
+        match = PATCH_FIRST_LINE.fullmatch(first_line)
+        contract_format_pass = bool(
+            match
+            and (expected_tier is None or match.group("tier") == expected_tier)
+            and match.group("result") == expected_result
+        )
     return {
         "real_process_succeeded": True,
         "assistant_output_present": bool(assistant_output.strip()),
@@ -200,7 +270,7 @@ def evaluate_output(assistant_output: str, mode: str = "standard") -> dict[str, 
             label in assistant_output
             for label in (
                 "已知事实", "已确认", "已确定", "待确认", "还需要确认", "暂定假设", "暂定方向", "暂定",
-                "已改成", "还需确认", "尚未确定", "暂不确定", "不能当作事实",
+                "已改成", "已记录", "已更新", "当前交付", "当前判断", "当前边界", "判断", "结论", "目前", "还需确认", "尚未确定", "暂不确定", "不能当作事实",
                 "目前只确认", "目前只能确认", "当前只确认", "未定", "仍未确定", "待具体化", "暂不展开", "暂不能",
                 "Fact", "Confirmed", "Inference", "Proposal", "Assumption", "Pending",
             )
@@ -208,10 +278,18 @@ def evaluate_output(assistant_output: str, mode: str = "standard") -> dict[str, 
         "blocked_trace_absent": blocked_trace_violation is None,
         "high_impact_bypass_absent": high_impact_bypass is None,
         "implementation_code_absent": implementation_code is None,
+        "contract_first_line": first_line,
+        "contract_format_type": contract_format_type,
+        "contract_format_pass": contract_format_pass,
     }
 
 
-def run_case(item: tuple[int, dict[str, object]], output_dir: Path, project_context: str = PROJECT_CONTEXT) -> dict[str, object]:
+def run_case(
+    item: tuple[int, dict[str, object]],
+    output_dir: Path,
+    project_context: str = PROJECT_CONTEXT,
+    snapshot: dict[str, object] | None = None,
+) -> dict[str, object]:
     round_no, case = item
     user_input = str(case.get("rendered_input") or case["user_input"])
     mode = str(case.get("mode", "standard"))
@@ -225,6 +303,8 @@ def run_case(item: tuple[int, dict[str, object]], output_dir: Path, project_cont
             command = [
                 CODEX,
                 "exec",
+                "-m",
+                MODEL,
                 "--json",
                 "--ephemeral",
                 "--skip-git-repo-check",
@@ -246,7 +326,12 @@ def run_case(item: tuple[int, dict[str, object]], output_dir: Path, project_cont
             )
         assistant_output = final_path.read_text(encoding="utf-8") if final_path.exists() else ""
         raw_platform_output = result.stdout + ("\n" + result.stderr if result.stderr else "")
-        checks = evaluate_output(assistant_output, mode)
+        checks = evaluate_output(
+            assistant_output,
+            mode,
+            str(case.get("focus", "")),
+            str(case.get("journey", "")),
+        )
         checks["real_process_succeeded"] = result.returncode == 0
         record: dict[str, object] = {
             "round": round_no,
@@ -257,6 +342,8 @@ def run_case(item: tuple[int, dict[str, object]], output_dir: Path, project_cont
             "exit_code": result.returncode,
             "thread_id": extract_thread_id(raw_platform_output),
             "runtime_workspace": "isolated temporary directory",
+            "source_snapshot_sha256": (snapshot or {}).get("sha256"),
+            "source_git_commit": (snapshot or {}).get("git_commit"),
             "role": case.get("role"),
             "journey": case.get("journey"),
             "focus": case.get("focus"),
@@ -302,10 +389,14 @@ def main() -> int:
     if not selected or min(selected) < 1 or max(selected) > len(cases):
         raise SystemExit("rounds must be within 1-50")
     args.output.mkdir(parents=True, exist_ok=True)
+    snapshot = source_snapshot()
+    (args.output / "source-manifest.json").write_text(
+        json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
     records: list[dict[str, object]] = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, args.workers)) as pool:
         futures = [
-            pool.submit(run_case, (number, cases[number - 1]), args.output / "records", args.project_context)
+            pool.submit(run_case, (number, cases[number - 1]), args.output / "records", args.project_context, snapshot)
             for number in sorted(selected)
         ]
         for future in concurrent.futures.as_completed(futures):
@@ -313,24 +404,37 @@ def main() -> int:
     for record_path in sorted((args.output / "records").glob("round-*.json")):
         record = json.loads(record_path.read_text(encoding="utf-8"))
         if int(record["round"]) not in selected:
-            record["checks"] = evaluate_output(str(record.get("assistant_output", "")), str(record.get("test_mode", "standard")))
+            record["checks"] = evaluate_output(
+                str(record.get("assistant_output", "")),
+                str(record.get("test_mode", "standard")),
+                str(record.get("focus", "")),
+                str(record.get("journey", "")),
+            )
             record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
             records.append(record)
     records.sort(key=lambda record: int(record["round"]))
     (args.output / "dialogues.jsonl").write_text(
         "".join(json.dumps(record, ensure_ascii=False) + "\n" for record in records), encoding="utf-8"
     )
-    hard_checks = (
-        "real_process_succeeded", "assistant_output_present", "question_limit_pass", "single_question_pass",
-        "compact_exploration_pass", "internal_language_absent", "tableless_exploration_pass",
-        "plain_text_exploration_pass",
-        "uncertainty_labels_present", "blocked_trace_absent", "high_impact_bypass_absent", "implementation_code_absent",
+    shared_hard_checks = (
+        "real_process_succeeded", "assistant_output_present", "question_limit_pass",
+        "blocked_trace_absent", "high_impact_bypass_absent", "implementation_code_absent",
+        "contract_format_pass",
     )
-    passed = sum(1 for record in records if all(bool(record["checks"].get(key)) for key in hard_checks))
+    exploration_hard_checks = (
+        "single_question_pass", "compact_exploration_pass", "internal_language_absent",
+        "tableless_exploration_pass", "plain_text_exploration_pass", "uncertainty_labels_present",
+    )
+
+    def hard_pass(record: dict[str, object]) -> bool:
+        keys = shared_hard_checks + (exploration_hard_checks if record.get("test_mode") == "exploration" else ())
+        return all(bool(record["checks"].get(key)) for key in keys)
+
+    passed = sum(1 for record in records if hard_pass(record))
     selected_passed = sum(
         1
         for record in records
-        if int(record["round"]) in selected and all(bool(record["checks"].get(key)) for key in hard_checks)
+        if int(record["round"]) in selected and hard_pass(record)
     )
     expected_count = args.expect_count if args.expect_count is not None else len(selected)
     summary = {
@@ -342,15 +446,18 @@ def main() -> int:
         "completed_rounds": len(records),
         "fully_passing_rounds": passed,
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "source_snapshot_sha256": snapshot["sha256"],
+        "source_git_commit": snapshot["git_commit"],
+        "source_file_count": len(snapshot["files"]),
         "command": "codex exec --json --ephemeral --skip-git-repo-check -s read-only -C isolated-temp -o final -",
-        "note": "每条记录均由正式运行时独立执行；本文件不包含人工拼接的 assistant 回复。",
+        "note": "每条记录均由正式运行时独立执行；本文件不包含人工拼接的 assistant 回复，并绑定同一源码快照。",
     }
     (args.output / "run-summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (args.output / "README.md").write_text(
         "# 正式平台 50 轮真实对话记录\n\n"
         "本目录由 `run_formal_platform_50.py` 调用 Codex CLI 正式运行时生成。每轮是一个独立会话，保存了用户输入、平台返回的最终 assistant 消息、会话标识、退出码和约束检查。\n\n"
         f"- 请求轮次：{len(selected)}\n- 期望本次通过：{expected_count}\n- 本次通过：{selected_passed}\n- 累计完成轮次：{len(records)}\n- 累计轻量检查通过：{passed}\n- 目标 Skill：`{SKILL_DIR / 'SKILL.md'}`\n\n"
-        "轻量检查验证运行成功、输出存在、提问上限、探索轮字数/纯文本/内部词边界、事实与待确认表达，以及未生成代码块；它不替代人工产品评审。\n",
+        "机器检查验证运行成功、输出存在、提问上限、探索轮字数/纯文本/内部词边界、固定 TFD/Patch 首行格式、事实与待确认表达，以及未生成代码块；它不替代人工产品评审。\n",
         encoding="utf-8",
     )
     print(json.dumps(summary, ensure_ascii=False))

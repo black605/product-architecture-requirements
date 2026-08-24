@@ -1,0 +1,61 @@
+schema_version: v1
+
+template_manifest:
+  manifest_id: TMF-001
+  template_id: TPL-001
+  template_version: v1.0.0
+  candidate_id: PTC-001
+  source_project_id: PROJECT-001
+  source_profile_id: UIP-001
+  lifecycle_status: project-candidate # project-candidate / in-validation / validated / registration-requested / registered / deprecated / superseded
+  scope: project-local
+  owner: pending
+
+  applicability:
+    target_users: []
+    primary_tasks: []
+    page_types: []
+    device_profiles: []
+    required_regions: []
+    supported_states: []
+    exclusions: []
+
+  contracts:
+    pui_contracts: []
+    fit_decision_id: TFD-001
+    asset_slot_contracts: []
+    template_definition_ref: ../schemas/template-definition.yaml
+
+  evidence:
+    structural_audit: pending
+    isolation_scan: pending
+    technical_validation: pending
+    target_task_validation: pending
+    handoff_audit: pending
+    artifact_ids: []
+
+  provenance:
+    evidence_ids: []
+    license_status: pending
+    external_sources: []
+
+  registration:
+    authorized: false
+    requested_at: null
+    registered_at: null
+    catalog_record_id: null
+    registry_record_id: null
+    returned_evidence: []
+
+  compatibility:
+    previous_versions: []
+    breaking_changes: []
+    migration_notes: []
+    replacement_template_id: null
+
+  contamination_scan:
+    copy: pass
+    user_data: pass
+    visual_assets: pass
+    brand_tokens: pass
+    business_rules: pass

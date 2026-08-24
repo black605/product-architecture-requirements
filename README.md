@@ -4,7 +4,25 @@
 
 `product-architecture-requirements` 是一个面向产品经理、业务专家/教师、设计师、运营与研发协作方的 Codex Skill。它通过简洁的自然语言对话，将模糊想法沿统一生命周期沉淀为业务流程、功能架构、页面结构、组件状态、中保真原型输入、验证证据和可验收的交接方案；不会用一份假设很多的 PRD 代替需求确认。
 
-## 本次更新：v3.4.7
+## 本次更新：v3.7.0
+
+- 新增项目级 `ProjectUIProfile` 和 UI 证据映射；每个新项目使用独立 Profile。
+- Figma、截图、旧页面和历史模具只作为可追溯证据，不自动成为当前项目规则。
+- 默认禁止继承旧项目文案、用户数据、视觉资产、品牌 Token 和业务规则。
+- 新增原型模具目录和强制适配闸门，按七个维度输出 `exact / extensible / no_match` 与逐项依据。
+- `no_match` 时生成项目级黑白候选模具；图片、插画、音视频等只使用带比例和状态的语义占位。
+- 原型在当前需求对话中生成和回改：生成前展示关键决策，自然语言修改形成可追溯 Patch，业务语义变化退回需求确认。
+- 候选模具经过结构、隔离、技术、任务和 Owner 审核后才能登记；模板目录、Runtime Registry、工程消费和生产部署状态分别记录。
+
+## 项目级模具与原型生成
+
+进入原型前，Skill 会为每个新项目建立独立 `ProjectUIProfile`，并按目标用户、核心任务、页面类型、信息层级、关键区域、设备尺寸和交互状态检查模板：
+
+- `exact`：完整匹配，生成当前项目实例；
+- `extensible`：核心骨架匹配，只扩展允许的 Slot、区域或状态；
+- `no_match`：不套旧模具，生成项目级黑白候选。
+
+图片、插画、音视频等只在原型中显示语义占位、比例和状态，不复用历史视觉资产。用户可以在当前对话中查看生成前摘要、打开真实预览并用自然语言修改；每次修改保留版本和影响记录。
 
 - 将主链路统一为“输入归集 → 需求收拢 → 产品架构 → 规格生成 → 中保真线稿 → 方案验证 → 生产交付 → 运营复盘”。
 - 新增 `ProjectSnapshot` 单一事实源和 S0–S7 阶段门槛，需求、原型、测试、交接与指标不再各自维护一套状态。
@@ -161,7 +179,11 @@ $product-architecture-requirements
 ├── platform/                        # Dify、Coze、GPTs 平台配置
 ├── references/                      # 生命周期、Snapshot、原型、交接与专项协议
 │   ├── prototype-ui-contract.md     # 页面语义与状态 Contract
+│   ├── project-ui-profile.md        # 项目独立 Profile 与证据隔离
+│   ├── prototype-template-fit.md    # 原型模具适配闸门
+│   ├── conversational-prototype-session.md # 对话式原型与 Patch
 │   └── versions/                    # 历史版本快照
+├── schemas/                         # Profile、模板、适配、素材、生成与登记数据结构
 └── tests/                           # 对抗用例、回归记录与正式测试证据
 ```
 
@@ -177,6 +199,7 @@ $product-architecture-requirements
 - [回归测试报告](tests/regression-report.md)：用于检查版本升级后是否发生引导逻辑退化。
 - [50 轮正式运行记录](tests/formal-platform-50/README.md)：记录生产平台模拟运行与评分证据。
 - [v3.4.7 五角色增强回归](tests/role-dialogue-50/v3.4.7-dialogue-quality-final/review.md)：40 个探索轮与 10 个交付轮，覆盖短答、回改、矛盾、跨角色、提前索要产物和 Ready/Blocked Gate。
+- [v3.7 项目级模具正式回归](tests/prototype-template-50/v3.7.0-release/README.md)：50 个独立会话，覆盖 Profile 隔离、三态适配、无匹配候选、素材占位、对话 Patch、模板生命周期和历史逻辑保护。
 - [变更记录](CHANGELOG.md)：说明每次规则调整的位置、原因与预期防范问题。
 
 若要继续优化，请遵守“每次只改一个测试用例或一个核心缺陷、改后回跑上一阶段案例、同步记录 Changelog”的迭代规则。

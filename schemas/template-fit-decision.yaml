@@ -1,0 +1,36 @@
+schema_version: v1
+
+template_fit_decision:
+  decision_id: TFD-001
+  project_id: PROJECT-001
+  profile_id: UIP-001
+  profile_version: v0.1
+  pui_contracts: []
+  status: draft # draft / ready / superseded / blocked
+  owner: pending
+
+  candidates:
+    - template_id: TPL-001
+      template_version: v0.1
+      scope_allowed: pending
+      dimensions:
+        target_users: unknown
+        primary_task: unknown
+        page_type: unknown
+        information_hierarchy: unknown
+        required_regions: unknown
+        device_viewport: unknown
+        interaction_states: unknown
+      evidence: []
+      hard_blockers: []
+      extension_items: []
+      prohibited_inheritance: []
+
+  result: no_match # exact / extensible / no_match
+  selected_template_id: null
+  selected_template_version: null
+  matched_items: []
+  mismatched_items: []
+  required_extensions: []
+  pending_decisions: []
+  next_action: create_project_candidate

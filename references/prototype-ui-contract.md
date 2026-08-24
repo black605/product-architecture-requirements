@@ -155,6 +155,16 @@ prototype_ui_contract:
     viewport: 1440x900
     primary_user:
     primary_task:
+    ui_profile_id:
+
+  template_fit:
+    decision_id:
+    result: pending # exact / extensible / no_match
+    selected_template_id:
+
+  prototype_candidate:
+    candidate_id:
+    asset_slot_contracts: []
 
   page:
     page_id: P-001
@@ -210,9 +220,10 @@ prototype_ui_contract:
 | 3. 信息分级 | 页面字段、真实样例内容或内容类型 | P0/P1/P2 与缺失行为 |
 | 4. 操作分级 | 用户要完成的任务、危险操作和返回需求 | 主次操作、确认、取消和恢复路径 |
 | 5. 状态补全 | 已知异常、权限和业务状态 | 页面状态矩阵与测试输入 |
-| 6. 原型表达 | 目标设备、视口、密度和旧页面继承约束 | `prototype-neutral` 展示边界 |
-| 7. 中保真输出 | Contract、目标页面和验证目标 | 可评审中保真交互线稿 |
-| 8. 下游交接 | 目标角色和下游产物 | 语义锁定、视觉可变、待确认与禁止推断清单 |
+| 6. 原型表达 | 目标设备、视口、密度和旧页面继承约束 | 独立 `UIP-` 与 `prototype-neutral` 展示边界 |
+| 7. 模具适配 | PUI、UIP 与允许范围内的模板目录 | `TFD-`、逐项匹配依据和 exact/extensible/no_match |
+| 8. 中保真输出 | Contract、目标页面和验证目标 | 可评审中保真交互线稿 |
+| 9. 下游交接 | 目标角色和下游产物 | 语义锁定、视觉可变、待确认与禁止推断清单 |
 
 用户最少只需提供：产品面向谁、用户在页面完成什么、页面/截图/Figma、目标设备尺寸、主要字段和操作、是否继承现有页面结构。其余信息由 Skill 逐轮提取，每轮最多询问一个关键问题。
 
@@ -221,6 +232,7 @@ prototype_ui_contract:
 ```text
 S3 功能/页面规格
   → PUI Contract（语义、层级、操作、状态）
+  → UIP + TFD（项目隔离、证据与模具适配）
   → S4 中保真交互线稿（可操作表达）
   → S5 技术/用户/交接验证
   → S6 设计、研发、测试交接

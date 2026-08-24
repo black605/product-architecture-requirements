@@ -42,12 +42,14 @@ Intent / DEC
 
 | 结果 | 行为 | 禁止事项 |
 |---|---|---|
-| 精确命中 | 使用已注册 component/variant/模板组合 | 不覆盖 Slot 约束 |
-| 兼容命中 | 在明确适配规则下映射并记录依据 | 不把近似视觉相似当作兼容 |
-| 无命中 | 返回候选或创建受控注册 Handoff | 临时插入 Catalog/Registry 或渲染未注册组件 |
+| `exact` 完全匹配 | 使用已注册 component/variant/模板组合 | 不覆盖 Slot 约束 |
+| `extensible` 可扩展匹配 | 在明确扩展点和适配规则下映射并记录依据 | 不把近似视觉相似当作兼容 |
+| `no_match` 无匹配 | 返回候选或创建受控注册 Handoff | 临时插入 Catalog/Registry 或渲染未注册组件 |
 | 策略拒绝 | 显示允许的 fallback，并记录拒绝类别 | 暴露权限/安全策略详情 |
 
 Catalog 缓存的键必须至少包含 component、variant、模板、协议版本和适用范围；缓存命中只说明候选复用，不证明资产、服务或部署状态。
+
+Runtime 的 Catalog Match 必须继承上游 `TFD-`，不能在运行时把原型阶段的 `no_match` 静默改成可用模板。
 
 ## 5. Fallback 与用户可见反馈
 

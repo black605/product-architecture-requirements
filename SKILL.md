@@ -28,10 +28,13 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 ### 状态与追溯
 
 - 阶段状态只使用：`Exploring`、`Needs Decision`、`Ready for Architecture`、`Ready for Specification`、`Ready for Prototype`、`In Validation`、`Validation Passed`、`Handoff Ready`、`Blocked`、`Superseded`。
-- 稳定 ID 使用 `OBJ/DEC/CHG/F/FL/TR/P/C/DS/AC/T/ART`；编号创建后不复用。
+- 稳定 ID 使用 `OBJ/DEC/CHG/F/FL/TR/P/C/DS/PUI/UIP/TFD/ASC/PTC/PRS/AC/T/ART`；编号创建后不复用。
+- 进入规格或交付后，创建 Profile、适配、素材占位、候选、原型会话或模具清单时必须显示对应 `UIP/TFD/ASC/PTC/PRS/TMF-` ID；尚不能正式编号时写 `前缀-待登记`，不能省略对象身份。
 - 用户或权威资料已确认的范围项、对象名、功能名和状态名在快照与交接中原样保留；可以追加通俗解释，但不能只用同义改写替代权威名称。
 - 每个 Must 至少形成“目标/用户任务 → DEC → F → FL/TR → P/系统入口 → AC → T → ART”的追溯链。
 - 只有证据支持的状态才能升级；文档完整、页面可打开或文件已生成都不等于验证通过或生产完成。
+- 原型模具适配的用户可见首行固定为 `TFD-ID｜exact/extensible/no_match｜ready/blocked`；不能在首行前加标题、解释或前缀。
+- 原型回改的用户可见首行固定为 `PATCH-ID｜L1/L2/L3｜vX.Y｜applied/needs-decision/conflicted/rejected`；第三段只能写版本号，PRS 等会话信息放到状态行，不能用自然语言回执替代。
 
 ## 默认交互协议
 
@@ -76,7 +79,7 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 
 ### S0–S3：输入、需求、架构和规格
 
-读取 [需求收拢、产品架构与规格生成](references/requirements-convergence.md)。用户仍在探索或以非专业角色沟通时，同时读取 [低摩擦自然语言对话](references/low-friction-dialogue.md)：先确认“让谁在什么场景完成什么任务”和“怎样算有价值”，再形成范围、对象、流程、状态、MVP、功能矩阵、IA、页面、组件与 AC。页面准备进入原型时，再读取 [原型 UI Contract](references/prototype-ui-contract.md)，把页面语义、层级、操作和状态冻结为可评审输入。
+读取 [需求收拢、产品架构与规格生成](references/requirements-convergence.md)。用户仍在探索或以非专业角色沟通时，同时读取 [低摩擦自然语言对话](references/low-friction-dialogue.md)：先确认“让谁在什么场景完成什么任务”和“怎样算有价值”，再形成范围、对象、流程、状态、MVP、功能矩阵、IA、页面、组件与 AC。页面准备进入原型时，读取 [原型 UI Contract](references/prototype-ui-contract.md)；若存在 Figma、截图、旧页面、历史模具或原型生成请求，同时读取 [项目 UI Profile 与证据输入](references/project-ui-profile.md)，为当前项目建立独立上下文和继承边界。
 
 - 一句话、PRD、会议记录、截图、Figma 或已有原型都可直接启动；先提取事实，不重复询问已知内容。
 - 内部维护 `confirmed_summary` 与 `turn_delta`：普通回复只回写本轮新增/改动及一个下一问，未变化历史不重复打印。
@@ -98,10 +101,20 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 
 进入中保真前必须建立 [原型 UI Contract](references/prototype-ui-contract.md)：定义页面骨架、P0/P1/P2 信息层级、主次/危险/返回操作、组件业务语义、加载/空/错误/无权限等页面状态，以及 `semantic_locked` / `visual_flexible` / `pending_decisions` / `forbidden_assumptions`。默认使用标记为 `prototype-only` 的 `prototype-neutral` 展示规范；它不等同于品牌视觉、前端组件库或生产实现。
 
+进入任何新项目原型前，还必须按 [项目 UI Profile 与证据输入](references/project-ui-profile.md) 建立独立 `UIP-`，再按 [原型模具目录](references/prototype-template-catalog.md) 和 [原型模具适配闸门](references/prototype-template-fit.md) 输出 `TFD-`。逐项比较目标用户、核心任务、页面类型、信息层级、关键区域、设备尺寸和交互状态；不得只写“相似、可复用或不匹配”。旧项目只能提供候选结构证据，文案、视觉资产、用户数据和业务规则默认禁止继承。
+
+`TFD-` 为 `no_match` 时读取 [项目级候选模具](references/prototype-candidate-generation.md)；页面存在图片、插画、图标、音视频或文档区域时同时读取 [原型素材占位 Contract](references/prototype-asset-slots.md)。只用通用网格、语义组件和 `prototype-neutral` 生成当前项目的 `PTC-`，素材只标注位置、比例、状态和替换规则。
+
+用户希望在沟通中直接生成和修改原型时读取 [对话式原型会话](references/conversational-prototype-session.md)：先展示页面、模具、扩展、占位和语义锁定摘要，再创建受控 Generation Request；预览返回后接受自然语言 Patch。L1/L2 可逆修改重渲染，L3 业务变化创建 DEC/CHG 并退回上游。没有真实生成证据时只交付请求，不声称原型已完成。
+
+任何原型回改须按顶部固定 Patch 首行输出，下一行写影响范围，再描述页面变化。L1/L2 为 `applied` 时先递增 Contract/Generation Request 版本，后续 Patch 以该版本为基线；没有重渲染能力时单独保留旧产物版本，不把 Contract 更新冒充页面已生成。L3 或含未定义触发词的变化禁止以“已确认、已改成、已应用”开头：先建立 Proposed/Blocked 的 DEC/CHG；编号暂时不可分配时也要写 `DEC-待登记 / CHG-待登记`，不能省略。随后降低受影响 PRS/TFD 状态并只追问一个前置规则。
+
 用户明确要求设计系统、组件规范、Token、设计到代码，或已选择基础组件库时，再读取 [设计系统与学习组件架构协议](references/design-system-architecture.md)。按目标端路由候选基础层：教师/运营后台优先 Ant Design + ProComponents；学生端/内容端优先 shadcn/ui + Radix + Tailwind Variants；需要严格多部件插槽和复合变体时可选 Park UI + Ark UI + Panda CSS；已有库则继承。先建立 `DS-` Contract：布局模式/区域、组件插槽、变体轴、状态、响应式约束、Token 引用和需求追溯必须分别记录。只有教育学习端且用户选择时才使用 SpeakUp Profile。所有库仍是候选，当前 Skill 只输出 AI 可读映射和交接；实际安装、组件注册或工程改动需用户授权后交给下游能力。
 
 - `Ready for Prototype` 前不得用更精细的页面掩盖高影响规则缺口。
-- `Ready for Prototype` 前，每个 Must 页面都必须有可追溯的 Contract；Contract 缺少主任务、信息层级、操作层级或适用状态时，继续停留在 Draft/Blocked。
+- `Ready for Prototype` 前，每个 Must 页面都必须有可追溯的 PUI、独立 UIP 和状态为 `ready` 的 TFD；缺少主任务、信息层级、操作层级、适用状态或模具适配依据时，继续停留在 Draft/Blocked。
+- 任何模具复用、扩展清单或候选选择都必须先输出 TFD 首行；不能先设计插槽、区域或页面，再补适配结论。
+- 上下文已有 `PRS-` 或原型版本，且用户说“改、增加、去掉、移动、隐藏、替换”时，强制进入对话式 Patch 路由，不使用普通需求确认回执代替 Patch。
 - v0.4 必须体现真实信息密度、主次操作、关键状态、异常出口、返回/继续/恢复，并清楚标记 Mock 与真实能力。
 - 选用设计系统 Profile 时，基础组件不得改变 `semantic_locked`；领域组件必须回指功能、页面、状态和验收，Token 与外观仍属于 `visual_flexible`，除非已有品牌确认。
 - 原型新增业务规则时创建 DEC/CHG 并退回受影响阶段，不在样例文案或 GUI 中静默定案。
@@ -115,6 +128,8 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 3. 交接完整性：设计、研发、测试和运营是否知道如何继续。
 
 一类证据不能替代另一类。尚未发生的用户测试只能交付计划、样本和记录模板；真实用户证据缺失时不得标记 v1.0。多人测试须有相同、可重复的干净起点，测试中不由主持人替用户执行关键步骤。
+
+项目候选模具需要验证或登记时读取 [原型模具生命周期与登记治理](references/prototype-template-lifecycle.md)。结构、隔离、技术、任务、追溯和来源证据齐备后才可提交 `TMF-`；实际 Catalog/Registry/仓库写入仍需授权和真实返回证据，登记不能替代工程消费或生产部署。
 
 ### S6：生产交付
 
@@ -142,6 +157,11 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 | Schema、自愈、Catalog、Runtime | [A2UI Runtime Quality Gate](references/a2ui-runtime-quality-gate.md) | 定义 fail-closed、修复上限和证据层，不实现运行时 |
 | TSX/Token/Registry/工程包 | [A2UI Asset Bundle Handoff](references/a2ui-asset-bundle-handoff.md) | 定义 Bundle Manifest 与授权状态，不把候选说成上线 |
 | 页面规格进入中保真原型 | [原型 UI Contract](references/prototype-ui-contract.md) | 冻结页面语义、层级、操作、状态和上下游边界，不绑定最终视觉或实现 |
+| Figma、截图、旧页面、历史模具或新项目原型 | [项目 UI Profile 与证据输入](references/project-ui-profile.md) | 建立项目独立 Profile、证据映射和继承边界，不复用旧项目内容与资产 |
+| 进入低/中保真、选择或复用页面模具 | [原型模具目录](references/prototype-template-catalog.md) 与 [原型模具适配闸门](references/prototype-template-fit.md) | 七维比对并输出 exact/extensible/no_match；未通过不得生成原型 |
+| 模具无匹配或原型包含未来素材位置 | [项目级候选模具](references/prototype-candidate-generation.md) 与 [原型素材占位 Contract](references/prototype-asset-slots.md) | 生成 project-local 黑白候选和语义占位，不带入旧项目资产 |
+| 在当前沟通中生成、预览或自然语言修改原型 | [对话式原型会话](references/conversational-prototype-session.md) | 维护 PRS、受控 Generation Request、Patch、版本和返回审计，不做黑盒一次性生成 |
+| 候选模具验证、登记、升级或停用 | [原型模具生命周期与登记治理](references/prototype-template-lifecycle.md) | 维护 TMF、证据、作用域和版本；不把项目候选自动升级为共享或生产资产 |
 | 设计系统、组件规范、Token、插槽/变体、shadcn/Radix、Ant Design 或学习组件 | [设计系统与学习组件架构协议](references/design-system-architecture.md) | 输出布局、插槽、变体、状态、Token 和基础/领域组件映射；不声称已安装、注册或上线 |
 | 模糊想法、非专业用户、角色化需求确认 | [低摩擦自然语言对话](references/low-friction-dialogue.md) | 用角色语言进行单问题推进，内部追溯不默认外露 |
 | 最新案例、开源或竞品证据 | [GitHub/对标参考](references/github-benchmarks.md) 或联网检索 | 优先官方来源，区分事实、推断与待验证 |

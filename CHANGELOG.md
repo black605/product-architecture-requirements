@@ -2,6 +2,55 @@
 
 ## [Unreleased]
 
+### v3.7.0：项目级模具与对话原型发布固化
+
+- 修改位置：新增 50 项结构校验、用例 K、v3.7 发布基线；同步 README、quickstart、Dify、Coze 和 GPTs 配置。
+- 修改原因：v3.5–v3.6 已形成 Profile、适配、候选、占位、对话生成与登记规则，但缺少统一发布门槛和平台配置映射。
+- 预期防范的问题：主入口漏路由；平台跳过模具适配；文档仍按旧原型流程使用；结构完整却未做真实前向测试；局部新规则导致 v3.4 生命周期回退。
+- 发布门槛：quick_validate、v3.4 25 项、v3.7 50 项、五类专项用例与正式运行时 50 轮均须通过，四维总分不低于 90；任何未执行证据不得写成已通过。
+- 回归结果：Skill 结构校验通过；v3.4 生命周期 25/25、v3.7 模具体系 50/50；正式运行时 50/50 通过通用硬检查，专项语义评审 50/50，四维评分 100/100。期间针对 TFD 标准结果和 L3 Patch/DEC/CHG 回执做了定向修补并仅重跑受影响轮次。
+- 已知边界：Figma 连接仍需重新授权，本版本验证的是证据不可访问时的 fail-closed 行为，未把节点标题当作实际设计参数；真实原型渲染、用户测试、目录登记、Runtime Registry、工程消费和部署仍需各自证据。
+
+### v3.6.1：候选模具生命周期与登记治理
+
+- 修改位置：新增 `references/prototype-template-lifecycle.md`、`schemas/template-manifest.yaml` 和生命周期回归；更新 S5、模板目录、验证、跨 Skill 与 A2UI Bundle 协议。
+- 修改原因：项目级候选能够生成后，如果没有证据门槛和版本状态，容易因“页面能打开”被直接升级为公共模具，并混淆目录登记、Runtime Registry、工程消费和生产部署。
+- 预期防范的问题：无目标任务证据自动登记；未授权外部写入；验证后覆盖旧版本；停用模板继续进入候选；registered 被误报为生产可用。
+- 新增约束：生命周期使用 project-candidate → in-validation → validated → registration-requested → registered → deprecated/superseded；登记必须有 TMF、Owner、适用范围、隔离/技术/任务证据和真实返回记录。
+- 回归要求：生命周期用例、对话式原型、三态适配、跨项目隔离和既有 v3.4 生命周期检查全部通过。
+
+### v3.6.0：对话式原型生成与自然语言回改
+
+- 修改位置：新增 `references/conversational-prototype-session.md`、`schemas/prototype-generation-request.yaml` 和对话原型回归；更新 S4、中保真与跨 Skill 交接。
+- 修改原因：即使已有 PUI、Profile 和模具适配，下游仍可能一次性自由生成 HTML，用户看不到模具与约束如何进入页面，修改也无法回写权威状态。
+- 预期防范的问题：黑盒原型；重复询问已确认资料；自然语言修改只改截图不改 Contract；完成口径等 L3 变化在页面中静默生效；没有生成能力却声称预览完成。
+- 新增约束：同一 `PRS-` 会话先展示生成前摘要，再发出受控 Generation Request；L1/L2 Patch 可回退，L3 变化必须创建 DEC/CHG；generated、技术验证、目标用户验证和生产状态分开。
+- 回归要求：对话式原型三轮场景、三态模具匹配、跨项目隔离和既有 v3.4 生命周期检查全部通过。
+
+### v3.5.2：素材占位与无匹配候选模具
+
+- 修改位置：新增 `references/prototype-asset-slots.md`、`references/prototype-candidate-generation.md`，对应 ASC/PTC schema 和无匹配回归；更新 S4、PUI、中保真与模具适配协议。
+- 修改原因：`no_match` 如果只返回阻塞，会诱导下游重新选择最相似旧模具；黑白原型若没有素材 Slot，也会用旧图片或临时装饰填满空白。
+- 预期防范的问题：无匹配时强套旧模具；候选模具进入共享目录；P0 素材失败被伪装成成功；旧项目图片成为默认 fallback；占位没有比例、缺失和错误规则。
+- 新增约束：`no_match` 使用通用网格和 `prototype-neutral` 生成 `project-local` 的 `PTC-`；影响布局的素材必须建立 `ASC-`，只标注语义、位置、比例、状态和替换规则。
+- 回归要求：无匹配、完全匹配、可扩展匹配、跨项目隔离和既有 v3.4 生命周期检查全部通过。
+
+### v3.5.1：模板目录与原型模具适配闸门
+
+- 修改位置：新增模板目录、适配闸门、模板定义与适配决策 schema，以及完全匹配/可扩展匹配回归；更新 `SKILL.md`、PUI、中保真和 A2UI Runtime 协议。
+- 修改原因：已有 Catalog Match 位于运行时阶段，无法阻止原型阶段按最近项目或视觉相似度直接套用旧模具。
+- 预期防范的问题：只用总分或风格相似判定；设备、P0 和关键状态未比对；可扩展匹配改写共享模板；Runtime 静默覆盖原型阶段的无匹配结论。
+- 新增约束：所有原型在生成前逐项比较目标用户、核心任务、页面类型、信息层级、关键区域、设备尺寸和交互状态；结果只使用 `exact / extensible / no_match`，硬阻塞项未知或不通过时不得放行。
+- 回归要求：完全匹配、可扩展匹配、跨项目隔离和既有 v3.4 生命周期检查全部通过。
+
+### v3.5.0：项目 UI Profile 与证据隔离
+
+- 修改位置：新增 `references/project-ui-profile.md`、`schemas/project-ui-profile.yaml` 和跨项目隔离用例；更新 `SKILL.md` 与 `references/project-snapshot.md`。
+- 修改原因：现有 PUI 能描述页面语义，DS Profile 能描述候选组件体系，但新项目缺少独立的 UI 上下文和外部设计证据映射，容易把历史项目文案、视觉资产或业务规则静默带入新原型。
+- 预期防范的问题：新项目共享旧 `profile_id`；无法访问 Figma 时根据链接标题编造参数；“参考旧页面”被解释为继承全部内容；设计证据脱离当前项目 PUI、页面、功能和 DEC。
+- 新增约束：每个项目使用独立 `UIP-`；外部证据记录来源与访问状态；文案、样例数据、用户数据、视觉资产、品牌 Token 和业务规则默认禁止继承。
+- 回归要求：跨项目隔离用例必须通过；既有生命周期、低摩擦对话、教育 Profile 和五子棋交付逻辑不得退化。
+
 ### v3.4.8：双端设计系统与 AI UI Contract
 
 - 修改位置：更新 `SKILL.md`、`references/design-system-architecture.md`、教育回归用例 F 和生命周期检查；同步 README。
