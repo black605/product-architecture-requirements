@@ -387,7 +387,7 @@
     "role": "产品经理",
     "journey": "五子棋原型模具复用",
     "focus": "exploration",
-    "mode": "exploration",
+    "mode": "delivery",
     "confirmed_context": ["学习机横屏", "沿用现有棋盘规则", "不做整体视觉重设计"],
     "user_input": "增加好友观战页，先看看原来的对弈页能不能直接套。"
   },

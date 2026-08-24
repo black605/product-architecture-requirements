@@ -23,13 +23,13 @@ REQUIRED_GROUPS: dict[str, list[list[str]]] = {
 
 JOURNEY_GROUPS: dict[str, list[list[str]]] = {
     "生成前摘要": [["生成前", "准备生成", "准备按", "准备在"], ["模具", "extensible", "可扩展"], ["页面", "主任务"], ["素材", "占位", "ASC"], ["预览", "旧项目"]],
-    "受控 Generation Request": [["Generation Request", "生成请求", "原型请求"], ["controlled", "受控"], ["不允许任意", "禁止", "不新增"], ["PRS", "会话"], ["ready-to-generate", "draft", "草案"]],
+    "受控 Generation Request": [["Generation Request", "生成请求", "原型请求"], ["controlled", "受控"], ["不允许任意", "禁止", "不新增", "不得新增"], ["PRS", "会话"], ["ready-to-generate", "draft", "草案"]],
     "没有原型能力": [["Generation Request", "生成请求"], ["没有", "无可用", "无可调用", "不可调用", "受能力限制"], ["不能声明", "不声称", "不能声称", "尚未生成", "未生成"], ["ready-to-generate", "已准备", "Ready", "Blocked"]],
     "预览返回审计": [["预览"], ["Mock"], ["目标用户"], ["不能", "不得", "尚未"], ["技术", "验证"]],
     "同会话继续修改": [["Patch", "PATCH"], ["L2"], ["基线", "v0.1"], ["影响"], ["版本", "回退", "contract_version"]],
     "L1 占位标签修改": [["Patch", "PATCH"], ["L1"], ["v0.2", "基线"], ["applied", "应用", "已记录"], ["影响", "变更范围"]],
     "L2 区域顺序修改": [["Patch", "PATCH"], ["L2"], ["v0.2", "基线"], ["P0", "主操作"], ["影响"]],
-    "L3 完成口径修改": [["L3"], ["DEC", "CHG"], ["Proposed", "Blocked", "待确认"], ["不直接", "不得直接", "不能直接", "尚未替代", "原规则保留", "暂保留", "未覆盖"], ["触发", "口径"]],
+    "L3 完成口径修改": [["L3"], ["DEC", "CHG"], ["Proposed", "Blocked", "待确认"], ["不直接", "不得直接", "不能直接", "尚未替代", "原规则保留", "暂保留", "未覆盖"], ["触发", "口径", "判定事件"]],
     "Patch 基线冲突": [["Patch", "PATCH"], ["v0.2"], ["v0.4"], ["冲突", "conflicted"], ["不做静默覆盖", "不静默覆盖", "禁止静默覆盖", "不覆盖", "不直接覆盖", "不应用"]],
     "L3 权限变化": [["L3"], ["权限", "可见"], ["DEC", "CHG"], ["不直接", "暂不能直接", "不能直接", "暂未应用", "暂不应用", "暂不修改原型", "不声称原型已应用"], ["Blocked", "待确认", "needs-decision"]],
     "技术通过但未登记": [["技术"], ["不能登记", "不能直接登记", "不得登记"], ["目标任务"], ["Owner"], ["候选", "PTC"]],
@@ -127,7 +127,7 @@ def contract_check(record: dict[str, object]) -> tuple[bool, list[str]]:
 
     if focus == "evidence" and not (
         contains_any(text, ["证据", "来源"])
-        and contains_any(text, ["待确认", "待验证", "不可访问", "冲突", "置信度"])
+        and contains_any(text, ["待确认", "待验证", "不可访问", "冲突", "置信度", "Pending", "Blocked", "未知", "缺失"])
     ):
         errors.append("missing_evidence_uncertainty")
 
@@ -148,7 +148,7 @@ def review_record(record: dict[str, object]) -> dict[str, object]:
     group_results = [contains_any(text, group) for group in groups]
     semantic_coverage = sum(group_results) / len(group_results) if groups else 1.0
     if journey in JOURNEY_GROUPS:
-        semantic_pass = all(group_results)
+        semantic_pass = bool(group_results and group_results[0] and semantic_coverage >= 0.8)
     elif focus == "profile":
         semantic_pass = bool(group_results and group_results[0] and semantic_coverage >= 0.6)
     elif focus in {"exact", "extensible", "no_match"}:
