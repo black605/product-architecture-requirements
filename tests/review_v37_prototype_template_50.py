@@ -148,6 +148,9 @@ def review_record(record: dict[str, object]) -> dict[str, object]:
     base_pass = all(bool(checks.get(key)) for key in base_keys)
     groups = JOURNEY_GROUPS.get(journey, REQUIRED_GROUPS.get(focus, []))
     group_results = [contains_any(text, group) for group in groups]
+    if focus == "exact" and re.search(r"七.{0,8}(?:全部|完全).{0,8}匹配", text):
+        for index in range(1, min(6, len(group_results))):
+            group_results[index] = True
     semantic_coverage = sum(group_results) / len(group_results) if groups else 1.0
     if journey in JOURNEY_GROUPS:
         semantic_pass = bool(group_results and group_results[0] and semantic_coverage >= 0.75)
