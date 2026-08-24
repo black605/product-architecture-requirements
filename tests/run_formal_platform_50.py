@@ -190,7 +190,7 @@ def prompt_for(round_no: int, user_input: str, project_context: str = PROJECT_CO
 4. 若本轮信息足够，交付当前阶段最小的结构化产物；若不足，只追问最影响方案的缺口；
 5. 不要为了套模板而输出完整 PRD，回复控制在 1200 字以内。
 6. 若本轮涉及原型模具适配或原型回改，第一非空行必须严格使用 SKILL.md 规定的 TFD/PATCH 固定回执，不在此前增加标题或解释；PATCH 第三段只能写 vX.Y 版本号。
-7. 交付 Profile、素材 Slot、项目候选、原型会话或模板生命周期记录时，必须显示 UIP/ASC/PTC/PRS/TMF 对象 ID；L3 回改必须同时显示 DEC 与 CHG 对象 ID。
+7. 交付 Profile、素材 Slot、项目候选、原型会话或模板生命周期记录时，必须显示 UIP/ASC/PTC/PRS/TMF 对象 ID；Profile 必须明确旧文案与旧视觉资产均默认不继承；L3 回改必须同时显示 DEC 与 CHG 对象 ID。
 
 用户输入：
 {user_input}
@@ -272,6 +272,7 @@ def evaluate_output(
                 "已知事实", "已确认", "已确定", "待确认", "还需要确认", "暂定假设", "暂定方向", "暂定",
                 "已改成", "已记录", "已更新", "当前交付", "当前判断", "当前边界", "判断", "结论", "目前", "还需确认", "尚未确定", "暂不确定", "不能当作事实",
                 "目前只确认", "目前只能确认", "当前只确认", "未定", "仍未确定", "待具体化", "暂不展开", "暂不能",
+                "暂作为", "还需要确认",
                 "Fact", "Confirmed", "Inference", "Proposal", "Assumption", "Pending",
             )
         ),
