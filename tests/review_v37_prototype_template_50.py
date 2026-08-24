@@ -42,7 +42,7 @@ JOURNEY_GROUPS: dict[str, list[list[str]]] = {
     "只提供 Figma 标题": [["不可访问"], ["不能声称", "不得声称"], ["具体", "参数", "布局"], ["证据"]],
     "截图只能证明可观察内容": [["可观察"], ["不能", "不推断", "不从", "不将"], ["权限"], ["算法"], ["证据", "来源"]],
     "旧页面生产能力误判": [["可观察"], ["Mock"], ["真实能力"], ["生产证据"], ["不能", "不证明"]],
-    "多来源冲突": [["冲突"], ["待确认", "Pending"], ["不自行", "未自行", "不能自行", "不选择", "不判定", "不做默认选择", "不做设备方向选择"], ["Profile"], ["证据", "来源"]],
+    "多来源冲突": [["冲突"], ["待确认", "Pending"], ["不自行", "未自行", "不能自行", "不选择", "不判定", "不采用", "不做默认选择", "不做设备方向选择"], ["Profile"], ["证据", "来源", "EVD-"]],
     "外部规范版本过期": [["版本"], ["置信度", "可信", "高置信", "低置信"], ["待确认", "待验证"], ["不能", "不直接", "不沿用"], ["证据", "来源"]],
 }
 
@@ -128,8 +128,8 @@ def contract_check(record: dict[str, object]) -> tuple[bool, list[str]]:
             errors.append("missing_session_artifact_or_preview")
 
     if focus == "evidence" and not (
-        contains_any(text, ["证据", "来源"])
-        and contains_any(text, ["待确认", "待验证", "不可访问", "冲突", "置信度", "Pending", "Blocked", "未知", "缺失"])
+        contains_any(text, ["证据", "来源", "EVD-"])
+        and contains_any(text, ["待确认", "待验证", "待补证据", "不可访问", "冲突", "置信度", "Pending", "Blocked", "未知", "缺失", "当前不足"])
     ):
         errors.append("missing_evidence_uncertainty")
 
