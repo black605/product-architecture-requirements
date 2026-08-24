@@ -118,7 +118,7 @@ def contract_check(record: dict[str, object]) -> tuple[bool, list[str]]:
             errors.append("missing_asc_id")
         if not contains_any(text, ["比例", "尺寸", "宽", "高", "×", ":"]):
             errors.append("missing_slot_geometry")
-        if not contains_any(text, ["加载", "空态", "错误", "失败", "缺失", "不可用"]):
+        if not contains_any(text, ["加载", "空态", "错误", "失败", "缺失", "不可用", "loading", "empty", "error", "unavailable"]):
             errors.append("missing_slot_states")
 
     if focus == "session" and journey not in PATCH_EXPECTATIONS:
