@@ -157,7 +157,14 @@ def main() -> int:
         checks["20_handoff_separates_user_evidence"] = handoff.get("evidence", {}).get("target_user_validation") == "not-claimed"
         checks["21_handoff_has_semantic_boundaries"] = bool(handoff.get("boundaries", {}).get("semantic_locked")) and bool(handoff.get("boundaries", {}).get("visual_flexible"))
         checks["22_trace_binds_source_hash"] = bool(result.get("source_hash")) and result.get("run_id", "").startswith("HRUN-")
-        checks["23_all_behavioral_checks_pass"] = all(checks.values())
+        scenario_results = result.get("evidence", {}).get("browser_result", {}).get("scenarios", [])
+        scenario_map = {item.get("scenario_id"): item for item in scenario_results}
+        checks["23_timeout_scenario_evidence"] = (
+            scenario_map.get("timeout-retry-path", {}).get("passed") is True
+            and "GENERATION_TIMEOUT" in scenario_map.get("timeout-retry-path", {}).get("visited_states", [])
+            and scenario_map.get("timeout-retry-path", {}).get("current_state") == "LEARNING_REPORT"
+        )
+        checks["24_all_behavioral_checks_pass"] = all(checks.values())
 
     summary = {
         "suite": "v4.0-executable-prototype-harness",

@@ -2,6 +2,29 @@
 
 ## [Unreleased]
 
+### v4.1.0：多场景 Harness 与项目级发布门禁
+
+- 修改位置：`assets/prototype-harness/runtime.js`、`scripts/harness.py`、AI 口语 Golden Case、`tests/run_v40_harness_checks.py`。
+- 修改原因：原有验证主要证明单条成功链路，无法证明异步超时、回退和重试路径可达；文档评分与原型发布之间也缺少 source hash、Snapshot revision 和真实浏览器结果的硬绑定。
+- 新增约束：`expected.scenarios` 可声明多个独立路径；每个场景必须有终态和 required states；超时路径可显式抑制自动成功并产生真实回退证据；发布候选必须通过项目级运行包门禁。
+- 回归结果：v4.0 Harness 行为回归 24/24；Skill Quick Validate、v3.4 生命周期 25/25、v3.7 模具 50/50、跨项目隔离 7/7 均通过。
+
+### v4.0.2：业务项目级 Harness 初始化器
+
+- 修改位置：新增 `assets/project-harness-template/`、`scripts/init_project.py` 和 `references/project-harness-bootstrap.md`；同步更新 `SKILL.md`、`README.md`。
+- 修改原因：Skill 仓库自身的 `AGENTS.md` 不能自动替代每个新业务项目的治理文件，需要提供可复用、隔离且不覆盖已有内容的初始化方式。
+- 预期防范的问题：新项目只依赖聊天记忆；手工复制旧项目状态；旧项目需求、文案、视觉资产或业务规则跨项目污染；没有统一验证入口。
+- 新增约束：初始化器只创建缺失文件；业务项目拥有独立 `AGENTS.md`、架构说明、需求/计划/决策/质量目录和 `scripts/verify`；项目专属验证未配置时明确提示，不伪装为完整通过。
+- 验证要求：在临时项目执行初始化、验证文件结构、检查不覆盖已有文件和脚本可执行性。
+
+### v4.0.1：Harness Engineering 项目治理配置
+
+- 修改位置：新增根目录 `AGENTS.md`、`ARCHITECTURE.md`、`docs/product-specs/`、`docs/plans/`、`docs/decisions/`、`docs/quality.md` 和 `scripts/verify`；同步更新 `SKILL.md` 与 `README.md`。
+- 修改原因：跨任务持续遵循目标、范围、质量和安全边界不能只依赖聊天记忆，需要项目级可读取、可执行、可验证的协作配置。
+- 预期防范的问题：需求/架构/测试/文档漂移；只做静态检查却声称交付完成；重复缺陷只靠提示词提醒；未授权外部写入被误认为正常流程。
+- 新增约束：统一执行 `structure → regression → harness`；高风险决策人工确认；项目状态回写文件；验证结果必须附实际命令和未验证边界。
+- 回归要求：保持 v4.0 Harness、v3.4 生命周期、v3.7 模具治理和跨项目隔离回归通过。
+
 ### v4.0.0：可执行原型生产 Harness
 
 - 修改位置：新增根命令 `harness`、`scripts/harness.py`、`assets/prototype-harness/`、Harness/Handoff schema、平台映射和发布文档。

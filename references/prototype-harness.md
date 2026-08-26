@@ -36,6 +36,8 @@ ProjectIdentity + ProjectSnapshot
 - `repair`：只在运行副本中应用白名单局部修复，最多两次；不静默覆盖源 Contract。
 - `snapshot`：按 `base_revision` 追加 add/replace 事件，冲突时拒绝写入。
 
+`expected.json` 可以声明多个独立 `scenarios`。每个场景必须有自己的 action sequence、终态和 required states；异步场景可声明 `suppress_auto_once_from` 与 `timeout_delay_ms`，用于强制跑出超时、回退和重试证据。没有 `scenarios` 时继续兼容单一 `action_sequence`。
+
 ## 3. 模板路由
 
 模板目录只提供候选，不提供全局默认业务页面：
@@ -73,6 +75,8 @@ no_match    → 通用网格 + project-local PTC，不读取旧项目页面
 5. 截图视觉差异在声明阈值内；
 6. Must 追溯链完整；
 7. 目标用户证据与技术证据分开声明。
+
+Harness 运行包还必须经过项目级 `publish_check`：运行结果、浏览器、视觉状态、当前 Contract source hash 和 Snapshot revision 必须一致；生产发布另需真实目标用户验证为 `passed`。技术通过但目标用户验证为 `not-claimed` 时，只能交付原型预览包。
 
 关键词、文件存在性和 Schema 文本检查只属于基础门槛，不能替代真实产物验证。
 

@@ -4,6 +4,11 @@
   const resultNode = document.querySelector('#harness-result');
   const stateMap = new Map(flow.states.map((item) => [item.state_id, item]));
   const transitions = flow.transitions || [];
+  const params = new URLSearchParams(location.search);
+  const scenarioId = params.get('harness_scenario');
+  const scenario = (expected.scenarios || []).find((item) => item.scenario_id === scenarioId) || null;
+  const suppressedAuto = new Set(scenario?.suppress_auto_from || []);
+  const suppressedAutoOnce = new Set(scenario?.suppress_auto_once_from || []);
   const visited = [];
   const errors = [];
   let currentState = new URLSearchParams(location.search).get('harness_state') || flow.initial_state;
@@ -84,10 +89,13 @@
       return;
     }
     const auto = transitions.find((item) => item.from === stateId && item.trigger === 'auto');
-    if (auto) autoTimer = setTimeout(() => activate(auto.to), Number(auto.delay_ms || 60));
+    const suppressAuto = suppressedAuto.has(stateId) || suppressedAutoOnce.has(stateId);
+    if (suppressedAutoOnce.has(stateId)) suppressedAutoOnce.delete(stateId);
+    if (auto && !suppressAuto) autoTimer = setTimeout(() => activate(auto.to), Number(auto.delay_ms || 60));
     if (state.type === 'async') {
       const timeout = transitions.find((item) => item.from === stateId && item.trigger === 'timeout');
-      if (timeout) timeoutTimer = setTimeout(() => activate(timeout.to), Number(timeout.timeout_ms || flow.async_policy?.required_timeout_ms || 3000));
+      const scenarioTimeout = Number(scenario?.timeout_delay_ms || 0);
+      if (timeout) timeoutTimer = setTimeout(() => activate(timeout.to), scenarioTimeout || Number(timeout.timeout_ms || flow.async_policy?.required_timeout_ms || 3000));
     }
   };
 
@@ -128,7 +136,8 @@
   };
 
   const runAuto = async () => {
-    for (const actionId of expected.action_sequence || []) {
+    const actionSequence = scenario?.action_sequence || expected.action_sequence || [];
+    for (const actionId of actionSequence) {
       const action = await waitForAction(actionId);
       if (!action) {
         pushError('FLOW_UNREACHABLE', actionId, `action unavailable from ${currentState}`);
@@ -138,14 +147,17 @@
       action.click();
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
-    const expectedState = expected.terminal_state;
+    const expectedState = scenario?.terminal_state || expected.terminal_state;
     const passed = !expectedState || currentState === expectedState;
     if (!passed) pushError('FLOW_UNREACHABLE', expectedState, `ended at ${currentState}`);
+    for (const requiredState of scenario?.required_states || []) {
+      if (!visited.includes(requiredState)) pushError('FLOW_UNREACHABLE', `${scenarioId}:${requiredState}`, `required state was not visited`);
+    }
     publish(passed);
   };
 
   auditAllScreens();
   activate(currentState);
   publish(null);
-  if (new URLSearchParams(location.search).get('harness_auto') === '1') runAuto();
+  if (params.get('harness_auto') === '1') runAuto();
 })();

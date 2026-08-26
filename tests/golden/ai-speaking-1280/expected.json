@@ -3,6 +3,24 @@
   "action_sequence": ["ACT-CONTINUE", "ACT-START", "ACT-WORD-DONE", "ACT-SENTENCE-DONE", "ACT-ROLEPLAY-DONE", "ACT-FINISH"],
   "terminal_state": "LEARNING_REPORT",
   "screenshot_state": "LEARNING_REPORT",
+  "scenarios": [
+    {
+      "scenario_id": "happy-path",
+      "action_sequence": ["ACT-CONTINUE", "ACT-START", "ACT-WORD-DONE", "ACT-SENTENCE-DONE", "ACT-ROLEPLAY-DONE", "ACT-FINISH"],
+      "terminal_state": "LEARNING_REPORT",
+      "required_states": ["COURSE_MAP", "LEARNING_GOAL", "WORD_REPEAT", "SENTENCE_REPEAT", "ROLEPLAY", "GENERATING", "CORRECTION", "LEARNING_REPORT"],
+      "screenshot_state": "LEARNING_REPORT"
+    },
+    {
+      "scenario_id": "timeout-retry-path",
+      "action_sequence": ["ACT-CONTINUE", "ACT-START", "ACT-WORD-DONE", "ACT-SENTENCE-DONE", "ACT-ROLEPLAY-DONE", "ACT-RETRY", "ACT-FINISH"],
+      "terminal_state": "LEARNING_REPORT",
+      "required_states": ["COURSE_MAP", "LEARNING_GOAL", "WORD_REPEAT", "SENTENCE_REPEAT", "ROLEPLAY", "GENERATING", "GENERATION_TIMEOUT", "CORRECTION", "LEARNING_REPORT"],
+      "suppress_auto_once_from": ["GENERATING"],
+      "timeout_delay_ms": 120
+    }
+  ],
+  "screenshot_scenario": "happy-path",
   "visual_diff": {
     "required": true,
     "baseline": "baseline.png",

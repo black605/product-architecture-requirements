@@ -19,6 +19,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from urllib.parse import urlencode
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -480,18 +481,57 @@ def validate_generation(contracts: dict[str, Any], project_id: str | None,
 
 def validate_expected(contracts: dict[str, Any], errors: list[dict[str, Any]]) -> None:
     expected = contracts.get("expected", {})
-    require(expected, ["viewport", "action_sequence", "terminal_state", "visual_diff"], "expected", errors)
+    scenarios = expected.get("scenarios", [])
+    required_fields = ["viewport", "terminal_state", "visual_diff"]
+    if "scenarios" in expected:
+        required_fields.append("scenarios")
+    else:
+        required_fields.append("action_sequence")
+    require(expected, required_fields, "expected", errors)
     flow = contracts.get("flow", {})
     viewport = expected.get("viewport", {})
     frame_viewport = contracts.get("frame", {}).get("viewport", {})
     if viewport.get("width") != frame_viewport.get("width") or viewport.get("height") != frame_viewport.get("height"):
         errors.append(error("CONTRACT_INVALID", "expected.viewport", "does not match Frame Contract viewport"))
     actions = {item.get("event") for item in flow.get("transitions", []) if item.get("trigger") == "action"}
-    for action_id in expected.get("action_sequence", []):
-        if action_id not in actions:
-            errors.append(error("FLOW_UNREACHABLE", action_id, "expected action has no action transition"))
-    if expected.get("terminal_state") not in set(flow.get("terminal_states", [])):
-        errors.append(error("FLOW_UNREACHABLE", str(expected.get("terminal_state")), "expected terminal is not a Flow terminal"))
+    flow_states = {item.get("state_id") for item in flow.get("states", [])}
+    terminals = set(flow.get("terminal_states", []))
+
+    def validate_scenario(scenario: dict[str, Any], label: str) -> None:
+        require(scenario, ["scenario_id", "action_sequence", "terminal_state"], label, errors)
+        for action_id in scenario.get("action_sequence", []):
+            if action_id not in actions:
+                errors.append(error("FLOW_UNREACHABLE", f"{label}:{action_id}", "expected action has no action transition"))
+        if scenario.get("terminal_state") not in terminals:
+            errors.append(error("FLOW_UNREACHABLE", f"{label}:{scenario.get('terminal_state')}", "expected terminal is not a Flow terminal"))
+        for state_id in scenario.get("required_states", []):
+            if state_id not in flow_states:
+                errors.append(error("STATE_MISSING", f"{label}:{state_id}", "required state is not in Flow Contract"))
+        async_states = {item.get("state_id") for item in flow.get("states", []) if item.get("type") == "async"}
+        for state_id in [*scenario.get("suppress_auto_from", []), *scenario.get("suppress_auto_once_from", [])]:
+            if state_id not in async_states:
+                errors.append(error("STATE_MISSING", f"{label}:{state_id}", "auto suppression must target an async state"))
+        timeout_delay = scenario.get("timeout_delay_ms")
+        if timeout_delay is not None and (not numeric(timeout_delay) or timeout_delay <= 0):
+            errors.append(error("CONTRACT_INVALID", label, "timeout_delay_ms must be a positive number"))
+
+    if "scenarios" in expected:
+        if not isinstance(scenarios, list) or not scenarios:
+            errors.append(error("CONTRACT_INVALID", "expected.scenarios", "scenarios must be a non-empty list"))
+        else:
+            seen_ids: set[str] = set()
+            for index, scenario in enumerate(scenarios, start=1):
+                if not isinstance(scenario, dict):
+                    errors.append(error("CONTRACT_INVALID", f"expected.scenarios[{index}]", "scenario must be an object"))
+                    continue
+                scenario_id = scenario.get("scenario_id")
+                if scenario_id in seen_ids:
+                    errors.append(error("CONTRACT_INVALID", f"expected.scenarios[{index}]", "scenario_id must be unique"))
+                if scenario_id:
+                    seen_ids.add(scenario_id)
+                validate_scenario(scenario, f"expected.scenarios[{index}]")
+    else:
+        validate_scenario(expected, "expected")
 
 
 def validate_project(project_dir: Path) -> tuple[dict[str, Any], list[dict[str, Any]]]:
@@ -698,36 +738,72 @@ def browser_test(html_path: Path, output_dir: Path, expected: dict[str, Any]) ->
         "--no-first-run", "--no-default-browser-check", "--disable-background-networking",
         "--force-device-scale-factor=1", f"--window-size={width},{height}", "--virtual-time-budget=5000",
     ]
-    url = html_path.resolve().as_uri() + "?harness_auto=1"
-    with tempfile.TemporaryDirectory(prefix="harness-chrome-", dir=output_dir) as profile:
-        command = common + [f"--user-data-dir={profile}", "--dump-dom", url]
+    scenarios = expected.get("scenarios") or [{
+        "scenario_id": "default",
+        "action_sequence": expected.get("action_sequence", []),
+        "terminal_state": expected.get("terminal_state"),
+        "required_states": expected.get("required_states", []),
+    }]
+    scenario_results: list[dict[str, Any]] = []
+    all_errors: list[dict[str, Any]] = []
+    for scenario in scenarios:
+        query = urlencode({"harness_auto": "1", "harness_scenario": scenario.get("scenario_id", "default")})
+        url = html_path.resolve().as_uri() + f"?{query}"
+        with tempfile.TemporaryDirectory(prefix="harness-chrome-", dir=output_dir) as profile:
+            command = common + [f"--user-data-dir={profile}", "--dump-dom", url]
+            try:
+                completed = subprocess.run(command, capture_output=True, text=True, timeout=30, check=False)
+            except subprocess.TimeoutExpired:
+                return None, [error("BROWSER_UNAVAILABLE", str(chrome), f"scenario {scenario.get('scenario_id')} timed out after 30 seconds")], None
+        if completed.returncode != 0:
+            return None, [error("BROWSER_UNAVAILABLE", "chrome", completed.stderr.strip() or f"exit {completed.returncode}")], None
+        match = re.search(r'<script id="harness-result" type="application/json">(.*?)</script>', completed.stdout, re.DOTALL)
+        if not match:
+            return None, [error("CONTRACT_INVALID", "harness-result", f"scenario {scenario.get('scenario_id')} returned no runtime evidence")], None
         try:
-            completed = subprocess.run(command, capture_output=True, text=True, timeout=30, check=False)
-        except subprocess.TimeoutExpired:
-            return None, [error("BROWSER_UNAVAILABLE", str(chrome), "browser DOM audit timed out after 30 seconds")], None
-    if completed.returncode != 0:
-        return None, [error("BROWSER_UNAVAILABLE", "chrome", completed.stderr.strip() or f"exit {completed.returncode}")], None
-    match = re.search(r'<script id="harness-result" type="application/json">(.*?)</script>', completed.stdout, re.DOTALL)
-    if not match:
-        return None, [error("CONTRACT_INVALID", "harness-result", "browser did not return runtime evidence")], None
-    try:
-        runtime_result = json.loads(html.unescape(match.group(1)))
-    except json.JSONDecodeError as exc:
-        return None, [error("CONTRACT_INVALID", "harness-result", f"invalid runtime evidence: {exc}")], None
-    runtime_errors = [error(item["type"], item.get("object_ref", "browser"), item.get("evidence", "browser failure")) for item in runtime_result.get("errors", [])]
-    screenshot_path = output_dir / "prototype.png"
+            scenario_result = json.loads(html.unescape(match.group(1)))
+        except json.JSONDecodeError as exc:
+            return None, [error("CONTRACT_INVALID", "harness-result", f"invalid runtime evidence: {exc}")], None
+        scenario_result["scenario_id"] = scenario.get("scenario_id", "default")
+        scenario_errors = [error(item["type"], item.get("object_ref", "browser"), item.get("evidence", "browser failure")) for item in scenario_result.get("errors", [])]
+        scenario_result["errors"] = [dict(item) for item in scenario_result.get("errors", [])]
+        scenario_result["passed"] = bool(scenario_result.get("passed")) and not scenario_errors
+        scenario_results.append(scenario_result)
+        all_errors.extend(scenario_errors)
+
+    primary_scenario = expected.get("screenshot_scenario") or scenarios[0].get("scenario_id", "default")
     screenshot_state = expected.get("screenshot_state", expected.get("terminal_state", ""))
-    screenshot_url = html_path.resolve().as_uri() + f"?harness_state={screenshot_state}"
+    for scenario in scenarios:
+        if scenario.get("scenario_id", "default") == primary_scenario:
+            screenshot_state = scenario.get("screenshot_state", screenshot_state)
+            break
+    screenshot_url = html_path.resolve().as_uri() + "?" + urlencode({"harness_state": screenshot_state})
+    screenshot_path = output_dir / "prototype.png"
     with tempfile.TemporaryDirectory(prefix="harness-shot-", dir=output_dir) as profile:
         command = common + [f"--user-data-dir={profile}", f"--screenshot={screenshot_path}", screenshot_url]
         try:
             completed = subprocess.run(command, capture_output=True, text=True, timeout=30, check=False)
         except subprocess.TimeoutExpired:
-            return runtime_result, runtime_errors + [error("BROWSER_UNAVAILABLE", str(chrome), "browser screenshot timed out after 30 seconds")], None
+            return None, all_errors + [error("BROWSER_UNAVAILABLE", str(chrome), "browser screenshot timed out after 30 seconds")], None
     if completed.returncode != 0 or not screenshot_path.is_file():
-        runtime_errors.append(error("BROWSER_UNAVAILABLE", "screenshot", completed.stderr.strip() or "screenshot missing"))
+        all_errors.append(error("BROWSER_UNAVAILABLE", "screenshot", completed.stderr.strip() or "screenshot missing"))
         screenshot_path = None
-    return runtime_result, runtime_errors, screenshot_path
+    visited: list[str] = []
+    for scenario_result in scenario_results:
+        for state_id in scenario_result.get("visited_states", []):
+            if state_id not in visited:
+                visited.append(state_id)
+    aggregate = {
+        "browser": all(item.get("browser") is True for item in scenario_results),
+        "viewport": {"width": width, "height": height},
+        "current_state": scenario_results[-1].get("current_state") if scenario_results else None,
+        "visited_states": visited,
+        "task_passed": all(item.get("task_passed") is True for item in scenario_results),
+        "errors": [dict(item) for item in all_errors],
+        "passed": bool(scenario_results) and all(item.get("passed") is True for item in scenario_results) and not all_errors,
+        "scenarios": scenario_results,
+    }
+    return aggregate, all_errors, screenshot_path
 
 
 def visual_diff(screenshot: Path | None, project_dir: Path, expected: dict[str, Any],

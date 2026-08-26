@@ -4,7 +4,7 @@
 
 `product-architecture-requirements` 是一个面向产品经理、业务专家/教师、设计师、运营与研发协作方的 Codex Skill。它通过简洁的自然语言对话，将模糊想法沿统一生命周期沉淀为业务流程、功能架构、页面结构、组件状态、中保真原型输入、验证证据和可验收的交接方案；不会用一份假设很多的 PRD 代替需求确认。
 
-## 当前版本：v4.0.0（原型生产 Harness）
+## 当前版本：v4.0.1（Harness Engineering 项目治理）
 
 - 新增 `Project Identity Gate`，明确 `resume / fork / new / needs_confirmation`，新项目不会继承最近项目内容。
 - `ProjectSnapshot` 可持久化为项目 JSON，通过 revision 与事件日志做增量更新和冲突保护。
@@ -15,7 +15,23 @@
 - 新增结构化错误和最多两次局部修复；修复只生成候选副本，不静默改变源 Contract 或业务语义。
 - 输出统一 `Harness Handoff Package`，同时标记技术、视觉基线、目标用户和 Mock/真实能力证据。
 
-当前确定性验证：v4.0 Harness 行为回归 23/23、AI 口语 Golden Case 在 1280×800 下完成真实浏览器渲染、六步任务和视觉基线检查；旧 v3.4 生命周期 25/25、v3.7 模具协议 50/50、跨项目污染扫描 7/7 保持通过。目标用户验证仍需真实测试，不由技术绿灯替代。
+当前确定性验证：v4.0 Harness 行为回归 24/24、AI 口语 Golden Case 在 1280×800 下完成真实浏览器双场景渲染（正常路径与超时回退路径）和视觉基线检查；旧 v3.4 生命周期 25/25、v3.7 模具协议 50/50、跨项目污染扫描 7/7 保持通过。目标用户验证仍需真实测试，不由技术绿灯替代。
+
+## 项目化持续协作
+
+为让规则跨任务持续生效，仓库增加了 [AGENTS.md](AGENTS.md)、[ARCHITECTURE.md](ARCHITECTURE.md)、[docs/](docs/) 和 [scripts/verify](scripts/verify)。维护任务会先读取项目地图、质量规则和当前计划，再通过统一入口回归；业务项目仍应维护自己的 `AGENTS.md`、ProjectSnapshot 和验证入口，不会自动继承本仓库的旧项目状态。
+
+### 为新业务项目搭建配置
+
+使用项目初始化器生成独立的治理骨架：
+
+```bash
+python3 scripts/init_project.py /path/to/project --name "项目名称"
+cd /path/to/project
+./scripts/verify
+```
+
+初始化器只创建不存在的文件，不复制旧项目需求、状态、文案或视觉资产。详细规则见 [项目 Harness 配置启动](references/project-harness-bootstrap.md)。
 
 ## 项目级模具与原型生成
 
@@ -184,6 +200,7 @@ $product-architecture-requirements
 ├── harness                          # lint/render/test/report 统一入口
 ├── scripts/harness.py               # Contract 编译、浏览器验证与有限修复
 ├── assets/prototype-harness/        # 中性运行时、模板目录和组件白名单
+├── assets/project-harness-template/ # 新业务项目治理骨架
 ├── platform/                        # Dify、Coze、GPTs 平台配置
 ├── references/                      # 生命周期、Snapshot、原型、交接与专项协议
 │   ├── prototype-ui-contract.md     # 页面语义与状态 Contract
@@ -192,7 +209,12 @@ $product-architecture-requirements
 │   ├── conversational-prototype-session.md # 对话式原型与 Patch
 │   └── versions/                    # 历史版本快照
 ├── schemas/                         # Snapshot、Frame/Flow、Profile、模板与交付数据结构
-└── tests/                           # 对抗用例、Golden Case、回归记录与正式测试证据
+├── tests/                           # 对抗用例、Golden Case、回归记录与正式测试证据
+├── docs/                            # 产品基线、计划、决策和质量规则
+├── AGENTS.md                        # 跨任务 Agent 协作规则
+├── ARCHITECTURE.md                  # 模块边界、依赖方向和状态所有权
+├── scripts/init_project.py          # 为业务项目初始化治理骨架
+└── scripts/verify                   # 统一结构、回归和 Harness 验证入口
 ```
 
 建议先阅读 [快速开始](references/quickstart.md)，需要了解评估方式时查看 [评分量表](references/evaluation-rubric.md)，需要做提示词迭代时使用 [自我迭代 Meta-Prompt](references/meta-prompt.md)。
@@ -208,8 +230,8 @@ $product-architecture-requirements
 - [50 轮正式运行记录](tests/formal-platform-50/README.md)：记录生产平台模拟运行与评分证据。
 - [v3.4.7 五角色增强回归](tests/role-dialogue-50/v3.4.7-dialogue-quality-final/review.md)：40 个探索轮与 10 个交付轮，覆盖短答、回改、矛盾、跨角色、提前索要产物和 Ready/Blocked Gate。
 - [v3.7 项目级模具正式回归](tests/prototype-template-50/v3.7.0-release/README.md)：50 个独立会话，覆盖 Profile 隔离、三态适配、无匹配候选、素材占位、对话 Patch、模板生命周期和历史逻辑保护。
-- [v4.0 可执行 Harness 回归](tests/run_v40_harness_checks.py)：真实浏览器、几何、任务、三态模板路由、视觉差异、项目身份、Snapshot 冲突、素材政策和有限修复 23 项行为检查。
-- [AI 口语 1280×800 Golden Case](tests/golden/ai-speaking-1280)：从课程地图到学习报告的完整可重复原型输入与截图基线。
+- [v4.0 可执行 Harness 回归](tests/run_v40_harness_checks.py)：真实浏览器、几何、任务、双场景超时回退、三态模板路由、视觉差异、项目身份、Snapshot 冲突、素材政策和有限修复 24 项行为检查。
+- [AI 口语 1280×800 Golden Case](tests/golden/ai-speaking-1280)：从课程地图到学习报告的正常/超时回退可重复原型输入与截图基线。
 - [变更记录](CHANGELOG.md)：说明每次规则调整的位置、原因与预期防范问题。
 
 若要继续优化，请遵守“每次只改一个测试用例或一个核心缺陷、改后回跑上一阶段案例、同步记录 Changelog”的迭代规则。

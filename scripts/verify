@@ -1,0 +1,44 @@
+#!/bin/sh
+set -eu
+
+VERIFY_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+VERIFY_PYTHON=${VERIFY_PYTHON:-python3}
+QUICK_VALIDATE="$VERIFY_ROOT/../.system/skill-creator/scripts/quick_validate.py"
+
+run_structure() {
+  "$VERIFY_PYTHON" "$QUICK_VALIDATE" "$VERIFY_ROOT"
+  sh -n "$VERIFY_ROOT/harness"
+  node --check "$VERIFY_ROOT/assets/prototype-harness/runtime.js"
+  git -C "$VERIFY_ROOT" diff --check
+}
+
+run_regression() {
+  "$VERIFY_PYTHON" "$VERIFY_ROOT/tests/run_v34_lifecycle_checks.py"
+  "$VERIFY_PYTHON" "$VERIFY_ROOT/tests/run_v37_prototype_template_checks.py"
+  "$VERIFY_PYTHON" "$VERIFY_ROOT/tests/run_v37_isolation_scan.py"
+}
+
+run_harness() {
+  "$VERIFY_PYTHON" "$VERIFY_ROOT/tests/run_v40_harness_checks.py"
+}
+
+case "${1:-all}" in
+  structure)
+    run_structure
+    ;;
+  regression)
+    run_regression
+    ;;
+  harness)
+    run_harness
+    ;;
+  all)
+    run_structure
+    run_regression
+    run_harness
+    ;;
+  *)
+    printf '%s\n' "用法: ./scripts/verify [structure|regression|harness|all]" >&2
+    exit 2
+    ;;
+esac

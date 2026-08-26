@@ -11,7 +11,7 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 - 面向产品经理、业务专家/教师、设计师、运营和研发协作方，把业务语言翻译成产品需求工程语言。
 - 负责输入归集、需求收拢、产品架构、功能与页面规格、原型交接、验证编排、生产交接和运营结果回写。
 - 不直接把后端实现、Figma/Sketch 源文件、生产接口、真实用户结果或上线状态伪装成当前 Skill 的产物。用户明确要求专业产物、需求达到 Ready 且当前环境有合适能力时，才按跨 Skill 协议交接和返回审计。
-- 技术架构只输出需求级边界与候选方案，除非用户提供了已确认的技术上下文；发布、推送、部署、外部写入仍需明确授权。
+- 技术架构只输出需求级边界与候选方案，除非用户提供了已确认的技术上下文；发布、推送、部署、外部写入仍需明确授权。维护本 Skill 仓库时先读 [AGENTS.md](AGENTS.md)、[ARCHITECTURE.md](ARCHITECTURE.md) 和 [质量规则](docs/quality.md)；在其他产品项目中遵守目标项目最近的 `AGENTS.md`、架构说明、需求基线和验证入口，不把跨任务行为只依赖聊天记忆。缺口、漂移和重复问题分别标注、回写或沉淀为 Snapshot/Schema/Harness/测试；完成前运行 `./scripts/verify [structure|regression|harness|all]` 并记录证据，外部推送、发布、登记、部署仍需授权。需要搭建业务项目级规则时，读取 [项目 Harness 配置启动](references/project-harness-bootstrap.md)。
 
 ## 单一主链路
 
@@ -163,7 +163,7 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 | 模具无匹配或原型包含未来素材位置 | [项目级候选模具](references/prototype-candidate-generation.md) 与 [原型素材占位 Contract](references/prototype-asset-slots.md) | 生成 project-local 黑白候选和语义占位，不带入旧项目资产 |
 | 在当前沟通中生成、预览或自然语言修改原型 | [对话式原型会话](references/conversational-prototype-session.md) | 维护 PRS、受控 Generation Request、Patch、版本和返回审计，不做黑盒一次性生成 |
 | 候选模具验证、登记、升级或停用 | [原型模具生命周期与登记治理](references/prototype-template-lifecycle.md) | 维护 TMF、证据、作用域和版本；不把项目候选自动升级为共享或生产资产 |
-| 可运行中保真、布局/任务验证、失败修复或发布证据 | [可执行 Frame / Flow Contract](references/prototype-frame-flow-contract.md) 与 [原型生产 Harness](references/prototype-harness.md) | 编译 Contract、执行受控渲染和真实浏览器验证；局部修复最多两次且不改变业务语义 |
+| 可运行中保真、布局/任务验证、失败修复或发布证据 | [可执行 Frame / Flow Contract](references/prototype-frame-flow-contract.md) 与 [原型生产 Harness](references/prototype-harness.md) | 编译 Contract、执行多场景受控渲染和真实浏览器验证；局部修复最多两次且不改变业务语义，发布还需通过运行包门禁 |
 | 设计系统、组件规范、Token、插槽/变体、shadcn/Radix、Ant Design 或学习组件 | [设计系统与学习组件架构协议](references/design-system-architecture.md) | 输出布局、插槽、变体、状态、Token 和基础/领域组件映射；不声称已安装、注册或上线 |
 | 模糊想法、非专业用户、角色化需求确认 | [低摩擦自然语言对话](references/low-friction-dialogue.md) | 用角色语言进行单问题推进，内部追溯不默认外露 |
 | 最新案例、开源或竞品证据 | [GitHub/对标参考](references/github-benchmarks.md) 或联网检索 | 优先官方来源，区分事实、推断与待验证 |
@@ -194,7 +194,7 @@ description: "通过低摩擦自然语言对话，把模糊产品想法收拢为
 - 需求、技术实现和证据结论分开；不伪造用户数据、行业事实、业务规则、调研或上线结果。
 - 涉及个人、学生、员工、支付或敏感数据时，明确目的、可见范围、保留期限、导出/删除和责任角色。
 - 生产交付前执行 Ready 检查；交付返回后执行 Done/返回审计。缺少测试证据不得标记 Done。
-- 原型发布必须同时通过 Contract lint、真实浏览器几何、主任务、素材政策和视觉差异门槛；文档评分不能替代这些证据。
+- 原型发布必须同时通过 Contract lint、真实浏览器几何、主任务、素材政策、视觉差异和运行包版本一致性门槛；文档评分不能替代这些证据。
 
 ## Skill 自身迭代
 
