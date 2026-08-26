@@ -1,0 +1,33 @@
+schema_version: v1
+
+frame_contract:
+  contract_id: FRM-001
+  project_id: PROJECT-001
+  version: v0.1
+  status: draft # draft / ready / superseded / blocked
+  viewport:
+    width: 1280
+    height: 800
+    orientation: landscape
+  safe_area: {top: 0, right: 0, bottom: 0, left: 0}
+  grid: {columns: 12, gutter: 16, margin: 24}
+  regions:
+    - region_id: REG-MAIN
+      semantic_role: primary-content
+      position_mode: flow # fixed / flow / overlay / scroll
+      geometry: {x: 24, y: 24, width: 1232, height: 752}
+      constraints:
+        min_width: 320
+        min_height: 240
+        max_width: 1232
+        max_height: 752
+      z_index: 1
+      overflow: auto # hidden / auto / visible
+      information_priorities: [P0, P1, P2]
+      allowed_overlap_with: []
+      repair_policy: none # none / shrink-to-safe-area
+      traces_to: [PUI-001, P-001]
+  primary_action_region: REG-MAIN
+  p0_regions: [REG-MAIN]
+  asset_slot_ids: []
+  forbidden_layout_assumptions: []

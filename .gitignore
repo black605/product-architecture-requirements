@@ -1,0 +1,4 @@
+.harness/
+tests/.generated/
+__pycache__/
+*.pyc

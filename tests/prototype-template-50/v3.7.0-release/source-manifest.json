@@ -1,0 +1,214 @@
+{
+  "sha256": "ea2b8bf8318d4bce0af7777a6ef738aa6035d066108aa0a45b2403f0348c652a",
+  "git_commit": "03086dbd17112ea23dc8792ea9e52bc95f06eab7",
+  "files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "0ac6466c4d3d5c780b9a0407c34f6ca0020cbe1fa369aca3c1e559114ed9389b"
+    },
+    {
+      "path": "platform/coze-config.md",
+      "sha256": "426e40ca01d978d4a945eb1f1e17f7499db8136576c3d725413b68f6243afa8f"
+    },
+    {
+      "path": "platform/dify-config.md",
+      "sha256": "0068ba6e7dbb4306e88fbecfd8d476c96d3a64c18a88e955ba9a86efa8419bca"
+    },
+    {
+      "path": "platform/gpts-instructions.md",
+      "sha256": "0cd4477590f5e1b1d9771aab1b822dfa501c7b6f840ca46df8c5886420363eb9"
+    },
+    {
+      "path": "references/a2ui-asset-bundle-handoff.md",
+      "sha256": "43463505b46032659968494354447e2cf3fe9c75680bfd74e5eec0aa6f62644a"
+    },
+    {
+      "path": "references/a2ui-defensive-ui-contract.md",
+      "sha256": "3c6a046d89dbfde61b57ac65317100ae88b9c90832ca034a2402f94071941ff4"
+    },
+    {
+      "path": "references/a2ui-intake-decision-contract.md",
+      "sha256": "274ac1803ea2fc04979f728d63772cc14536e80417e63501a69249f935404500"
+    },
+    {
+      "path": "references/a2ui-runtime-quality-gate.md",
+      "sha256": "a1c4d2b45fcefdb8985618800f7721565c15b3fbfdad66b71c2dcc0451c691ca"
+    },
+    {
+      "path": "references/a2ui-studio-patch-bridge.md",
+      "sha256": "1f1ea4301d7a556f9a6792e89438809aa6edf690d7f0ec12ef953926ce0e59a8"
+    },
+    {
+      "path": "references/conversational-prototype-session.md",
+      "sha256": "d43e8bdcbcae412460990940050445eb2315f9b08ac545d481ecfbb2d2ca9272"
+    },
+    {
+      "path": "references/cross-skill-delivery.md",
+      "sha256": "fc0b37cf40e3d90d621c527d601004d18adc7a0a40bdca0b42542c1079375a51"
+    },
+    {
+      "path": "references/decision-ledger.md",
+      "sha256": "963f5108274dd8bd8ea970b5d8821fe78d792cc7e0f483aa5a7ae51782c37cc5"
+    },
+    {
+      "path": "references/design-system-architecture.md",
+      "sha256": "3c4cbea335695d79a225feda69c2e8014d0c656791379dfecd286cc907e237f6"
+    },
+    {
+      "path": "references/evaluation-rubric.md",
+      "sha256": "6e9669a8e75624d6bb5f6775caea60ea818af18fc02bee8e60a7af1ca272bf6b"
+    },
+    {
+      "path": "references/github-benchmarks.md",
+      "sha256": "b15cc6017e1d85e6aca05764c3d21ed8df2e79a79916b70a44e9efeb1290dd40"
+    },
+    {
+      "path": "references/lifecycle-orchestration.md",
+      "sha256": "218cba3ff7a1ffe801f9810dd9ec6ef0c7a3e821a0192de0fe054b60ec37ed64"
+    },
+    {
+      "path": "references/low-friction-dialogue.md",
+      "sha256": "58f8f03ab4f606e1c6603b7355a35dca834bc037c41bad492e05585bec7888f2"
+    },
+    {
+      "path": "references/medium-fidelity-handoff.md",
+      "sha256": "9443e6e3145a59ce832e88f46a19d804a942911cf40b5d247f9ca27ded18c2d8"
+    },
+    {
+      "path": "references/meta-prompt.md",
+      "sha256": "c892163b297b52171ead2bc8d51557094f99546dff9efe86814aca44f5a637cc"
+    },
+    {
+      "path": "references/product-operations-loop.md",
+      "sha256": "aa4ec5d383628221cd273fc319d3457274d953b5e3824d5c6bf8d4e864780c29"
+    },
+    {
+      "path": "references/production-handoff.md",
+      "sha256": "da4b6456c4c28b5f81e547a87871e0df9689a7759a3ae0bd1d3c7f991e479cc5"
+    },
+    {
+      "path": "references/project-functional-playbook.md",
+      "sha256": "dcb4b33db1cbfad57c601797bd7247eba981d0637124f48162168e2409b77621"
+    },
+    {
+      "path": "references/project-snapshot.md",
+      "sha256": "070e4e1f90c0822cf05d9ca01c9037d1b5108c55350059427de1c1205fc33ae3"
+    },
+    {
+      "path": "references/project-ui-profile.md",
+      "sha256": "d7004acb9588ee09952e1bb5e9ceb6f3fab0eea68ade281b2a569b063c169a5a"
+    },
+    {
+      "path": "references/prototype-asset-slots.md",
+      "sha256": "5ffe1d54c963056830c17c3b8b832eb4062fd66227cdf734e5cce15101bd62a9"
+    },
+    {
+      "path": "references/prototype-candidate-generation.md",
+      "sha256": "dec4bd43793f9be5c2ae7bf782b5ebbf32faed64aef68776e3d6c8a895852de6"
+    },
+    {
+      "path": "references/prototype-template-catalog.md",
+      "sha256": "feb26fb3122f2d34ae3a98d6437519563a16e36390660f411d32cc3ea43952ac"
+    },
+    {
+      "path": "references/prototype-template-fit.md",
+      "sha256": "fbae8a50d9d9b5cbf09c6f4296c533e72b55144dcaec51642095687dab0610ca"
+    },
+    {
+      "path": "references/prototype-template-lifecycle.md",
+      "sha256": "bb850162c6a2c1df9bec70f8a2a42a43d567c63529889d18fb3d1a9fa3bd6d6d"
+    },
+    {
+      "path": "references/prototype-ui-contract.md",
+      "sha256": "4b7589a9bc1c8064e4afb6533e33a720a2e0a0c2e6abc627c8c4ac647c5cdb69"
+    },
+    {
+      "path": "references/prototype-validation-evidence.md",
+      "sha256": "20394d846380a6f65f4601705b3603a4d4a569a51af7a7489c9dbd98729db794"
+    },
+    {
+      "path": "references/quickstart.md",
+      "sha256": "04788b9cf858b9c2db678e201eab7392bc1dfae810fd04ebdb9fac61acfd1668"
+    },
+    {
+      "path": "references/requirements-convergence.md",
+      "sha256": "ce68842507690aa276ddb7b384c6f416bd69f453ecfeda282efcb2881cf1283e"
+    },
+    {
+      "path": "references/state-test-gates.md",
+      "sha256": "c565e5f49a0075cbec9b93a39d3859679455f002544202a1c8be9f2a1b3b7558"
+    },
+    {
+      "path": "references/structural-prototype-handoff.md",
+      "sha256": "459a2986ddc1cc7bc4961068600b21c8af7f0cac09bc21c83c0fe2b47e357636"
+    },
+    {
+      "path": "schemas/asset-slot-contract.yaml",
+      "sha256": "8c8b94502bf29b542223bbca14d7628649028639f5ee450bb1b09feaac691274"
+    },
+    {
+      "path": "schemas/project-ui-profile.yaml",
+      "sha256": "58aab2c8fc6f6a62d14f95c421e8cdc7dd3e17a7d208b91798d6e6adda6489df"
+    },
+    {
+      "path": "schemas/prototype-candidate.yaml",
+      "sha256": "e8105b073fe194c1f42ea372ecb1b9df8ad5be8f28d7137fcd2ee1bb92c63fde"
+    },
+    {
+      "path": "schemas/prototype-generation-request.yaml",
+      "sha256": "23cac3d7d92fdb836c330171730dbbac02f7fe86633e4de4dac6f50a17ba7108"
+    },
+    {
+      "path": "schemas/template-definition.yaml",
+      "sha256": "e9a95a4bb664d9305a69b725266a8c10acdef72c381fee7babdf0b9ec68c93cf"
+    },
+    {
+      "path": "schemas/template-fit-decision.yaml",
+      "sha256": "d7156c244db132d2b90185a61ba19adc0ce39a9b59a347e044676586dc5aa5f9"
+    },
+    {
+      "path": "schemas/template-manifest.yaml",
+      "sha256": "63885e5a95c17dc0060cbdde51415a55a9abb3e92ee2a19af7a36bcbbb711e46"
+    },
+    {
+      "path": "tests/fixtures/cross-project/student-source.json",
+      "sha256": "14dbc0769a161a1ab2511ee26f05331a0b8d9da95aaabd640e545741b5dbbfa0"
+    },
+    {
+      "path": "tests/fixtures/cross-project/teacher-review-candidate.html",
+      "sha256": "96c3224bac2015926dea18923da3c0a1e942dba9fb4bba428d3160a5f69d5a1f"
+    },
+    {
+      "path": "tests/prototype-template-50.json",
+      "sha256": "309014b3466f0e2cda4cff638c2dfd250068db2192d969fef3e46e2f89f15b63"
+    },
+    {
+      "path": "tests/review_v37_prototype_template_50.py",
+      "sha256": "9e9277f0d87580aa776ca7a425dc91b83e88c56ba592e30ad141c4bd198837ca"
+    },
+    {
+      "path": "tests/run_formal_platform_50.py",
+      "sha256": "3f7417d910be0ef0e3538d2ee6ee86a0f1ae719ef6ad29b66ea837f080339f50"
+    },
+    {
+      "path": "tests/run_gomoku_case_d.py",
+      "sha256": "61785aa7d7e89afcf9fad5572b4e97c2198d66870599f3c2c14a5015936aff0e"
+    },
+    {
+      "path": "tests/run_v34_lifecycle_checks.py",
+      "sha256": "17b7a60b59881bbfdbfd121b813124c29c804849d45ea7fe21fc8f71ab963629"
+    },
+    {
+      "path": "tests/run_v37_continuous_session.py",
+      "sha256": "2d295f17da2cdabfed591d702de2fc988fb3277b0426772f849889fb4b4521ae"
+    },
+    {
+      "path": "tests/run_v37_isolation_scan.py",
+      "sha256": "8f79f096eddf1cea17374ae4c7177fa339b3d87946ac4ee91f1e5f98bb44943e"
+    },
+    {
+      "path": "tests/run_v37_prototype_template_checks.py",
+      "sha256": "fcc1daa55763ba891e85390683d8e45ce88530fa33e325bdd072e6500c1a2788"
+    }
+  ]
+}

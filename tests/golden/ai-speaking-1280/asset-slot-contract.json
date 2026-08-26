@@ -1,0 +1,36 @@
+{
+  "contract_id": "ASC-001",
+  "project_id": "PROJECT-AI-SPEAKING-001",
+  "profile_id": "UIP-001",
+  "pui_contract_id": "PUI-001",
+  "status": "ready",
+  "slots": [
+    {
+      "slot_id": "ASLOT-TEACHER",
+      "page_id": "P-002",
+      "region_id": "REG-MAIN",
+      "semantic_role": "外教示范位置",
+      "information_priority": "P1",
+      "asset_type": "video",
+      "required": false,
+      "source_asset_ids": [],
+      "geometry": {"aspect_ratio": "16:9", "min_size": {"width": 240, "height": 135}, "max_size": {"width": 640, "height": 360}, "fit": "contain", "safe_area": "center"},
+      "placeholder": {"style": "neutral-outline", "label": "外教示范视频", "alt_text": "视频素材占位"},
+      "states": {"loading": "skeleton", "empty": "collapse", "error": "safe-placeholder", "unavailable": "safe-placeholder", "extreme_content": "contain"}
+    },
+    {
+      "slot_id": "ASLOT-SCENE",
+      "page_id": "P-005",
+      "region_id": "REG-MAIN",
+      "semantic_role": "点餐场景位置",
+      "information_priority": "P1",
+      "asset_type": "illustration",
+      "required": false,
+      "source_asset_ids": [],
+      "geometry": {"aspect_ratio": "4:3", "min_size": {"width": 200, "height": 150}, "max_size": {"width": 480, "height": 360}, "fit": "contain", "safe_area": "center"},
+      "placeholder": {"style": "neutral-outline", "label": "点餐场景插图", "alt_text": "插图素材占位"},
+      "states": {"loading": "skeleton", "empty": "collapse", "error": "safe-placeholder", "unavailable": "safe-placeholder", "extreme_content": "contain"}
+    }
+  ],
+  "inheritance": {"allow_geometry_rules": true, "allow_safe_area_rules": true, "allow_source_assets": false, "allow_historical_fallback": false}
+}

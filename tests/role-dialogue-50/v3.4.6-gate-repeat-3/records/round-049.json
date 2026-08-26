@@ -1,0 +1,32 @@
+{
+  "round": 49,
+  "platform": "Codex CLI formal runtime",
+  "model": "gpt-5.6-luna",
+  "started_at": "2026-08-21T12:59:17.016703+00:00",
+  "duration_seconds": 64.21,
+  "exit_code": 0,
+  "thread_id": "01a02467-7d2c-7fd3-b8b3-b8f9ee21e2b5",
+  "runtime_workspace": "isolated temporary directory",
+  "role": "研发/技术负责人",
+  "journey": "邀请规则就绪",
+  "focus": "就绪后对象状态交付",
+  "test_mode": "delivery",
+  "user_input": "【当前沟通角色】研发/技术负责人\n【会话路径】邀请规则就绪\n【本轮关注点】就绪后对象状态交付\n【此前已确认的用户信息】\n- 目标用户是已有好友关系的学生。\n- 目标是发起并完成一次好友对弈。\n- 主任务是邀请好友并完成双方准备。\n- 首期只做一对一邀请，不做群组赛。\n- 邀请15秒有效，接受一个后其他邀请失效。\n- 双方准备是开局前置条件；自动开局还是点击开始尚未确认。\n\n【用户本轮表达】\n请整理对象、状态、守卫、异常和验收，不写代码。",
+  "assistant_output": "## 就绪后对象状态交付草案\n\n### 已确认范围\n\n- 目标对象：已有好友关系的学生。\n- 主任务：一对一邀请好友，完成双方准备后开始对弈。\n- 邀请有效期：15 秒。\n- 接受一个邀请后，同一批次其他邀请失效。\n- 双方准备是开局前置条件。\n- 群组赛不在首期范围内。\n\n### 对象与状态\n\n| 对象 | 状态/含义 | 当前结论 |\n|---|---|---|\n| 邀请 | 待接受、已接受、已失效 | 已确认业务方向 |\n| 对局 | 等待邀请、等待双方准备、对弈中 | “对弈中”前的触发方式待确认 |\n| 对局参与者 | 未准备、已准备 | 已确认是开局前置条件 |\n| 其他邀请 | 有效、因接受其他邀请而失效、超时失效 | 已确认规则 |\n\n### 守卫与状态变化\n\n| 事件 | 守卫 | 结果 |\n|---|---|---|\n| 发出邀请 | 接收者是已有好友，且为一对一邀请 | 邀请进入“待接受” |\n| 15 秒到期 | 邀请仍未被接受 | 邀请进入“已失效” |\n| 接受邀请 | 邀请仍有效，且尚未接受其他邀请 | 当前邀请“已接受”，其他邀请失效 |\n| 双方准备 | 对局已建立，双方均完成准备 | 允许进入“对弈中” |\n| 开始对弈 | 触发方式尚未确认 | 当前转移暂不作为研发验收依据 |\n\n### 异常出口\n\n- 非好友：拒绝发起邀请。\n- 邀请已超时：拒绝接受，并提示邀请已失效。\n- 已接受其他邀请：拒绝重复接受。\n- 其他邀请已因接受一项而失效：不可再次接受。\n- 仅一方准备：保持等待，不得开始对弈。\n- 重复发送或重复接受：需保证不重复创建有效对局，具体幂等口径待技术确认。\n- 网络失败、离线恢复、对局结束状态：本轮尚未定义，暂列待补充异常。\n\n### 验收范围\n\n已确认部分可验收：\n\n- 有效期内可接受邀请；超过 15 秒不可接受。\n- 接受一个邀请后，其他邀请不可再接受。\n- 双方未同时准备时，不得进入对弈中。\n- 非好友不能创建有效邀请。\n- 失效邀请的状态和反馈应可被双方看到。\n\n当前仍为 `Needs Decision`：必须先确认“双方准备完成后自动开局，还是由一方点击开始”。该决定会影响对局状态转移、按钮权限、并发处理和正向验收。",
+  "checks": {
+    "real_process_succeeded": true,
+    "assistant_output_present": true,
+    "question_count": 0,
+    "question_limit_pass": true,
+    "single_question_pass": true,
+    "chinese_char_count": 613,
+    "compact_exploration_pass": true,
+    "internal_language_absent": true,
+    "tableless_exploration_pass": true,
+    "plain_text_exploration_pass": true,
+    "uncertainty_labels_present": true,
+    "blocked_trace_absent": true,
+    "high_impact_bypass_absent": true,
+    "implementation_code_absent": true
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-08-21T09:40:09.731330+00:00",
+  "artifact_dir": "/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle",
+  "files": {
+    "prototype": {
+      "path": "/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Gomoku Friend Battle Prototype.html",
+      "exists": true,
+      "size": 47442,
+      "sha256": "f5aea1581a321d3552b2eb9b5aac1542a2687d3e67cc43794c5d8f703ed13af8"
+    },
+    "development": {
+      "path": "/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Development Tasks and Acceptance Checklist.md",
+      "exists": true,
+      "size": 12604,
+      "sha256": "68a92124485a3f462f9ac3b670fb472e95e027d9e66da9cc09bfcf6690c980e4"
+    },
+    "testing": {
+      "path": "/Users/tal/Documents/ChatGPT/新课件-0818/designs/gomoku-friend-battle/Test Cases and State Machines.md",
+      "exists": true,
+      "size": 14464,
+      "sha256": "b1912178c5431bc7d23c28a9e107ca220f2f1f35d3fd61b3fd34fde93ea74fb7"
+    }
+  }
+}

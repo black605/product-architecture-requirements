@@ -1,0 +1,28 @@
+{
+  "decision_id": "TFD-001",
+  "project_id": "PROJECT-AI-SPEAKING-001",
+  "profile_id": "UIP-001",
+  "profile_version": "v0.1",
+  "pui_contracts": ["PUI-001"],
+  "status": "ready",
+  "owner": "product-owner",
+  "candidates": [],
+  "dimensions": {
+    "target_users": "unknown",
+    "primary_task": "mismatched",
+    "page_type": "extensible",
+    "information_hierarchy": "extensible",
+    "required_regions": "extensible",
+    "device_viewport": "matched",
+    "interaction_states": "mismatched"
+  },
+  "result": "no_match",
+  "selected_template_id": null,
+  "selected_template_version": null,
+  "matched_items": ["desktop-landscape"],
+  "mismatched_items": ["完整口语学习状态链", "具体步骤恢复"],
+  "required_extensions": [],
+  "pending_decisions": [],
+  "prohibited_inheritance": ["copy", "visual_assets", "brand_tokens", "business_rules"],
+  "next_action": "create_project_candidate"
+}

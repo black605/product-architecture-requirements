@@ -1,0 +1,7 @@
+PATCH-002｜L3｜v0.2｜needs-decision
+DEC-待登记 / CHG-待登记｜Proposed/Blocked
+变化：拟将“看完重点”直接判定为完成，并移除练习作为完成前置条件。
+影响：完成规则、主流程、练习区、结果区、PUI、TFD、AC、测试及 PRS-900；原“查看重点后开始练习”规则暂保留，未被静默替换。
+状态：PRS-900｜blocked｜Contract/Generation Request 保持 v0.2，未更新；TFD-900 需重新检查；页面未生成。
+
+请先定义“看完重点”的唯一触发事件，例如“学生滚动至重点区域底部即触发”。

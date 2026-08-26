@@ -1,0 +1,62 @@
+schema_version: v1
+
+project_ui_profile:
+  profile_id: UIP-001
+  project_id: PROJECT-001
+  version: v0.1
+  status: draft # draft / ready / superseded / blocked
+
+  target:
+    users: []
+    primary_task: pending
+    page_types: []
+    target_device: pending
+    viewport:
+      width: pending
+      height: pending
+      orientation: pending
+
+  page_semantics:
+    information_hierarchy:
+      p0: []
+      p1: []
+      p2: []
+    required_regions: []
+    primary_action: pending
+    required_states: []
+
+  evidence_map:
+    - evidence_id: EVD-UI-001
+      source_type: written-spec
+      source_ref: pending
+      observed: []
+      derived_constraints: []
+      confidence: unavailable
+      verification_status: pending
+
+  inheritance:
+    source_profiles: []
+    allowed:
+      structure: false
+      grid: false
+      component_semantics: false
+      slot_structure: false
+      state_patterns: false
+    prohibited_by_default:
+      copy: true
+      sample_data: true
+      user_data: true
+      visual_assets: true
+      brand_tokens: true
+      business_rules: true
+      permissions: true
+      algorithms: true
+
+  traceability:
+    pui_contracts: []
+    pages: []
+    functions: []
+    decisions: []
+
+  pending_decisions: []
+  forbidden_assumptions: []

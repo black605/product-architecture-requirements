@@ -1,0 +1,46 @@
+schema_version: v1
+
+prototype_candidate:
+  candidate_id: PTC-001
+  project_id: PROJECT-001
+  profile_id: UIP-001
+  fit_decision_id: TFD-001
+  pui_contracts: []
+  asset_slot_contracts: []
+  version: v0.1
+  status: draft # draft / ready-for-prototype / in-validation / validated / superseded
+  scope: project-local
+
+  viewport:
+    device_type: pending
+    width: pending
+    height: pending
+    orientation: pending
+
+  grid:
+    columns: pending
+    gutter: pending
+    margins: pending
+    source: generic-project-grid
+
+  regions: []
+  component_semantics: []
+  states: []
+  extension_points: []
+
+  style:
+    profile: prototype-neutral
+    visual_assets_included: false
+    brand_tokens_included: false
+
+  isolation_scan:
+    historical_copy_found: false
+    historical_assets_found: false
+    user_data_found: false
+    unconfirmed_business_rules_found: false
+
+  traceability:
+    functions: []
+    pages: []
+    decisions: []
+    acceptance_criteria: []

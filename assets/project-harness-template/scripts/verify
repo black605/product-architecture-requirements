@@ -1,0 +1,29 @@
+#!/bin/sh
+set -eu
+
+PROJECT_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+
+required_files="AGENTS.md ARCHITECTURE.md docs/quality.md docs/product-specs/README.md docs/plans/README.md docs/decisions/README.md"
+for required_file in $required_files; do
+  if [ ! -f "$PROJECT_ROOT/$required_file" ]; then
+    printf '缺少项目治理文件: %s\n' "$required_file" >&2
+    exit 1
+  fi
+done
+
+if git -C "$PROJECT_ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  git -C "$PROJECT_ROOT" diff --check
+else
+  printf '%s\n' '提示：当前目录不是 Git 仓库，跳过 git diff --check。'
+fi
+
+if [ -n "${PROJECT_VERIFY_COMMAND:-}" ]; then
+  cd "$PROJECT_ROOT"
+  sh -c "$PROJECT_VERIFY_COMMAND"
+elif [ -x "$PROJECT_ROOT/harness" ]; then
+  "$PROJECT_ROOT/harness" all
+else
+  printf '%s\n' '提示：尚未配置项目专属验证。请接入 PROJECT_VERIFY_COMMAND 或 ./harness。'
+fi
+
+printf '%s\n' '项目级 Harness 配置结构检查通过。'

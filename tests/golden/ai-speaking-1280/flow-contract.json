@@ -1,0 +1,35 @@
+{
+  "contract_id": "FLOW-001",
+  "project_id": "PROJECT-AI-SPEAKING-001",
+  "version": "v0.1",
+  "status": "ready",
+  "initial_state": "COURSE_MAP",
+  "terminal_states": ["LEARNING_REPORT"],
+  "states": [
+    {"state_id": "COURSE_MAP", "page_id": "P-001", "type": "interactive", "entry_conditions": [], "recovery_key": "course-map", "traces_to": ["F-001", "P-001"]},
+    {"state_id": "LEARNING_GOAL", "page_id": "P-002", "type": "interactive", "entry_conditions": ["已选择课程"], "recovery_key": "learning-goal", "traces_to": ["F-001", "P-002"]},
+    {"state_id": "WORD_REPEAT", "page_id": "P-003", "type": "interactive", "entry_conditions": ["已查看目标"], "recovery_key": "word-repeat:item-1", "traces_to": ["F-001", "P-003"]},
+    {"state_id": "SENTENCE_REPEAT", "page_id": "P-004", "type": "interactive", "entry_conditions": ["单词跟读完成"], "recovery_key": "sentence-repeat:item-1", "traces_to": ["F-001", "P-004"]},
+    {"state_id": "ROLEPLAY", "page_id": "P-005", "type": "interactive", "entry_conditions": ["重点句完成"], "recovery_key": "roleplay:turn-1", "traces_to": ["F-001", "P-005"]},
+    {"state_id": "GENERATING", "page_id": "P-006", "type": "async", "entry_conditions": ["对话提交"], "recovery_key": "generating", "traces_to": ["F-001", "P-006"]},
+    {"state_id": "GENERATION_TIMEOUT", "page_id": "P-007", "type": "failure", "entry_conditions": ["生成超时"], "recovery_key": "generation-timeout", "traces_to": ["F-001", "P-007"]},
+    {"state_id": "CORRECTION", "page_id": "P-008", "type": "interactive", "entry_conditions": ["纠音结果可用"], "recovery_key": "correction:item-1", "traces_to": ["F-001", "P-008"]},
+    {"state_id": "LEARNING_REPORT", "page_id": "P-009", "type": "terminal", "entry_conditions": ["复习步骤完成"], "recovery_key": "completed", "traces_to": ["F-001", "P-009"]}
+  ],
+  "transitions": [
+    {"transition_id": "TR-001", "from": "COURSE_MAP", "event": "ACT-CONTINUE", "trigger": "action", "guard": "course-selected", "to": "LEARNING_GOAL", "failure_to": null, "traces_to": ["DEC-001", "F-001", "AC-001", "T-001"]},
+    {"transition_id": "TR-002", "from": "LEARNING_GOAL", "event": "ACT-START", "trigger": "action", "guard": "always", "to": "WORD_REPEAT", "failure_to": null, "traces_to": ["DEC-001", "F-001", "AC-001", "T-001"]},
+    {"transition_id": "TR-003", "from": "WORD_REPEAT", "event": "ACT-WORD-DONE", "trigger": "action", "guard": "attempt-recorded", "to": "SENTENCE_REPEAT", "failure_to": null, "traces_to": ["DEC-001", "F-001", "AC-001", "T-001"]},
+    {"transition_id": "TR-004", "from": "SENTENCE_REPEAT", "event": "ACT-SENTENCE-DONE", "trigger": "action", "guard": "attempt-recorded", "to": "ROLEPLAY", "failure_to": null, "traces_to": ["DEC-001", "F-001", "AC-001", "T-001"]},
+    {"transition_id": "TR-005", "from": "ROLEPLAY", "event": "ACT-ROLEPLAY-DONE", "trigger": "action", "guard": "dialogue-submitted", "to": "GENERATING", "failure_to": null, "traces_to": ["DEC-001", "F-001", "AC-001", "T-001"]},
+    {"transition_id": "TR-006", "from": "GENERATING", "event": "ASYNC-COMPLETE", "trigger": "auto", "guard": "result-ready", "to": "CORRECTION", "failure_to": "GENERATION_TIMEOUT", "delay_ms": 80, "traces_to": ["DEC-001", "F-001", "AC-001", "T-001"]},
+    {"transition_id": "TR-007", "from": "GENERATING", "event": "ASYNC-TIMEOUT", "trigger": "timeout", "guard": "result-not-ready", "to": "GENERATION_TIMEOUT", "failure_to": null, "timeout_ms": 3000, "traces_to": ["DEC-001", "F-001", "AC-001", "T-003"]},
+    {"transition_id": "TR-008", "from": "GENERATION_TIMEOUT", "event": "ACT-RETRY", "trigger": "action", "guard": "retry-count-below-limit", "to": "GENERATING", "failure_to": null, "traces_to": ["DEC-001", "F-001", "AC-001", "T-003"]},
+    {"transition_id": "TR-009", "from": "CORRECTION", "event": "ACT-FINISH", "trigger": "action", "guard": "correction-reviewed", "to": "LEARNING_REPORT", "failure_to": null, "traces_to": ["DEC-001", "F-001", "AC-001", "T-001"]},
+    {"transition_id": "TR-010", "from": "LEARNING_REPORT", "event": "ACT-REVIEW-COURSE", "trigger": "action", "guard": "always", "to": "COURSE_MAP", "failure_to": null, "traces_to": ["DEC-002", "F-002", "AC-002", "T-002"]},
+    {"transition_id": "TR-011", "from": "GENERATING", "event": "ACT-CANCEL-GENERATING", "trigger": "action", "guard": "always", "to": "COURSE_MAP", "failure_to": null, "traces_to": ["DEC-002", "F-002", "AC-002", "T-002"]}
+  ],
+  "async_policy": {"max_retries": 2, "required_timeout_ms": 3000},
+  "resume": {"persistence": "state-and-step", "fallback_state": "COURSE_MAP"},
+  "forbidden_assumptions": ["原型不声称真实语音评分已接入", "超时不能伪装为成功"]
+}

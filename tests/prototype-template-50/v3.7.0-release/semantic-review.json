@@ -1,0 +1,62 @@
+{
+  "suite": "v3.7-formal-prototype-template-50",
+  "records": 50,
+  "passing_records": 48,
+  "dimensions": {
+    "elicitation": 25,
+    "architecture": 25,
+    "ui_ux": 25,
+    "constraint": 24
+  },
+  "total_score": 99,
+  "source_snapshot_sha256": "ea2b8bf8318d4bce0af7777a6ef738aa6035d066108aa0a45b2403f0348c652a",
+  "current_source_snapshot_sha256": "ea2b8bf8318d4bce0af7777a6ef738aa6035d066108aa0a45b2403f0348c652a",
+  "source_git_commit": "03086dbd17112ea23dc8792ea9e52bc95f06eab7",
+  "source_integrity": true,
+  "all_base_pass": true,
+  "critical_contract_records": 21,
+  "critical_contract_pass": true,
+  "release_candidate": true,
+  "failed_rounds": [
+    {
+      "round": 4,
+      "focus": "profile",
+      "base_pass": true,
+      "semantic_pass": true,
+      "required_group_results": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "semantic_coverage": 0.8,
+      "contract_pass": false,
+      "contract_errors": [
+        "missing_profile_isolation_fields"
+      ],
+      "unsafe_claim_absent": true,
+      "passed": false
+    },
+    {
+      "round": 43,
+      "focus": "evidence",
+      "base_pass": true,
+      "semantic_pass": true,
+      "required_group_results": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "semantic_coverage": 1.0,
+      "contract_pass": false,
+      "contract_errors": [
+        "missing_evidence_uncertainty"
+      ],
+      "unsafe_claim_absent": true,
+      "passed": false
+    }
+  ]
+}

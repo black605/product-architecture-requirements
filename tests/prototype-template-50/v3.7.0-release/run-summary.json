@@ -1,0 +1,15 @@
+{
+  "platform": "Codex CLI formal runtime",
+  "model": "gpt-5.6-luna",
+  "requested_rounds": 50,
+  "executed_rounds_this_invocation": 50,
+  "selected_passing_rounds": 50,
+  "completed_rounds": 50,
+  "fully_passing_rounds": 50,
+  "generated_at": "2026-08-24T05:51:17.634784+00:00",
+  "source_snapshot_sha256": "ea2b8bf8318d4bce0af7777a6ef738aa6035d066108aa0a45b2403f0348c652a",
+  "source_git_commit": "03086dbd17112ea23dc8792ea9e52bc95f06eab7",
+  "source_file_count": 52,
+  "command": "codex exec --json --ephemeral --skip-git-repo-check -s read-only -C isolated-temp -o final -",
+  "note": "每条记录均由正式运行时独立执行；本文件不包含人工拼接的 assistant 回复，并绑定同一源码快照。"
+}

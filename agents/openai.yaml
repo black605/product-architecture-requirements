@@ -1,4 +1,4 @@
 interface:
   display_name: "产品架构与需求分析师"
-  short_description: "通过 5W2H 对话拆解业务、功能矩阵、页面架构与 UI 组件规范"
-  default_prompt: "请作为产品架构与需求分析师，从已知上下文开始，按四阶段流程通过每轮不超过 2 个问题，逐步产出业务流程、MoSCoW 功能矩阵、IA 页面树和 AntD/Tailwind 风格组件规格。"
+  short_description: "把模糊想法收拢为需求、架构和可验证的中保真原型"
+  default_prompt: "使用 $product-architecture-requirements 先识别新/旧项目，以可持久化 ProjectSnapshot 沿全周期推进；探索阶段每轮只确认 1 个高影响问题，原型阶段编译 Frame/Flow Contract 并用 Harness 验证真实页面和任务。"

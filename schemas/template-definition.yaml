@@ -1,0 +1,56 @@
+schema_version: v1
+
+prototype_template:
+  template_id: TPL-001
+  name: pending
+  version: v0.1
+  status: project-candidate # project-candidate / in-validation / validated / registration-requested / registered / deprecated / superseded
+  scope: project-local # project-local / shared / restricted
+  owner: pending
+
+  provenance:
+    source_project_id: pending
+    evidence_ids: []
+    created_from_candidate_id: pending
+
+  applicability:
+    target_users: []
+    primary_tasks: []
+    page_types: []
+    device_profiles:
+      - device_type: pending
+        orientation: pending
+        min_viewport: {width: pending, height: pending}
+        max_viewport: {width: pending, height: pending}
+        input_modes: []
+
+  structure:
+    information_hierarchy:
+      supported_p0: []
+      supported_p1: []
+      supported_p2: []
+    required_regions: []
+    optional_regions: []
+    primary_action_region: pending
+    extension_points: []
+
+  slots:
+    required: []
+    optional: []
+    collapse_rules: []
+  variants: []
+  compound_variants: []
+  supported_states: []
+
+  isolation:
+    example_content: example-only
+    copy_embedded: false
+    user_data_embedded: false
+    visual_assets_embedded: false
+    brand_tokens_embedded: false
+    business_rules_embedded: false
+
+  compatibility:
+    schema_version: v1
+    compatible_profile_versions: []
+    breaking_change_policy: new-major-version
